@@ -41,6 +41,7 @@ class RatingTableViewCell: UITableViewCell {
     private let profileImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
+        image.tintColor = UIColor(hexString: "#625C5C")
         image.layer.cornerRadius = 15
         image.clipsToBounds = true
         return image

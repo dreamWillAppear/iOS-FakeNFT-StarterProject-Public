@@ -5,6 +5,8 @@
 //  Created by Александр  Сухинин on 12.10.2024.
 //
 
+import Foundation
+
 struct Rating {
     let position: Int
     let imageURLString: String
@@ -17,13 +19,20 @@ protocol RatingStoreProtocol {
     func rating(for index: Int) -> Rating?
 }
 
-enum SortingKeys {
-    case score
-    case name
+enum SortingKeys: String {
+    case score = "score"
+    case name = "name"
 }
 
 final class RatingStore: RatingStoreProtocol {
-    private var sortingKey = SortingKeys.score
+    private var sortingKey: SortingKeys {
+        get {
+            let keyString = UserDefaults.standard.string(forKey: "sortingKey") ?? "score"
+            return SortingKeys(rawValue: keyString) ?? .score
+        } set {
+            UserDefaults.standard.setValue(newValue.rawValue, forKey: "sortingKey")
+        }
+    }
     
     var sortedRating: [Rating] {
         unsortedRatings.sorted { [weak self] in
@@ -40,7 +49,7 @@ final class RatingStore: RatingStoreProtocol {
     
     private let unsortedRatings: [Rating] = [
         Rating(position: 1,imageURLString: "https://via.placeholder.com/200", name: "Sasha", score: 215),
-        Rating(position: 34,imageURLString: "https://images.unsplash.com/photo-1547721064-da6cfb341d50", name: "Oleg", score: 105),
+        Rating(position: 31,imageURLString: "https://images.unsplash.com/photo-1547721064-da6cfb341d50", name: "Oleg", score: 105),
         Rating(position: 4,imageURLString: "https://www.example.com/image.jpg", name: "Zlata", score: 200),
         Rating(position: 2, imageURLString: "https://images.unsplash.com/photo-1547721064-da6cfb341d50", name: "Artem", score: 110),
         Rating(position: 5,imageURLString: "https://www.example.com/image.jpg", name: "Jenya", score: 88)

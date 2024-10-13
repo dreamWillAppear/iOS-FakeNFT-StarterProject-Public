@@ -119,10 +119,9 @@ final class UserProfileViewController: UIViewController {
         view.backgroundColor = .white
         addSubViews()
         setupConstraints()
-        websiteButton.addTarget(self, action: #selector(openWebsite), for: .touchUpInside)
         backButton.setImage(UIImage(named: backButtonImageName), for: .normal)
         backButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-        nftCollectionView.addTarget(self, action: #selector(showCollection), for: .touchUpInside)
+
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         updateInfo(nftNumber: nftNumber, image: imageURL, name: name, description: profileDescription)
     }
@@ -131,10 +130,7 @@ final class UserProfileViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    @objc private func showCollection() {
-        let vc = NFTCollectionViewController()
-        navigationController?.pushViewController(vc, animated: true)
-    }
+
     
     private func addSubViews() {
         view.addSubview(profileBlock)
@@ -220,11 +216,5 @@ final class UserProfileViewController: UIViewController {
     
     private func updateDescription(description: String) {
         descriptionLabel.text = profileDescription
-    }
-    
-    @objc private func openWebsite() {
-        let webVC = WebViewController(url: profileURL)
-        let navController = UINavigationController(rootViewController: webVC)
-        present(navController, animated: true, completion: nil)
     }
 }

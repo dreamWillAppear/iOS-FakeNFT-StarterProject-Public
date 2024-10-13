@@ -10,15 +10,21 @@ final class TabBarController: UITabBarController {
         tag: 0
     )
 
+    private let statisticTabBarItem = UITabBarItem(title: NSLocalizedString("Tab.statistic", comment: ""), image: UIImage(systemName: "flag.2.crossed.fill"), tag: 1)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         let catalogController = TestCatalogViewController(
             servicesAssembly: servicesAssembly
         )
         catalogController.tabBarItem = catalogTabBarItem
-
-        viewControllers = [catalogController]
+        
+        
+        let statisticVC = RatingTableViewController()
+        let navStatisticVC = UINavigationController(rootViewController: statisticVC)
+        navStatisticVC.tabBarItem = statisticTabBarItem
+        
+        viewControllers = [catalogController, navStatisticVC]
 
         view.backgroundColor = .systemBackground
     }

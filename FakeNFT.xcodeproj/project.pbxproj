@@ -23,13 +23,13 @@
 		0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFCB7482A7808900009A829 /* TestCatalogController.swift */; };
 		0CFCB74B2A780EA80009A829 /* UIView+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFCB74A2A780EA80009A829 /* UIView+Constraints.swift */; };
 		0CFCB74E2A7817DC0009A829 /* NftStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFCB74D2A7817DC0009A829 /* NftStorage.swift */; };
+		356AA5D12CBDAFFC00941BF6 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 356AA5D02CBDAFFC00941BF6 /* ProgressHUD */; };
 		35754BF62CBCFA1700A1797B /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35754BF52CBCFA1700A1797B /* CartViewController.swift */; };
 		35754BF82CBD1C8700A1797B /* CartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35754BF72CBD1C8700A1797B /* CartTableViewCell.swift */; };
 		35754BFD2CBD2D8C00A1797B /* NftCart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35754BFC2CBD2D8C00A1797B /* NftCart.swift */; };
 		35754C002CBD2E1E00A1797B /* CartEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35754BFF2CBD2E1E00A1797B /* CartEnum.swift */; };
 		35754C032CBD5BE800A1797B /* DeleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35754C022CBD5BE800A1797B /* DeleteViewController.swift */; };
 		35754C082CBD5D3D00A1797B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 35754C072CBD5D3D00A1797B /* Kingfisher */; };
-		35754C0A2CBD5D4200A1797B /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 35754C092CBD5D4200A1797B /* ProgressHUD */; };
 		3F478ECF29DB474E00F6D39E /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F478ECE29DB474E00F6D39E /* Colors.swift */; };
 		3F478ED129DB476500F6D39E /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F478ED029DB476500F6D39E /* Fonts.swift */; };
 		3F68069729CBBAF100B4F915 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F68069629CBBAF100B4F915 /* AppDelegate.swift */; };
@@ -127,7 +127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35754C082CBD5D3D00A1797B /* Kingfisher in Frameworks */,
-				35754C0A2CBD5D4200A1797B /* ProgressHUD in Frameworks */,
+				356AA5D12CBDAFFC00941BF6 /* ProgressHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,7 +450,7 @@
 			name = FakeNFT;
 			packageProductDependencies = (
 				35754C072CBD5D3D00A1797B /* Kingfisher */,
-				35754C092CBD5D4200A1797B /* ProgressHUD */,
+				356AA5D02CBDAFFC00941BF6 /* ProgressHUD */,
 			);
 			productName = FakeNFT;
 			productReference = 3F68069329CBBAF100B4F915 /* FakeNFT.app */;
@@ -527,7 +527,7 @@
 			mainGroup = 3F68068A29CBBAF100B4F915;
 			packageReferences = (
 				35754C042CBD5D2000A1797B /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				35754C052CBD5D3400A1797B /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+				356AA5CF2CBDAFF200941BF6 /* XCRemoteSwiftPackageReference "ProgressHUD" */,
 			);
 			productRefGroup = 3F68069429CBBAF100B4F915 /* Products */;
 			projectDirPath = "";
@@ -953,6 +953,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		356AA5CF2CBDAFF200941BF6 /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/relatedcode/ProgressHUD";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 14.1.3;
+			};
+		};
 		35754C042CBD5D2000A1797B /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -961,26 +969,18 @@
 				minimumVersion = 8.1.0;
 			};
 		};
-		35754C052CBD5D3400A1797B /* XCRemoteSwiftPackageReference "ProgressHUD" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/relatedcode/ProgressHUD.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 14.1.3;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		356AA5D02CBDAFFC00941BF6 /* ProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 356AA5CF2CBDAFF200941BF6 /* XCRemoteSwiftPackageReference "ProgressHUD" */;
+			productName = ProgressHUD;
+		};
 		35754C072CBD5D3D00A1797B /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 35754C042CBD5D2000A1797B /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
-		};
-		35754C092CBD5D4200A1797B /* ProgressHUD */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 35754C052CBD5D3400A1797B /* XCRemoteSwiftPackageReference "ProgressHUD" */;
-			productName = ProgressHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

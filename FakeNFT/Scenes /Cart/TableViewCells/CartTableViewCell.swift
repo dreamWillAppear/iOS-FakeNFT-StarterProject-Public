@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol CartTableViewCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: CartTableViewCell)
+}
+
 final class CartTableViewCell: UITableViewCell {
+    
+    weak var delegate: CartTableViewCellDelegate?
     
     lazy var containerView: UIView = {
         let view = UIView()
@@ -51,7 +57,7 @@ final class CartTableViewCell: UITableViewCell {
         let button = UIButton.systemButton(
             with: UIImage(named: "cartDelete") ?? UIImage(),
             target: self,
-            action: nil)
+            action: #selector(Self.didTapDeleteButton))
         button.backgroundColor = .clear
         button.tintColor = .ypBlack
         return button
@@ -112,6 +118,11 @@ final class CartTableViewCell: UITableViewCell {
             deleteButton.widthAnchor.constraint(equalTo: deleteButton.heightAnchor)
 
         ])
+    }
+    
+    @objc
+    private func didTapDeleteButton() {
+        delegate?.imageListCellDidTapLike(self)
     }
     
     required init?(coder: NSCoder) {

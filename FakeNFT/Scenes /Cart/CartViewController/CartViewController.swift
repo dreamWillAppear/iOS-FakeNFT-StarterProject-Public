@@ -162,7 +162,6 @@ final class CartViewController: UIViewController {
     
     @objc
     private func didTapforPaymentButton() {
-        
     }
 }
 
@@ -184,11 +183,23 @@ extension CartViewController: UITableViewDataSource {
             withIdentifier: CartTableViewCell.reuseIdentifier,
             for: indexPath
         ) as? CartTableViewCell else { return UITableViewCell()}
+        cell.delegate = self
         cell.backgroundColor = .clear
         cell.nameNFT.text = data[indexPath.row].name
         cell.priceNFT.text = "\(data[indexPath.row].price) ETH".replacingOccurrences(of: ".", with: ",")
         cell.imageNFT.image = data[indexPath.row].image
         cell.gradeNFT.image = makeGradeImage(grade: data[indexPath.row].grade)
         return cell
+    }
+}
+
+extension CartViewController: CartTableViewCellDelegate {
+    
+    func imageListCellDidTapLike(_ cell: CartTableViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let deleteViewController = DeleteViewController()
+        deleteViewController.dataNft = data[indexPath.row]
+        deleteViewController.modalPresentationStyle = .overCurrentContext
+        self.present(deleteViewController, animated: true)
     }
 }

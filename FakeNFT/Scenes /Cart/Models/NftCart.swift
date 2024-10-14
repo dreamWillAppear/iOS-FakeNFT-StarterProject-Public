@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct NFTCart {
+struct NftCart {
     let name: String
     let image: UIImage
     let grade: Int

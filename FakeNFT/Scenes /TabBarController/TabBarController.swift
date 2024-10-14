@@ -39,7 +39,7 @@ final class TabBarController: UITabBarController {
             servicesAssembly: servicesAssembly
         )
         
-        let cartController = UIViewController()
+        let cartController = CartViewController()
         
         let statisticsController = UIViewController()
         

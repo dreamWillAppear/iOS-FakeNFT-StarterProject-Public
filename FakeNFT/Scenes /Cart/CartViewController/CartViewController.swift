@@ -63,6 +63,7 @@ final class CartViewController: UIViewController {
         tableView.register(CartTableViewCell.self, forCellReuseIdentifier: CartTableViewCell.reuseIdentifier)
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
+        tableView.allowsSelection = false
         return tableView
     }()
     

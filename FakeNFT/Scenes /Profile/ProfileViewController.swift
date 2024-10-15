@@ -67,7 +67,7 @@ final class ProfileViewController: UIViewController {
         
         addSubViews()
         applyConstraints()
-        setupTableView() // Необходимо вызвать метод для отображения таблицы
+        setupTableView()
     }
     
     private func addSubViews() {
@@ -77,7 +77,7 @@ final class ProfileViewController: UIViewController {
     private func applyConstraints() {
         NSLayoutConstraint.activate([
             editButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            editButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -7), // Исправляем на -7 для правильного позиционирования
+            editButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -7),
             editButton.heightAnchor.constraint(equalToConstant: 44),
             editButton.widthAnchor.constraint(equalToConstant: 44),
             
@@ -91,7 +91,7 @@ final class ProfileViewController: UIViewController {
             
             descriptionLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 16),
             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16), // Исправляем на -16 для корректного отображения
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             websiteLink.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
             websiteLink.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -99,7 +99,7 @@ final class ProfileViewController: UIViewController {
             tableView.topAnchor.constraint(equalTo: websiteLink.bottomAnchor, constant: 40),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor) // Добавляем нижнее ограничение
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     

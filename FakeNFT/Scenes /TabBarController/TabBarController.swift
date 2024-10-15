@@ -48,10 +48,10 @@ final class TabBarController: UITabBarController {
         cartController.tabBarItem = cartTabBarItem
         statisticsController.tabBarItem = statisticsTabBarItem
         
-        appearance.backgroundColor = .ypWhite
         appearance.stackedLayoutAppearance.normal.iconColor = .ypBlack
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.ypBlack as Any]
         tabBar.standardAppearance = appearance
+        tabBar.backgroundColor = .ypWhite
 
         viewControllers = [profileController, catalogController, cartController, statisticsController]
         

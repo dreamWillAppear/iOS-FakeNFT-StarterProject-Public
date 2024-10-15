@@ -55,6 +55,6 @@ final class TabBarController: UITabBarController {
 
         viewControllers = [profileController, catalogController, cartController, statisticsController]
         
-        selectedIndex = 3 //при старте приложения будет открыта вторая вкладка
+        selectedIndex = 3
     }
 }

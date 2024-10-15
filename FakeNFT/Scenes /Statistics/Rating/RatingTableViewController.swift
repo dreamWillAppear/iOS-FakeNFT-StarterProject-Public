@@ -7,10 +7,10 @@
 
 import UIKit
 
-final class RatingTableViewController: UIViewController {
+final class RatingTableViewController: UIViewController, RatingTableViewControllerProtocol {
     private let cellIdentifier: String = "RatingTableViewCell"
     private let sortingButtonImage = UIImage(named: "sortButtonImage")
-    private let store = RatingStore()
+    private var presenter: RatingTablePresenterProtocol
 
     private let tableView = {
         let tableView = UITableView()
@@ -21,30 +21,40 @@ final class RatingTableViewController: UIViewController {
     private let sortingButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-
         return button
     }()
-
+    
+    init() {
+        self.presenter = RatingTablePresenter()
+        super.init(nibName: nil, bundle: nil)
+        presenter.setView(view: self)
+    }
+    
+    required init?(coder: NSCoder) {
+        self.presenter = RatingTablePresenter()
+        super.init(coder: coder)
+        presenter.setView(view: self)
+    }
+    
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
+    func showSortOptionsAlert(actions: [UIAlertAction]) {
+        let alert = UIAlertController(
+            title: "Сортировка",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        actions.forEach {
+            alert.addAction($0)
+        }
+        present(alert, animated: true, completion: nil)
+    }
+    
     @objc
     private func sortingButtonTapped() {
-
-        let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
-
-        let nameAction = UIAlertAction(title: "По имени", style: .default) { [weak self] _ in
-            self?.changeSorting(sortingKey: .name)
-        }
-
-        let ratingAction = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _  in
-            self?.changeSorting(sortingKey: .score)
-        }
-
-        let cancelAction = UIAlertAction(title: "Закрыть", style: .cancel, handler: nil) 
-
-        alert.addAction(nameAction)
-        alert.addAction(ratingAction)
-        alert.addAction(cancelAction)
-
-        present(alert, animated: true, completion: nil)
+        presenter.sortingButtonTapped()
     }
 
     override func viewDidLoad() {
@@ -68,7 +78,6 @@ final class RatingTableViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
-
     private func setupUI() {
         view.addSubview(sortingButton)
         view.addSubview(tableView)
@@ -88,25 +97,19 @@ final class RatingTableViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -8)
         ])
     }
-
-    private func changeSorting(sortingKey: SortingKeys) {
-        store.changeSortingKey(sortingKey: sortingKey)
-        tableView.reloadData()
-    }
 }
 
 extension RatingTableViewController: UITableViewDataSource, UITableViewDelegate {
-
     func numberOfSections(in tableView: UITableView) -> Int {
         1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        store.numberOfRatings()
+        presenter.numberOfItems()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cellInfo = store.rating(for: indexPath.row),
+        guard let cellInfo = presenter.item(at: indexPath.row),
               let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? RatingTableViewCell
         else {
             return UITableViewCell()
@@ -122,9 +125,7 @@ extension RatingTableViewController: UITableViewDataSource, UITableViewDelegate 
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-//        guard let user = store.rating(for: indexPath.row) else { return }
-        let profile = Profile(name: "Sasha", image: "https://via.placeholder.com/200", description: "yung folawer 21", nftNumber: 202, profileURL: "google.com")
+        guard let profile = presenter.profile(for: indexPath.row) else { return }
         let vc = UserProfileViewController(profile: profile)
         navigationController?.pushViewController(vc, animated: true)
     }

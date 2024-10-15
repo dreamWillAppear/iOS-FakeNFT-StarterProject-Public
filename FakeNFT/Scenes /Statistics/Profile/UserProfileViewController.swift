@@ -22,7 +22,7 @@ final class UserProfileViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "square.and.arrow.up.circle.fill")
-        imageView.layer.cornerRadius = 40
+        imageView.layer.cornerRadius = 351111
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -130,8 +130,6 @@ final class UserProfileViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-
-    
     private func addSubViews() {
         view.addSubview(profileBlock)
         profileBlock.addSubview(profileImageView)
@@ -179,7 +177,7 @@ final class UserProfileViewController: UIViewController {
             nftCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             nftCollectionView.heightAnchor.constraint(equalToConstant: 54),
             
-            collectionLabel.leadingAnchor.constraint(equalTo: nftCollectionView.leadingAnchor, constant: 16),
+            collectionLabel.leadingAnchor.constraint(equalTo: nftCollectionView.leadingAnchor),
             collectionLabel.centerYAnchor.constraint(equalTo: nftCollectionView.centerYAnchor),
             arrowImageView.trailingAnchor.constraint(equalTo: nftCollectionView.trailingAnchor, constant: -16),
             

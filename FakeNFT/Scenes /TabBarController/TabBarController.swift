@@ -53,7 +53,7 @@ final class TabBarController: UITabBarController {
         tabBar.standardAppearance = appearance
         tabBar.backgroundColor = .ypWhite
 
-        viewControllers = [profileController, catalogController, cartController, statisticsController]
+        viewControllers = [profileController, catalogViewController, cartController, statisticsController]
         
         selectedIndex = 1 //при старте приложения будет открыта вторая вкладка
     }

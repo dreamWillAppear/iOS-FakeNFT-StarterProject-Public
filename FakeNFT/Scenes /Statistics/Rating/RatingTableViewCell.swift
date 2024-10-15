@@ -109,9 +109,6 @@ class RatingTableViewCell: UITableViewCell {
         addSubViews()
         setupConstraints()
         setupImage(imageString: imageString)
-
-//        contentView.backgroundColor = UIColor.lightGray
-
         scoreTextLabel.text = "\(score)"
         nameTextLabel.text = name
         positionTextLabel.text = "\(position)"

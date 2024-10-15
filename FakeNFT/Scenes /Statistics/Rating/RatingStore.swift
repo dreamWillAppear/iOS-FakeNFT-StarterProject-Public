@@ -66,14 +66,4 @@ final class RatingStore: RatingStoreProtocol {
         changeKey(sortingKey: sortingKey)
     }
     
-//    func profile(for index: Int) -> Profile? {
-//        let profile = Profile(
-//            name: "Sasha",
-//            image: "https://via.placeholder.com/200",
-//            description: "yung folawer 21",
-//            nftNumber: 202,
-//            profileURL: "google.com"
-//        )
-//        return profile
-//    }
 }

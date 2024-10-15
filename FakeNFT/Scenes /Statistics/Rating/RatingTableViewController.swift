@@ -3,9 +3,13 @@
 //  FakeNFT
 //
 //  Created by Александр  Сухинин on 12.10.2024.
-//
 
 import UIKit
+
+protocol RatingTableViewControllerProtocol: AnyObject {
+    func reloadData()
+    func showSortOptionsAlert(actions: [UIAlertAction])
+}
 
 final class RatingTableViewController: UIViewController, RatingTableViewControllerProtocol {
     private let cellIdentifier: String = "RatingTableViewCell"
@@ -129,8 +133,6 @@ extension RatingTableViewController: UITableViewDataSource, UITableViewDelegate 
         let vc = UserProfileViewController(presenter: profilePresenter)
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-
 }
 
 

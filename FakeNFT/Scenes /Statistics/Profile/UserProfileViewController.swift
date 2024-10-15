@@ -5,7 +5,6 @@
 //  Created by Александр  Сухинин on 13.10.2024.
 //
 
-
 import UIKit
 
 final class UserProfileViewController: UIViewController {
@@ -142,6 +141,7 @@ final class UserProfileViewController: UIViewController {
         nftCollectionView.addSubview(collectionLabel)
         nftCollectionView.addSubview(arrowImageView)
     }
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             backButton.heightAnchor.constraint(equalToConstant: 24),

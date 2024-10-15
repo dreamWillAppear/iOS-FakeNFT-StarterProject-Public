@@ -14,12 +14,6 @@ protocol RatingTablePresenterProtocol {
     func presenterForProfileViewController(for index: Int) -> UserProfilePresenter
 }
 
-protocol RatingTableViewControllerProtocol: AnyObject {
-    func reloadData()
-    func showSortOptionsAlert(actions: [UIAlertAction])
-}
-
-
 class RatingTablePresenter: RatingTablePresenterProtocol {
     weak var view: RatingTableViewControllerProtocol?
     private let store = RatingStore()

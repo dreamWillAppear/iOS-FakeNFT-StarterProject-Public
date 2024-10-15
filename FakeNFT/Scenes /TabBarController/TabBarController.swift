@@ -31,8 +31,6 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
         let appearance = tabBar.standardAppearance
         
         let profileController = UIViewController()
@@ -50,12 +48,12 @@ final class TabBarController: UITabBarController {
         cartController.tabBarItem = cartTabBarItem
         statisticsController.tabBarItem = statisticsTabBarItem
         
-        appearance.backgroundColor = .ypWhite
         appearance.stackedLayoutAppearance.normal.iconColor = .ypBlack
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.ypBlack as Any]
         tabBar.standardAppearance = appearance
-        
-        viewControllers = [profileController, catalogViewController, cartController, statisticsController]
+        tabBar.backgroundColor = .ypWhite
+
+        viewControllers = [profileController, catalogController, cartController, statisticsController]
         
         selectedIndex = 1 //при старте приложения будет открыта вторая вкладка
     }

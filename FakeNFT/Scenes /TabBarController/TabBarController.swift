@@ -33,11 +33,9 @@ final class TabBarController: UITabBarController {
         
         let appearance = tabBar.standardAppearance
 
-        let profileController = UIViewController()
+        let profileController = ProfileViewController()
         
-        let catalogController = TestCatalogViewController(
-            servicesAssembly: servicesAssembly
-        )
+        let catalogController = UIViewController()
         
         let cartController = UIViewController()
         

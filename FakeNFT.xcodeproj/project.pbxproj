@@ -49,6 +49,7 @@
 		FD8BD70E2CBC9CC5001A94C6 /* CatalogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD70D2CBC9CC5001A94C6 /* CatalogModel.swift */; };
 		FD8BD7102CBC9DFC001A94C6 /* CatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD70F2CBC9DFC001A94C6 /* CatalogViewController.swift */; };
 		FD8BD7122CBC9EBF001A94C6 /* CatalogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD7112CBC9EBF001A94C6 /* CatalogPresenter.swift */; };
+		FD8BD7142CBDAF65001A94C6 /* CatalogTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD7132CBDAF65001A94C6 /* CatalogTableCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,7 @@
 		FD8BD70D2CBC9CC5001A94C6 /* CatalogModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogModel.swift; sourceTree = "<group>"; };
 		FD8BD70F2CBC9DFC001A94C6 /* CatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogViewController.swift; sourceTree = "<group>"; };
 		FD8BD7112CBC9EBF001A94C6 /* CatalogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPresenter.swift; sourceTree = "<group>"; };
+		FD8BD7132CBDAF65001A94C6 /* CatalogTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogTableCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +191,7 @@
 				FD8BD70D2CBC9CC5001A94C6 /* CatalogModel.swift */,
 				FD8BD70F2CBC9DFC001A94C6 /* CatalogViewController.swift */,
 				FD8BD7112CBC9EBF001A94C6 /* CatalogPresenter.swift */,
+				FD8BD7132CBDAF65001A94C6 /* CatalogTableCell.swift */,
 			);
 			path = Catalog;
 			sourceTree = "<group>";
@@ -539,6 +542,7 @@
 				0C79EE612A76DCD600EE90EA /* NftByIdRequest.swift in Sources */,
 				E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */,
 				FD8BD70E2CBC9CC5001A94C6 /* CatalogModel.swift in Sources */,
+				FD8BD7142CBDAF65001A94C6 /* CatalogTableCell.swift in Sources */,
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogViewController.swift in Sources */,

@@ -9,7 +9,7 @@ final class TabBarController: UITabBarController {
         image: UIImage(systemName: "person.crop.circle.fill"),
         tag: 0
     )
-
+    
     private let catalogTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.catalog", comment: ""),
         image: UIImage(systemName: "rectangle.stack.fill"),
@@ -27,22 +27,26 @@ final class TabBarController: UITabBarController {
         image: UIImage(systemName: "flag.2.crossed.fill"),
         tag: 3
     )
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
         let appearance = tabBar.standardAppearance
-
+        
         let profileController = UIViewController()
         
-        let catalogController = CatalogViewController()
+        let catalogPresenter = CatalogPresenter(view: nil)
+        let catalogViewController = CatalogViewController(presenter: catalogPresenter)
+        catalogPresenter.setView(catalogViewController)
         
         let cartController = UIViewController()
         
         let statisticsController = UIViewController()
         
         profileController.tabBarItem = profileTabBarItem
-        catalogController.tabBarItem = catalogTabBarItem
+        catalogViewController.tabBarItem = catalogTabBarItem
         cartController.tabBarItem = cartTabBarItem
         statisticsController.tabBarItem = statisticsTabBarItem
         
@@ -50,8 +54,8 @@ final class TabBarController: UITabBarController {
         appearance.stackedLayoutAppearance.normal.iconColor = .ypBlack
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.ypBlack as Any]
         tabBar.standardAppearance = appearance
-
-        viewControllers = [profileController, catalogController, cartController, statisticsController]
+        
+        viewControllers = [profileController, catalogViewController, cartController, statisticsController]
         
         selectedIndex = 1 //при старте приложения будет открыта вторая вкладка
     }

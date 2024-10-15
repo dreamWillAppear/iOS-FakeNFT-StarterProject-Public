@@ -28,6 +28,12 @@ final class DeleteViewController: UIViewController {
         return label
     }()
     
+    private lazy var buttonsView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+    
     private lazy var deleteButton = {
         let button = UIButton()
         button.backgroundColor = .ypBlack
@@ -59,30 +65,40 @@ final class DeleteViewController: UIViewController {
     private func setupViews() {
         [nftImageView,
          deleteLabel,
-         deleteButton,
-         cancelButton].forEach{
+         buttonsView].forEach{
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
+        }
+        [deleteButton,
+         cancelButton].forEach{
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            buttonsView.addSubview($0)
         }
         
         NSLayoutConstraint.activate([
             nftImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 244),
-            nftImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 134),
-            nftImageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -134),
+            nftImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            nftImageView.widthAnchor.constraint(equalToConstant: 108),
             nftImageView.heightAnchor.constraint(equalTo: nftImageView.widthAnchor),
             
             deleteLabel.topAnchor.constraint(equalTo: nftImageView.bottomAnchor, constant: 12),
             deleteLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            deleteButton.topAnchor.constraint(equalTo: deleteLabel.bottomAnchor, constant: 20),
-            deleteButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 56),
-            deleteButton.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor, constant: -8),
-            deleteButton.heightAnchor.constraint(equalToConstant: 44),
+            buttonsView.widthAnchor.constraint(equalToConstant: 262),
+            buttonsView.heightAnchor.constraint(equalToConstant: 44),
+            buttonsView.topAnchor.constraint(equalTo: deleteLabel.bottomAnchor, constant: 20),
+            buttonsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
-            cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -56),
-            cancelButton.topAnchor.constraint(equalTo: deleteButton.topAnchor),
-            cancelButton.heightAnchor.constraint(equalTo: deleteButton.heightAnchor),
-            cancelButton.widthAnchor.constraint(equalTo: deleteButton.widthAnchor)
+            deleteButton.topAnchor.constraint(equalTo: buttonsView.topAnchor, constant: 0),
+            deleteButton.leadingAnchor.constraint(equalTo: buttonsView.leadingAnchor, constant: 0),
+            deleteButton.bottomAnchor.constraint(equalTo: buttonsView.bottomAnchor, constant: 0),
+            deleteButton.widthAnchor.constraint(equalToConstant: 127),
+            
+            cancelButton.topAnchor.constraint(equalTo: buttonsView.topAnchor, constant: 0),
+            cancelButton.trailingAnchor.constraint(equalTo: buttonsView.trailingAnchor, constant: 0),
+            cancelButton.bottomAnchor.constraint(equalTo: buttonsView.bottomAnchor, constant: 0),
+            cancelButton.widthAnchor.constraint(equalToConstant: 127),
+
         ])
     }
     

@@ -11,7 +11,7 @@ import UIKit
 final class UserProfileViewController: UIViewController {
     private let backButtonImageName = "backwardButton"
     private let placeholder = UIImage(systemName: "person.crop.circle.fill")
-    
+    private var presenter: UserProfilePresenterProtocol
     private let backButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -22,7 +22,7 @@ final class UserProfileViewController: UIViewController {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "square.and.arrow.up.circle.fill")
-        imageView.layer.cornerRadius = 351111
+        imageView.layer.cornerRadius = 35
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
         return imageView
@@ -94,19 +94,9 @@ final class UserProfileViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
-    private let name: String
-    private let imageURL: String
-    private let nftNumber: Int
-    private let profileURL: String
-    private let profileDescription: String
-    
-    init(profile: Profile) {
-        self.name = profile.name
-        self.imageURL = profile.image
-        self.nftNumber = profile.nftNumber
-        self.profileURL = profile.profileURL
-        self.profileDescription = profile.description
+
+    init(presenter: UserProfilePresenterProtocol) {
+        self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -116,6 +106,7 @@ final class UserProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupUI()
         view.backgroundColor = .white
         addSubViews()
         setupConstraints()
@@ -123,11 +114,21 @@ final class UserProfileViewController: UIViewController {
         backButton.addTarget(self, action: #selector(close), for: .touchUpInside)
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
-        updateInfo(nftNumber: nftNumber, image: imageURL, name: name, description: profileDescription)
     }
     
     @objc private func close() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    private func setupUI() {
+        guard let profile = presenter.profile() else { return }
+        updateInfo(
+            nftNumber: profile.nftNumber,
+            image: profile.image,
+            name: profile.name,
+            description: profile.description,
+            profileURL: profile.profileURL
+        )
     }
     
     private func addSubViews() {
@@ -188,11 +189,12 @@ final class UserProfileViewController: UIViewController {
         ])
     }
     
-    private func updateInfo(nftNumber: Int, image: String, name: String, description: String) {
+    private func updateInfo(nftNumber: Int, image: String, name: String, description: String, profileURL: String) {
         updateNFTNumber(nftNumber: nftNumber)
         updateProfileImage(image: image)
         updateName(name: name)
-        updateDescription(description: profileDescription)
+        updateDescription(description: description)
+        updateProfileURL(profileURL: profileURL)
     }
     
     private func updateNFTNumber(nftNumber: Int) {
@@ -213,6 +215,8 @@ final class UserProfileViewController: UIViewController {
     }
     
     private func updateDescription(description: String) {
-        descriptionLabel.text = profileDescription
+        descriptionLabel.text = description
     }
+    
+    private func updateProfileURL(profileURL: String) { }
 }

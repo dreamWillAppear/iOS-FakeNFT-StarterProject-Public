@@ -125,8 +125,8 @@ extension RatingTableViewController: UITableViewDataSource, UITableViewDelegate 
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let profile = presenter.profile(for: indexPath.row) else { return }
-        let vc = UserProfileViewController(profile: profile)
+        let profilePresenter = presenter.presenterForProfileViewController(for: indexPath.row)
+        let vc = UserProfileViewController(presenter: profilePresenter)
         navigationController?.pushViewController(vc, animated: true)
     }
     

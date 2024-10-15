@@ -10,8 +10,8 @@ protocol RatingTablePresenterProtocol {
     func sortingButtonTapped()
     func numberOfItems() -> Int
     func item(at index: Int) -> Rating?
-    func profile(for index: Int) -> Profile?
     func setView(view: RatingTableViewControllerProtocol)
+    func presenterForProfileViewController(for index: Int) -> UserProfilePresenter
 }
 
 protocol RatingTableViewControllerProtocol: AnyObject {
@@ -23,7 +23,6 @@ protocol RatingTableViewControllerProtocol: AnyObject {
 class RatingTablePresenter: RatingTablePresenterProtocol {
     weak var view: RatingTableViewControllerProtocol?
     private let store = RatingStore()
-
     func setView(view: any RatingTableViewControllerProtocol) {
         self.view = view
     }
@@ -55,7 +54,8 @@ class RatingTablePresenter: RatingTablePresenterProtocol {
         return store.rating(for: index)
     }
     
-    func profile(for index: Int) -> Profile? {
-        return store.profile(for: index)
+    func presenterForProfileViewController(for index: Int) -> UserProfilePresenter {
+        let userProfilePresenter = UserProfilePresenter(userProfileIndex: index)
+        return userProfilePresenter
     }
 }

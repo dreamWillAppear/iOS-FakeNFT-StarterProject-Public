@@ -27,8 +27,13 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
     
     func onViewDidLoad() {
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "AppIcon")!, nftCollectionName: "Collection1 (25)"))
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "AppIcon")!, nftCollectionName: "Collection2 (32)"))
+        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverPeach")!, nftCollectionName: "Peach (11)"))
+        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverBlue")!, nftCollectionName: "Blue (6)"))
+        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverBrown")!, nftCollectionName: "Brown (8)"))
+        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverGreen")!, nftCollectionName: "Green (7)"))
+        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverGray")!, nftCollectionName: "Gray (5)"))
+        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverYellow")!, nftCollectionName: "Yellow (999)"))
+        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverWhite")!, nftCollectionName: "White (99)"))
         
         view?.reloadData()
     }

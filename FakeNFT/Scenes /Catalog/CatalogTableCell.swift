@@ -11,6 +11,7 @@ final class CatalogTableCell: UITableViewCell {
         cover.contentMode = .scaleAspectFill
         cover.clipsToBounds = true
         cover.layer.cornerRadius = 12
+        cover.layer.contentsRect = CGRect(x: 0, y: 0, width: 1, height: 0.5)
         
         return cover
     }()

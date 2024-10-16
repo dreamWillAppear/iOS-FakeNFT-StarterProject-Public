@@ -100,6 +100,14 @@ final class EditProfileViewController: UIViewController, UITextViewDelegate {
         return textView
     }()
     
+    private var closeButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "close"), for: .normal)
+        button.tintColor = .ypBlack
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
@@ -112,7 +120,7 @@ final class EditProfileViewController: UIViewController, UITextViewDelegate {
     }
     
     private func addSubViews() {
-        [avatarImageView, nameLabel, nameTextView, descriptionLabel, descriptionTextView, websiteLabel, websiteTextView].forEach {
+        [closeButton, avatarImageView, nameLabel, nameTextView, descriptionLabel, descriptionTextView, websiteLabel, websiteTextView].forEach {
             view.addSubview($0)
         }
         avatarImageView.addSubview(darkOverlayView)
@@ -121,6 +129,11 @@ final class EditProfileViewController: UIViewController, UITextViewDelegate {
     
     private func applyConstraints() {
         NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            closeButton.heightAnchor.constraint(equalToConstant: 44),
+            closeButton.widthAnchor.constraint(equalToConstant: 44),
+            
             avatarImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
             avatarImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             avatarImageView.heightAnchor.constraint(equalToConstant: 70),

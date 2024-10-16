@@ -49,6 +49,8 @@
 		FCF32CB12CBE9CD600828852 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CB02CBE9CD600828852 /* EditProfileViewController.swift */; };
 		FCF32CB32CBF9D1500828852 /* MyNFTViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CB22CBF9D1500828852 /* MyNFTViewController.swift */; };
 		FCF32CB52CBFB02700828852 /* NFTTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CB42CBFB02700828852 /* NFTTableViewCell.swift */; };
+		FCF32CB72CBFD5DF00828852 /* FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CB62CBFD5DF00828852 /* FavouritesViewController.swift */; };
+		FCF32CB92CBFD8DE00828852 /* FavouriteNFTCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CB82CBFD8DE00828852 /* FavouriteNFTCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -114,6 +116,8 @@
 		FCF32CB02CBE9CD600828852 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		FCF32CB22CBF9D1500828852 /* MyNFTViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTViewController.swift; sourceTree = "<group>"; };
 		FCF32CB42CBFB02700828852 /* NFTTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTTableViewCell.swift; sourceTree = "<group>"; };
+		FCF32CB62CBFD5DF00828852 /* FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewController.swift; sourceTree = "<group>"; };
+		FCF32CB82CBFD8DE00828852 /* FavouriteNFTCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNFTCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -373,6 +377,8 @@
 				FCF32CB02CBE9CD600828852 /* EditProfileViewController.swift */,
 				FCF32CB22CBF9D1500828852 /* MyNFTViewController.swift */,
 				FCF32CB42CBFB02700828852 /* NFTTableViewCell.swift */,
+				FCF32CB62CBFD5DF00828852 /* FavouritesViewController.swift */,
+				FCF32CB82CBFD8DE00828852 /* FavouriteNFTCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -517,6 +523,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FCF32CB72CBFD5DF00828852 /* FavouritesViewController.swift in Sources */,
 				3FC8C38B29D242E90081F015 /* ProductDetailsTableViewCell.swift in Sources */,
 				3F478ECF29DB474E00F6D39E /* Colors.swift in Sources */,
 				0C79EE662A76DDFF00EE90EA /* NftDetailViewController.swift in Sources */,
@@ -549,6 +556,7 @@
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
+				FCF32CB92CBFD8DE00828852 /* FavouriteNFTCell.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
 				0C79EE632A76DD1900EE90EA /* RequestConstants.swift in Sources */,

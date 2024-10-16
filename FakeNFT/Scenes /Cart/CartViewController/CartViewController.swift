@@ -72,14 +72,23 @@ final class CartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = CartViewPresenter()
-        view.backgroundColor = .ypWhite
         setupViews()
-        tableView.dataSource = self
-        tableView.delegate = self
         self.data = presenter?.getDataNft()
+        setupNavItems()
+    }
+    
+    private func setupNavItems() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortButton)
+        let backItem = UIBarButtonItem()
+        backItem.title = ""
+        navigationItem.backBarButtonItem = backItem
+        navigationItem.backBarButtonItem?.tintColor = .ypBlack
     }
     
     private func setupViews() {
+        view.backgroundColor = .ypWhite
+        tableView.dataSource = self
+        tableView.delegate = self
         [sortButton,
          paymentView,
          tableView].forEach{
@@ -94,8 +103,6 @@ final class CartViewController: UIViewController {
         }
         
         NSLayoutConstraint.activate([
-            sortButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2),
-            sortButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -9),
             sortButton.heightAnchor.constraint(equalToConstant: 42),
             sortButton.widthAnchor.constraint(equalToConstant: 42),
             
@@ -116,7 +123,7 @@ final class CartViewController: UIViewController {
             forPaymentButton.bottomAnchor.constraint(equalTo: paymentView.bottomAnchor, constant: -16),
             forPaymentButton.leadingAnchor.constraint(equalTo: priceNFTLabel.trailingAnchor, constant: 24),
             
-            tableView.topAnchor.constraint(equalTo: sortButton.bottomAnchor, constant: 20),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.bottomAnchor.constraint(equalTo: paymentView.topAnchor, constant: 0)
@@ -167,6 +174,8 @@ final class CartViewController: UIViewController {
     
     @objc
     private func didTapforPaymentButton() {
+        let paymentViewController = PaymentViewController()
+        navigationController?.pushViewController(paymentViewController, animated: true)
     }
 }
 

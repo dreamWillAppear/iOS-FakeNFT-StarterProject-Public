@@ -156,7 +156,8 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
             
             nftCollecionView.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 24),
             nftCollecionView.leadingAnchor.constraint(equalTo:mainStackView.leadingAnchor, constant: 16),
-            nftCollecionView.trailingAnchor.constraint(equalTo:mainStackView.trailingAnchor, constant: 16)
+            nftCollecionView.trailingAnchor.constraint(equalTo:mainStackView.trailingAnchor, constant: -16),
+            nftCollecionView.heightAnchor.constraint(equalToConstant: 500)
         ])
     }
     
@@ -166,13 +167,22 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
 
 extension NftCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
+        6
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NftCollectionViewCell.reuseIdentifier, for: indexPath) as? NftCollectionViewCell else {
             return .init()
         }
+        
+        cell.configureCell(
+            cover: UIImage(named: "MokeCellArchie")!,
+            name: "Archie",
+            isLiked: false,
+            raitng: 2,
+            price: 22.56,
+            isInCart: false
+        )
         
         return cell
     }

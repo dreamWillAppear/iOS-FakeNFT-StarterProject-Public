@@ -9,7 +9,9 @@ import UIKit
 
 final class CartViewController: UIViewController {
     
-    private let data = CartEnum.cart
+    var presenter: CartViewPresenterProtocol?
+    
+    private var data: [NftCart]?
     
     private lazy var sortButton: UIButton = {
         let button = UIButton.systemButton(
@@ -69,10 +71,12 @@ final class CartViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter = CartViewPresenter()
         view.backgroundColor = .ypWhite
         setupViews()
         tableView.dataSource = self
         tableView.delegate = self
+        self.data = presenter?.getDataNft()
     }
     
     private func setupViews() {
@@ -176,6 +180,7 @@ extension CartViewController: UITableViewDelegate {
 extension CartViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let data = self.data else { return 0 }
         return data.count
     }
     
@@ -184,6 +189,7 @@ extension CartViewController: UITableViewDataSource {
             withIdentifier: CartTableViewCell.reuseIdentifier,
             for: indexPath
         ) as? CartTableViewCell else { return UITableViewCell()}
+        guard let data = self.data else { return UITableViewCell() }
         cell.delegate = self
         cell.backgroundColor = .clear
         cell.nameNFT.text = data[indexPath.row].name
@@ -198,6 +204,7 @@ extension CartViewController: CartTableViewCellDelegate {
     
     func imageListCellDidTapLike(_ cell: CartTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
+        guard let data = self.data else { return }
         let deleteViewController = DeleteViewController()
         deleteViewController.dataNft = data[indexPath.row]
         deleteViewController.modalPresentationStyle = .overCurrentContext

@@ -20,7 +20,7 @@ final class UserProfileStore: UserProfileStoreProtocol {
     )]
     
     func profile(for index: Int) -> Profile? {
-        return profilesList[index]
+        return profilesList[0] //TODO: переделаю когда будут запросы в сеть
     }
 }
 

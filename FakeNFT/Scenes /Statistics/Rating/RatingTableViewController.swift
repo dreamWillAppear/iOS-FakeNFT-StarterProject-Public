@@ -8,7 +8,7 @@ import UIKit
 
 protocol RatingTableViewControllerProtocol: AnyObject {
     func reloadData()
-    func showSortOptionsAlert(actions: [UIAlertAction])
+    func showSortOptionsAlert()
 }
 
 final class RatingTableViewController: UIViewController, RatingTableViewControllerProtocol {
@@ -44,12 +44,22 @@ final class RatingTableViewController: UIViewController, RatingTableViewControll
         tableView.reloadData()
     }
     
-    func showSortOptionsAlert(actions: [UIAlertAction]) {
+    func showSortOptionsAlert() {
         let alert = UIAlertController(
             title: "Сортировка",
             message: nil,
             preferredStyle: .actionSheet
         )
+        let nameAction = UIAlertAction(title: "По имени", style: .default) { [weak self] _ in
+            self?.presenter.sortItemsByKey(key: .name)
+        }
+        
+        let ratingAction = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+            self?.presenter.sortItemsByKey(key: .score)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Закрыть", style: .cancel, handler: nil)
+        let actions = [nameAction, ratingAction, cancelAction]
         actions.forEach {
             alert.addAction($0)
         }

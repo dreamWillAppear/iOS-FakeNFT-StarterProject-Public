@@ -4,7 +4,6 @@
 //
 //  Created by Александр  Сухинин on 15.10.2024.
 //
-import UIKit
 
 protocol RatingTablePresenterProtocol {
     func sortingButtonTapped()
@@ -12,6 +11,7 @@ protocol RatingTablePresenterProtocol {
     func item(at index: Int) -> Rating?
     func setView(view: RatingTableViewControllerProtocol)
     func presenterForProfileViewController(for index: Int) -> UserProfilePresenter
+    func sortItemsByKey(key: SortingKeys)
 }
 
 class RatingTablePresenter: RatingTablePresenterProtocol {
@@ -22,19 +22,13 @@ class RatingTablePresenter: RatingTablePresenterProtocol {
     }
     
     func sortingButtonTapped() {
-        let nameAction = UIAlertAction(title: "По имени", style: .default) { [weak self] _ in
-            self?.sortItems(by: .name)
-        }
-        
-        let ratingAction = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
-            self?.sortItems(by: .score)
-        }
-        
-        let cancelAction = UIAlertAction(title: "Закрыть", style: .cancel, handler: nil)
-
-        view?.showSortOptionsAlert(actions: [nameAction, ratingAction, cancelAction])
+        view?.showSortOptionsAlert()
     }
 
+    func sortItemsByKey(key: SortingKeys) {
+        sortItems(by: key)
+    }
+    
     private func sortItems(by key: SortingKeys) {
         store.changeSortingKey(sortingKey: key)
         view?.reloadData()

@@ -93,7 +93,7 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NFTCell", for: indexPath) as! NFTTableViewCell
-        cell.configure(image: UIImage(named: "nft1"), name: "Lilo", starImage: UIImage(named: "rating3"), author: "от John Doe", price: "1,78 ETH")
+        cell.configure(image: UIImage(named: "nft1"), likeImage: UIImage(named: "notLiked"), name: "Lilo", starImage: UIImage(named: "rating3"), author: "от John Doe", price: "1,78 ETH")
         
         return cell
     }

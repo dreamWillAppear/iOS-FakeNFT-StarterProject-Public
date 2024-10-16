@@ -17,6 +17,13 @@ final class FavouriteNFTCell: UICollectionViewCell {
         return imageView
     }()
     
+    private let likeButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.tintColor = .ypBlack
+        return button
+    }()
+    
     private let infoView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -55,16 +62,19 @@ final class FavouriteNFTCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(name: String, ratingImage: UIImage?, price: String, nftImage: UIImage?) {
+    func configure(name: String, ratingImage: UIImage?, price: String, nftImage: UIImage?, likeImage: UIImage?) {
         nameLabel.text = name
         ratingImageView.image = ratingImage
         priceLabel.text = price
         nftImageView.image = nftImage
+        likeButton.setImage(likeImage, for: .normal)
     }
     
     private func setupCell() {
         contentView.addSubview(nftImageView)
         contentView.addSubview(infoView)
+        
+        nftImageView.addSubview(likeButton)
         
         infoView.addSubview(nameLabel)
         infoView.addSubview(ratingImageView)
@@ -75,6 +85,11 @@ final class FavouriteNFTCell: UICollectionViewCell {
             nftImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             nftImageView.widthAnchor.constraint(equalToConstant: 80),
             nftImageView.heightAnchor.constraint(equalToConstant: 80),
+            
+            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor),
+            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor),
+            likeButton.heightAnchor.constraint(equalToConstant: 44),
+            likeButton.widthAnchor.constraint(equalToConstant: 44),
             
             infoView.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: 7),
             infoView.bottomAnchor.constraint(equalTo: nftImageView.bottomAnchor, constant: -7),

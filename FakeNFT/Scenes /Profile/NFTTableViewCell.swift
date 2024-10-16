@@ -18,6 +18,12 @@ final class NFTTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    private let likeButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -89,6 +95,8 @@ final class NFTTableViewCell: UITableViewCell {
     
     private func setupViews() {
         contentView.addSubview(nftImageView)
+        nftImageView.addSubview(likeButton)
+        
         contentView.addSubview(labelsContainerView)
         
         labelsContainerView.addSubview(descriptionContainerView)
@@ -109,6 +117,11 @@ final class NFTTableViewCell: UITableViewCell {
             nftImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             nftImageView.widthAnchor.constraint(equalToConstant: 108),
             nftImageView.heightAnchor.constraint(equalToConstant: 108),
+            
+            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor),
+            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor),
+            likeButton.heightAnchor.constraint(equalToConstant: 44),
+            likeButton.widthAnchor.constraint(equalToConstant: 44),
             
             labelsContainerView.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: 23),
             labelsContainerView.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 20),
@@ -147,8 +160,9 @@ final class NFTTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(image: UIImage?, name: String, starImage: UIImage?, author: String, price: String) {
+    func configure(image: UIImage?, likeImage: UIImage?, name: String, starImage: UIImage?, author: String, price: String) {
         nftImageView.image = image
+        likeButton.setImage(likeImage, for: .normal)
         nameLabel.text = name
         starImageView.image = starImage
         authorLabel.text = author

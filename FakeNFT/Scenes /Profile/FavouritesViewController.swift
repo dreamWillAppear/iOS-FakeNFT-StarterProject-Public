@@ -83,7 +83,7 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteNFTCell", for: indexPath) as! FavouriteNFTCell
-        cell.configure(name: "Archie", ratingImage: UIImage(named: "rating3"), price: "1,78 ETH", nftImage: UIImage(named: "nft2"))
+        cell.configure(name: "Archie", ratingImage: UIImage(named: "rating3"), price: "1,78 ETH", nftImage: UIImage(named: "nft2"), likeImage: UIImage(named: "liked"))
         return cell
     }
     

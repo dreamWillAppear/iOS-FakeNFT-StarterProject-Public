@@ -11,7 +11,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = FavouritesViewController()
+        window?.rootViewController = TabBarController()
         window?.makeKeyAndVisible()
         
 //        let tabBarController = window?.rootViewController as? TabBarController

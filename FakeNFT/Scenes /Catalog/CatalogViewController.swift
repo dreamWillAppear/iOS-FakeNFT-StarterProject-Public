@@ -113,4 +113,15 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
         
         return cell ?? .init()
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let collectionPresenter = NftCollectionPresenter(view: nil)
+        let collectionViewController = NftCollectionViewController(presenter: collectionPresenter)
+        collectionPresenter.setView(collectionViewController)
+    
+        collectionViewController.modalPresentationStyle = .fullScreen
+        present(collectionViewController, animated: true, completion: nil)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }

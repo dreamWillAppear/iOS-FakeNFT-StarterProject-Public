@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class MyNFTViewController: UIViewController {
+final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
+    
+    var presenter: MyNFTPresenterProtocol?
     
     private var backButton: UIButton = {
         let button = UIButton()
@@ -44,6 +46,11 @@ final class MyNFTViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
+        
+        presenter = MyNFTPresenter(view: self)
+        presenter?.loadNFTs()
+        
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         
         setupTable()
         addSubViews()
@@ -84,17 +91,33 @@ final class MyNFTViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
+    
+    func reloadData() {
+        tableView.reloadData()
+    }
+    
+    @objc private func backButtonTapped() {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return presenter?.nfts.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NFTCell", for: indexPath) as! NFTTableViewCell
-        cell.configure(image: UIImage(named: "nft1"), likeImage: UIImage(named: "notLiked"), name: "Lilo", starImage: UIImage(named: "rating3"), author: "от John Doe", price: "1,78 ETH")
-        
+        if let nft = presenter?.nfts[indexPath.row] {
+            cell.configure(
+                image: UIImage(named: nft.imageName),
+                likeImage: UIImage(named: nft.likeImageName),
+                name: nft.name,
+                starImage: UIImage(named: nft.ratingImageName),
+                author: nft.author,
+                price: nft.price
+            )
+        }
         return cell
     }
     

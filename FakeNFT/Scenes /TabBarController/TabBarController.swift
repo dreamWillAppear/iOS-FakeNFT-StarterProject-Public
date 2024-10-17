@@ -41,7 +41,7 @@ final class TabBarController: UITabBarController {
         
         let cartController = UIViewController()
         
-        let statisticsController = UIViewController()
+        let statisticsController = UINavigationController(rootViewController: RatingTableViewController())
         
         profileController.tabBarItem = profileTabBarItem
         catalogController.tabBarItem = catalogTabBarItem
@@ -55,6 +55,6 @@ final class TabBarController: UITabBarController {
 
         viewControllers = [profileController, catalogController, cartController, statisticsController]
         
-        selectedIndex = 1 //при старте приложения будет открыта вторая вкладка
+        selectedIndex = 3
     }
 }

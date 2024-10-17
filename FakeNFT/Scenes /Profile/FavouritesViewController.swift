@@ -7,7 +7,9 @@
 
 import UIKit
 
-final class FavouritesViewController: UIViewController {
+final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
+    
+    private var presenter: FavouritesPresenter?
     
     private var backButton: UIButton = {
         let button = UIButton()
@@ -43,6 +45,11 @@ final class FavouritesViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         
+        presenter = FavouritesPresenter(view: self)
+        presenter?.loadFavouriteNFTs()
+        
+        backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(FavouriteNFTCell.self, forCellWithReuseIdentifier: "FavouriteNFTCell")
@@ -73,17 +80,27 @@ final class FavouritesViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
+    
+    func reloadData() {
+        collectionView.reloadData()
+    }
+    
+    @objc private func backButtonTapped() {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 6
+        return presenter?.getNumberOfItems() ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteNFTCell", for: indexPath) as! FavouriteNFTCell
-        cell.configure(name: "Archie", ratingImage: UIImage(named: "rating3"), price: "1,78 ETH", nftImage: UIImage(named: "nft2"), likeImage: UIImage(named: "liked"))
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteNFTCell", for: indexPath) as? FavouriteNFTCell else { return UICollectionViewCell() }
+        if let nft = presenter?.getNFT(at: indexPath.row) {
+            cell.configure(name: nft.name, ratingImage: nft.rating, price: nft.price, nftImage: nft.image, likeImage: nft.liked)
+        }
         return cell
     }
     

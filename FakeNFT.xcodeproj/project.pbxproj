@@ -61,6 +61,9 @@
 		FCF32CD42CC1380300828852 /* MyNFTPresenterProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CD32CC1380300828852 /* MyNFTPresenterProtocol.swift */; };
 		FCF32CD62CC1381100828852 /* NFTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CD52CC1381100828852 /* NFTModel.swift */; };
 		FCF32CD82CC1382E00828852 /* MyNFTPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CD72CC1382E00828852 /* MyNFTPresenter.swift */; };
+		FCF32CDB2CC1420700828852 /* FavouritesViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */; };
+		FCF32CDD2CC1421300828852 /* FavouritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */; };
+		FCF32CDF2CC1422F00828852 /* FavouriteNFTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +141,9 @@
 		FCF32CD32CC1380300828852 /* MyNFTPresenterProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTPresenterProtocol.swift; sourceTree = "<group>"; };
 		FCF32CD52CC1381100828852 /* NFTModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTModel.swift; sourceTree = "<group>"; };
 		FCF32CD72CC1382E00828852 /* MyNFTPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTPresenter.swift; sourceTree = "<group>"; };
+		FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewProtocol.swift; sourceTree = "<group>"; };
+		FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPresenter.swift; sourceTree = "<group>"; };
+		FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNFTModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -441,6 +447,9 @@
 			children = (
 				FCF32CB82CBFD8DE00828852 /* FavouriteNFTCell.swift */,
 				FCF32CB62CBFD5DF00828852 /* FavouritesViewController.swift */,
+				FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */,
+				FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */,
+				FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */,
 			);
 			name = "FavouriteNFT Page";
 			sourceTree = "<group>";
@@ -599,6 +608,7 @@
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				FCF32CB12CBE9CD600828852 /* EditProfileViewController.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
+				FCF32CDF2CC1422F00828852 /* FavouriteNFTModel.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
 				FCF32CB52CBFB02700828852 /* NFTTableViewCell.swift in Sources */,
 				FCF32CD82CC1382E00828852 /* MyNFTPresenter.swift in Sources */,
@@ -625,10 +635,12 @@
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
+				FCF32CDD2CC1421300828852 /* FavouritesPresenter.swift in Sources */,
 				FCF32CC02CC0E65E00828852 /* ProfileViewProtocol.swift in Sources */,
 				FCF32CB92CBFD8DE00828852 /* FavouriteNFTCell.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
+				FCF32CDB2CC1420700828852 /* FavouritesViewProtocol.swift in Sources */,
 				FCF32CC72CC0E9F800828852 /* EditProfilePresenter.swift in Sources */,
 				0C79EE632A76DD1900EE90EA /* RequestConstants.swift in Sources */,
 				FCF32CBE2CC0E60200828852 /* ProfilePresenter.swift in Sources */,

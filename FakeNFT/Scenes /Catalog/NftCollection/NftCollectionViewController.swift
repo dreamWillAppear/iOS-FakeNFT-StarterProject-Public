@@ -12,6 +12,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     private lazy var mainScrollView: UIScrollView = {
         let scrollView = UIScrollView()
+        
         return scrollView
     }()
     
@@ -44,7 +45,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         return textView
     }()
     
-    private lazy var nftCollecionView: UICollectionView = {
+    private lazy var nftCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.minimumLineSpacing = 9
@@ -114,11 +115,12 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     // MARK: - Private Methods
     
     private func setupUI() {
-        let views = [cover, descriptionTextView, nftCollecionView]
+        let views = [cover, descriptionTextView, nftCollectionView]
         
         view.backgroundColor = .ypWhite
         
-        view.addSubview(mainStackView)
+        view.addSubview(mainScrollView)
+        mainScrollView.addSubview(mainStackView)
         
         setupMainStackView(for: views)
         setupLayout(for: views)
@@ -126,11 +128,13 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     private func setupMainStackView(for views: [UIView]) {
         views.forEach {
-            mainStackView.addSubview($0)
+            mainStackView.addArrangedSubview($0)
         }
     }
     
     private func setupLayout(for views: [UIView]) {
+        let window = UIApplication.shared.windows.first
+        let windowSafeAreaTopInset = window?.safeAreaInsets.top ?? 50
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         mainScrollView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -139,28 +143,33 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         }
         
         NSLayoutConstraint.activate([
-            mainStackView.topAnchor.constraint(equalTo: view.topAnchor),
-            mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            mainScrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        
+            mainStackView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            mainStackView.topAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.topAnchor, constant: -windowSafeAreaTopInset),
+            mainStackView.leadingAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.trailingAnchor),
+            mainStackView.bottomAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.bottomAnchor),
             
             cover.topAnchor.constraint(equalTo: mainStackView.topAnchor),
             cover.heightAnchor.constraint(equalToConstant: 310),
-            cover.leadingAnchor.constraint(equalTo:mainStackView.leadingAnchor),
+            cover.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor),
             cover.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),
             
             descriptionTextView.topAnchor.constraint(equalTo: cover.bottomAnchor, constant: 16),
             descriptionTextView.heightAnchor.constraint(equalToConstant: 136),
-            descriptionTextView.leadingAnchor.constraint(equalTo:mainStackView.leadingAnchor, constant: 16),
+            descriptionTextView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 16),
             descriptionTextView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -16),
             
-            nftCollecionView.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 24),
-            nftCollecionView.leadingAnchor.constraint(equalTo:mainStackView.leadingAnchor, constant: 16),
-            nftCollecionView.trailingAnchor.constraint(equalTo:mainStackView.trailingAnchor, constant: -16),
-            nftCollecionView.heightAnchor.constraint(equalToConstant: 500)
+            nftCollectionView.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 24),
+            nftCollectionView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 16),
+            nftCollectionView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -16),
+            nftCollectionView.heightAnchor.constraint(equalToConstant: 592)
         ])
     }
-    
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDelegate

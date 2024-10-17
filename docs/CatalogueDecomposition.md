@@ -27,7 +27,7 @@
 + Верстка UITextView для описания коллекции (est: 30 минут; fact: 60 минут).
 + Верстка UICollectionView (est: 60 минут; fact: 60 минут).
 + Верстка ячеек коллекции (est: 90 минут; fact: 120 минут).
-- Запуск экрана с мок-данными и сверка с макетом (est: 20 минут; fact: x минут).
++ Запуск экрана с мок-данными и сверка с макетом (est: 20 минут; fact: 90 минут).
 
 ## Модуль 2:
 #### Работа с логикой экрана [Catalogue](https://www.figma.com/design/k1LcgXHGTHIeiCv4XuPbND/FakeNFT-(YP)?node-id=641-31969&t=uRX9RhlepVPymNrs-4)

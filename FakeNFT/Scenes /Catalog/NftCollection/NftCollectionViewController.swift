@@ -12,7 +12,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     private lazy var mainScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        
+
         return scrollView
     }()
     
@@ -32,6 +32,19 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         return cover
     }()
     
+    private lazy var backButton: UIButton = {
+        let button = UIButton(type: .system)
+        let image = UIImage(systemName: "chevron.backward")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
+        button.setImage(image, for: .normal)
+        button.addTarget(
+            self,
+            action: #selector(didTapBackButton),
+            for: .touchUpInside
+        )
+        
+        return button
+    }()
+    
     private lazy var descriptionTextView: UITextView = {
         let textView = UITextView()
         textView.isEditable = false
@@ -40,8 +53,8 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         textView.textAlignment = .left
         textView.dataDetectorTypes = [.link]
         textView.textContainer.lineBreakMode = .byWordWrapping
-        textView.textContainerInset = .zero 
-        textView.textContainer.lineFragmentPadding = 0 
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
         return textView
     }()
     
@@ -120,6 +133,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         view.backgroundColor = .ypWhite
         
         view.addSubview(mainScrollView)
+        view.addSubview(backButton)
         mainScrollView.addSubview(mainStackView)
         
         setupMainStackView(for: views)
@@ -135,6 +149,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     private func setupLayout(for views: [UIView]) {
         let window = UIApplication.shared.windows.first
         let windowSafeAreaTopInset = window?.safeAreaInsets.top ?? 50
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         mainScrollView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -143,11 +158,16 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         }
         
         NSLayoutConstraint.activate([
+            backButton.widthAnchor.constraint(equalToConstant: 24),
+            backButton.heightAnchor.constraint(equalToConstant: 24),
+            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 9),
+            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 55),
+            
             mainScrollView.topAnchor.constraint(equalTo: view.topAnchor),
             mainScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             mainScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             mainScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        
+            
             mainStackView.widthAnchor.constraint(equalTo: view.widthAnchor),
             mainStackView.topAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.topAnchor, constant: -windowSafeAreaTopInset),
             mainStackView.leadingAnchor.constraint(equalTo: mainScrollView.contentLayoutGuide.leadingAnchor),
@@ -170,13 +190,20 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
             nftCollectionView.heightAnchor.constraint(equalToConstant: 592)
         ])
     }
+    
+    //MARK: - Actions
+    
+    @objc private func didTapBackButton(){
+        self.dismiss(animated: true)
+    }
+    
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDelegate
 
 extension NftCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        6
+        15
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

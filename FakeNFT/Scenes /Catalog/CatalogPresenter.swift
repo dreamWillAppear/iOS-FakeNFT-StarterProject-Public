@@ -12,7 +12,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     // MARK: - Private Properties
     
     private weak var view: CatalogViewProtocol?
-    private var nftCollections: [CatalogModel] = []
+    private var nftCollections: [CatalogViewModel] = []
     
     // MARK: - Initializers
     
@@ -27,13 +27,13 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
     
     func onViewDidLoad() {
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverPeach")!, nftCollectionName: "Peach (11)"))
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverBlue")!, nftCollectionName: "Blue (6)"))
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverBrown")!, nftCollectionName: "Brown (8)"))
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverGreen")!, nftCollectionName: "Green (7)"))
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverGray")!, nftCollectionName: "Gray (5)"))
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverYellow")!, nftCollectionName: "Yellow (999)"))
-        nftCollections.append(CatalogModel(nftCollectionCover: UIImage(named: "MokeCoverWhite")!, nftCollectionName: "White (99)"))
+        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverPeach")!, nftCollectionName: "Peach (11)"))
+        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverBlue")!, nftCollectionName: "Blue (6)"))
+        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverBrown")!, nftCollectionName: "Brown (8)"))
+        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverGreen")!, nftCollectionName: "Green (7)"))
+        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverGray")!, nftCollectionName: "Gray (5)"))
+        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverYellow")!, nftCollectionName: "Yellow (999)"))
+        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverWhite")!, nftCollectionName: "White (99)"))
         
         view?.reloadData()
     }

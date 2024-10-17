@@ -1,6 +1,6 @@
 import UIKit
 
-protocol NftCollectionPresenter: AnyObject {
+protocol NftCollectionPresenterProtocol: AnyObject {
     func onViewDidLoad()
     func getCollectionCover() -> UIImage
     func getCollectionName() -> String
@@ -12,3 +12,4 @@ protocol NftCollectionPresenter: AnyObject {
     func isInCart() -> Bool
     func isLiked() -> Bool
 }
+

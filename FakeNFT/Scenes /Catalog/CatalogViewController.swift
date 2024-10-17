@@ -2,8 +2,6 @@ import UIKit
 
 protocol CatalogViewProtocol: AnyObject {
     func reloadData()
-    func setFooter(text: String)
-    func setCover(image: UIImage)
 }
 
 final class CatalogViewController: UIViewController, CatalogViewProtocol {
@@ -52,14 +50,6 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol {
     
     func reloadData() {
         nftCollectionTableView.reloadData()
-    }
-    
-    func setFooter(text: String) {
-        
-    }
-    
-    func setCover(image: UIImage) {
-        
     }
     
     // MARK: - Private Methods

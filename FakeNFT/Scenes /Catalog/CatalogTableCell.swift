@@ -43,6 +43,12 @@ final class CatalogTableCell: UITableViewCell {
     // MARK: - Private Methods
     
     private func setupUI() {
+        let selectedBackground = UIView()
+        selectedBackground.backgroundColor = .ypLightGrey
+        selectedBackground.layer.masksToBounds = true
+        selectedBackground.layer.cornerRadius = nftCollectionCover.layer.cornerRadius
+        selectedBackgroundView = selectedBackground
+        
         let views = [nftCollectionCover, nftCollectionLabel]
         
         views.forEach {

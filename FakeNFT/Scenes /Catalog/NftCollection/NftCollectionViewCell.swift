@@ -163,7 +163,7 @@ final class NftCollectionViewCell: UICollectionViewCell {
     
     private func updateCartButtonState(isInCart: Bool) {
         let addToCartImage = UIImage(named: "AddToCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
-        let removeFromCartImage = UIImage(named: "removeFromCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
+        let removeFromCartImage = UIImage(named: "RemoveFromCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
         let cartButtonImage = isInCart ? removeFromCartImage : addToCartImage
         cartButton.setImage(cartButtonImage, for: .normal)
     }

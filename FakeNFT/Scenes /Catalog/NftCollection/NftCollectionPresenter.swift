@@ -49,6 +49,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     //временный метод с мок-данными для отладки UI
     private func setupMokeData() {
         let coverNames = ["MokeCellTater", "MokeCellSusan", "MokeCellRuby", "MokeCellPixi", "MokeCellNacho", "MokeCellDaisy", "MokeCellBiscuit", "MokeCellArchie"]
+        let cellNames =  ["Tater", "Susan", "Ruby", "Pixi", "Nacho", "Daisy", "Biscuit", "Archie"]
         var nfts: [NftViewModel] = []
         
         for (index, coverName) in coverNames.enumerated() {
@@ -60,7 +61,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
             nfts.append(NftViewModel(
                 id: "\(String(index + 1))",
                 cover: UIImage(named: coverName)!,
-                name: "AnyCollection\(index + 1)",
+                name: cellNames[index],
                 isLiked: isLiked,
                 raiting: randomRating,
                 price: randomPrice,

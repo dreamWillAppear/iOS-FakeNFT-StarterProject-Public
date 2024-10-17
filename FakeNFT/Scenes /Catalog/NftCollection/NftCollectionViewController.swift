@@ -2,8 +2,6 @@ import UIKit
 
 protocol NftCollectionViewProtocol: AnyObject {
     func reloadData()
-    func setCover(image: UIImage)
-    func setDescription(title: String, author: String, description: String)
 }
 
 final class NftCollectionViewController: UIViewController, NftCollectionViewProtocol {
@@ -12,9 +10,11 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     private let presenter: NftCollectionPresenterProtocol?
     
+    private lazy var collection = presenter?.getCollection()
+    
     private lazy var mainScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-
+        
         return scrollView
     }()
     
@@ -27,7 +27,6 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     private lazy var cover: UIImageView = {
         let cover = UIImageView()
-        cover.image = UIImage(named: "MokeCoverPink")
         cover.contentMode = .scaleAspectFill
         cover.layer.masksToBounds = true
         cover.layer.cornerRadius = 12
@@ -90,8 +89,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setDescription(title: "Peach", author: "John Doe", description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.")
+        presenter?.onViewDidLoad()
         
         setupUI()
     }
@@ -103,7 +101,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     }
     
     func setCover(image: UIImage) {
-        
+        cover.image = image
     }
     
     func setDescription(title: String, author: String, description: String) {
@@ -141,6 +139,13 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     // MARK: - Private Methods
     
     private func setupUI() {
+        setCover(image: collection?.cover ?? UIImage())
+        setDescription(
+            title: collection?.name ?? "",
+            author: collection?.authorName ?? "",
+            description: collection?.description ?? ""
+        )
+        
         let views = [cover, descriptionTextView, nftCollectionView]
         
         view.backgroundColor = .ypWhite
@@ -216,21 +221,24 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
 
 extension NftCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
+        presenter?.getNftsCount() ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NftCollectionViewCell.reuseIdentifier, for: indexPath) as? NftCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NftCollectionViewCell.reuseIdentifier, for: indexPath) as? NftCollectionViewCell,
+              let collection = presenter?.getCollection() else {
             return .init()
         }
         
+        let nft = collection.nfts[indexPath.item]
+        
         cell.configureCell(
-            cover: UIImage(named: "MokeCellArchie")!,
-            name: "Archie",
-            isLiked: false,
-            raitng: 2,
-            price: 22.56,
-            isInCart: false
+            cover: nft.cover,
+            name: nft.name,
+            isLiked: nft.isLiked,
+            raitng: nft.raiting,
+            price: nft.price,
+            isInCart: nft.isInCart
         )
         
         return cell

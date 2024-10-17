@@ -27,6 +27,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func onViewDidLoad() {
         setupMokeData()
+        view?.reloadData()
     }
     
     func getCollection() -> NftCollectionViewModel {
@@ -35,7 +36,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
             cover:  UIImage(named: "MokeCoverPeach")!,
             authorName: "John Doe",
             description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
-            nfts: [""]
+            nfts: nfts
         )
     }
     
@@ -48,11 +49,11 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     //временный метод с мок-данными для отладки UI
     private func setupMokeData() {
         let coverNames = ["MokeCellTater", "MokeCellSusan", "MokeCellRuby", "MokeCellPixi", "MokeCellNacho", "MokeCellDaisy", "MokeCellBiscuit", "MokeCellArchie"]
-        var nfts = [NftViewModel]()
+        var nfts: [NftViewModel] = []
         
         for (index, coverName) in coverNames.enumerated() {
             let randomRating = Int.random(in: 0...5)
-            let randomPrice = Float.random(in: 5...100)
+            let randomPrice = round((Float.random(in: 5...100)) * 100) / 100 //рандомный Float, округленный до 2х знаков после запятой, с бекенда такое прилетать не будет 
             let isLiked = Bool.random()
             let isInCart = Bool.random()
             
@@ -66,5 +67,6 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
                 isInCart: isInCart
             ))
         }
+        self.nfts = nfts
     }
 }

@@ -55,6 +55,7 @@
 		FD8BD7122CBC9EBF001A94C6 /* CatalogPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD7112CBC9EBF001A94C6 /* CatalogPresenter.swift */; };
 		FD8BD7142CBDAF65001A94C6 /* CatalogTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD7132CBDAF65001A94C6 /* CatalogTableCell.swift */; };
 		FD9514E32CC03EA700EDD369 /* NftCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9514E22CC03EA700EDD369 /* NftCollectionViewCell.swift */; };
+		FD9514E52CC1409800EDD369 /* NftViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9514E42CC1409800EDD369 /* NftViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +128,7 @@
 		FD8BD7112CBC9EBF001A94C6 /* CatalogPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogPresenter.swift; sourceTree = "<group>"; };
 		FD8BD7132CBDAF65001A94C6 /* CatalogTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogTableCell.swift; sourceTree = "<group>"; };
 		FD9514E22CC03EA700EDD369 /* NftCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCollectionViewCell.swift; sourceTree = "<group>"; };
+		FD9514E42CC1409800EDD369 /* NftViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -392,6 +394,7 @@
 				FD4CDD0D2CBF1ADB00638002 /* NftCollectionPresenter.swift */,
 				FD4CDD0F2CBF1D8600638002 /* NftCollectionViewController.swift */,
 				FD9514E22CC03EA700EDD369 /* NftCollectionViewCell.swift */,
+				FD9514E42CC1409800EDD369 /* NftViewModel.swift */,
 			);
 			path = NftCollection;
 			sourceTree = "<group>";
@@ -538,6 +541,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD8BD7122CBC9EBF001A94C6 /* CatalogPresenter.swift in Sources */,
+				FD9514E52CC1409800EDD369 /* NftViewModel.swift in Sources */,
 				3FC8C38B29D242E90081F015 /* ProductDetailsTableViewCell.swift in Sources */,
 				3F478ECF29DB474E00F6D39E /* Colors.swift in Sources */,
 				0C79EE662A76DDFF00EE90EA /* NftDetailViewController.swift in Sources */,

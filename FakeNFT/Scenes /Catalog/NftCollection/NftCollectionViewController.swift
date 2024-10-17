@@ -10,6 +10,8 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     // MARK: - Private Properties
     
+    private let presenter: NftCollectionPresenterProtocol?
+    
     private lazy var mainScrollView: UIScrollView = {
         let scrollView = UIScrollView()
 
@@ -73,6 +75,17 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         return collectionView
     }()
     
+    //MARK: - Init
+    
+    init(presenter: NftCollectionPresenterProtocol) {
+        self.presenter = presenter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - View Life Cycles
     
     override func viewDidLoad() {
@@ -86,7 +99,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     // MARK: - Public Methods
     
     func reloadData() {
-        
+        nftCollectionView.reloadData()
     }
     
     func setCover(image: UIImage) {
@@ -203,7 +216,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
 
 extension NftCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        15
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

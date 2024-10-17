@@ -1,10 +1,11 @@
 import UIKit
 
-struct NftCollectionCellModel {
+struct NftViewModel {
+    let id: String
+    let cover: UIImage
     let name: String
-    let image: UIImage
+    let isLiked: Bool
     let raiting: Int
     let price: Float
-    let isLiked: Bool
     let isInCart: Bool
 }

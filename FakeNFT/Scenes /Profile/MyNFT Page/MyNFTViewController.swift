@@ -97,7 +97,14 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
     }
     
     @objc private func backButtonTapped() {
-        dismiss(animated: true, completion: nil)
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.type = .push
+        transition.subtype = .fromLeft
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        view.window?.layer.add(transition, forKey: kCATransition)
+        dismiss(animated: false, completion: nil)
     }
 }
 
@@ -124,4 +131,8 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 140
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }   
 }

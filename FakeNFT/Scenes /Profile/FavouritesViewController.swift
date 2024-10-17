@@ -86,7 +86,14 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
     }
     
     @objc private func backButtonTapped() {
-        dismiss(animated: true, completion: nil)
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.type = .push
+        transition.subtype = .fromLeft
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        view.window?.layer.add(transition, forKey: kCATransition)
+        dismiss(animated: false, completion: nil)
     }
 }
 

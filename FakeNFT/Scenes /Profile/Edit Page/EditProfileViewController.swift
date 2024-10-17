@@ -118,6 +118,7 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
         websiteTextView.delegate = self
         
         presenter?.loadProfileData()
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         
         addSubViews()
         applyConstraints()
@@ -197,6 +198,10 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
               let description = descriptionTextView.text,
               let website = websiteTextView.text else { return }
         presenter?.saveProfile(name: name, description: description, website: website)
+    }
+    
+    @objc private func closeButtonTapped() {
+        dismiss(animated: true)
     }
 }
 

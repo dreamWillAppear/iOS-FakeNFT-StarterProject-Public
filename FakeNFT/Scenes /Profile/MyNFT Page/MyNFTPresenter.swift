@@ -16,10 +16,8 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
     }
     
     func loadNFTs() {
-        // Заглушка данных
         nfts = [
             NFT(imageName: "nft1", likeImageName: "notLiked", name: "Lilo", ratingImageName: "rating3", author: "от John Doe", price: "1,78 ETH"),
-            // Можно добавить другие NFT
         ]
         view?.reloadData()
     }

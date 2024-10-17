@@ -71,6 +71,8 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         applyConstraints()
         setupTableView()
         
+        editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        
         presenter?.loadProfileData()
     }
     
@@ -120,6 +122,17 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         descriptionLabel.text = profile.description
         websiteLink.text = profile.website
     }
+    
+    @objc private func editButtonTapped() {
+        let editProfileVC = EditProfileViewController()
+        let popover = UIPopoverPresentationController(presentedViewController: editProfileVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        
+        editProfileVC.modalPresentationStyle = .popover
+        present(editProfileVC, animated: true, completion: nil)
+    }
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
@@ -147,6 +160,27 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        //TODO: open screen
+        let transition = CATransition()
+        transition.duration = 0.3
+        transition.type = .push
+        transition.subtype = .fromRight
+        transition.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        switch indexPath.row {
+        case 0:
+            let myNFTVC = MyNFTViewController()
+            myNFTVC.modalPresentationStyle = .fullScreen
+            view.window?.layer.add(transition, forKey: kCATransition)
+            present(myNFTVC, animated: false, completion: nil)
+            
+        case 1:
+            let favouritesVC = FavouritesViewController()
+            favouritesVC.modalPresentationStyle = .fullScreen
+            view.window?.layer.add(transition, forKey: kCATransition)
+            present(favouritesVC, animated: false, completion: nil)
+            
+        default:
+            break
+        }
     }
 }

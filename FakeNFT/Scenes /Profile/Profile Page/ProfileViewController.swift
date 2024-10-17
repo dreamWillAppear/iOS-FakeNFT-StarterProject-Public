@@ -114,6 +114,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.rowHeight = 54
+        tableView.separatorStyle = .none
     }
     
     func updateProfile(_ profile: Profile) {

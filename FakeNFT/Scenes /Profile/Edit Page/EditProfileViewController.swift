@@ -7,8 +7,10 @@
 
 import UIKit
 
-final class EditProfileViewController: UIViewController, UITextViewDelegate {
+final class EditProfileViewController: UIViewController, EditProfileViewProtocol, UITextViewDelegate {
 
+    var presenter: EditProfilePresenterProtocol?
+    
     private var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -115,6 +117,8 @@ final class EditProfileViewController: UIViewController, UITextViewDelegate {
         descriptionTextView.delegate = self
         websiteTextView.delegate = self
         
+        presenter?.loadProfileData()
+        
         addSubViews()
         applyConstraints()
     }
@@ -171,6 +175,13 @@ final class EditProfileViewController: UIViewController, UITextViewDelegate {
         ])
     }
     
+    func updateProfile(_ profile: Profile) {
+        avatarImageView.image = UIImage(named: profile.avatarImageName)
+        nameTextView.text = profile.name
+        descriptionTextView.text = profile.description
+        websiteTextView.text = profile.website
+    }
+    
     func textViewDidChange(_ textView: UITextView) {
         let size = CGSize(width: textView.frame.width, height: .infinity)
         let estimatedSize = textView.sizeThatFits(size)
@@ -179,6 +190,13 @@ final class EditProfileViewController: UIViewController, UITextViewDelegate {
                 constraint.constant = estimatedSize.height
             }
         }
+    }
+    
+    @objc private func saveProfileChanges() {
+        guard let name = nameTextView.text,
+              let description = descriptionTextView.text,
+              let website = websiteTextView.text else { return }
+        presenter?.saveProfile(name: name, description: description, website: website)
     }
 }
 

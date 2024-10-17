@@ -9,6 +9,8 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    var presenter: ProfilePresenterProtocol?
+    
     let cellData = [
         "Мои NFT (112)",
         "Избранные NFT",
@@ -68,6 +70,8 @@ final class ProfileViewController: UIViewController {
         addSubViews()
         applyConstraints()
         setupTableView()
+        
+        presenter?.loadProfileData()
     }
     
     private func addSubViews() {
@@ -109,6 +113,13 @@ final class ProfileViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.rowHeight = 54
     }
+    
+    func updateProfile(_ profile: Profile) {
+        avatarImageView.image = UIImage(named: profile.avatarImageName)
+        nameLabel.text = profile.name
+        descriptionLabel.text = profile.description
+        websiteLink.text = profile.website
+    }
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
@@ -127,7 +138,6 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
                                    withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
         let chevronImageView = UIImageView(image: chevronImage)
         chevronImageView.tintColor = .black
-        
         cell.accessoryView = chevronImageView
         
         return cell

@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "MokeCoverPeach.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -98,6 +98,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     func reloadData() {
         nftCollectionView.reloadData()
+        updateCollectionViewHeight()
     }
     
     func setCover(image: UIImage) {
@@ -204,8 +205,22 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
             
             nftCollectionView.topAnchor.constraint(equalTo: descriptionTextView.bottomAnchor, constant: 24),
             nftCollectionView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 16),
-            nftCollectionView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -16),
-            nftCollectionView.heightAnchor.constraint(equalToConstant: 592)
+            nftCollectionView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -16)
+        ])
+    }
+    
+    private func updateCollectionViewHeight()  {
+        let itemsCount = presenter?.getNftsCount() ?? 0
+        let itemsPerRow = 3
+        let cellHeight: CGFloat = 192
+        let minimumLineSpacing: CGFloat = 9
+        
+        let numberOfRows = ceil(Double(itemsCount) / Double(itemsPerRow))
+        
+        let totalHeight = CGFloat(numberOfRows) * cellHeight + CGFloat(numberOfRows - 1) * minimumLineSpacing
+        
+        NSLayoutConstraint.activate([
+            nftCollectionView.heightAnchor.constraint(equalToConstant: totalHeight)
         ])
     }
     
@@ -214,7 +229,6 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     @objc private func didTapBackButton(){
         self.dismiss(animated: true)
     }
-    
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDelegate

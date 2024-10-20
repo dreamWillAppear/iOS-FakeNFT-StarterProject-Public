@@ -62,8 +62,6 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     private lazy var nftCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 9
-        layout.itemSize = CGSize(width: 108, height: 192)
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
@@ -231,9 +229,10 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     }
 }
 
-// MARK: - UICollectionViewDelegate, UICollectionViewDelegate
+// MARK: - UICollectionViewDelegate, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
 
-extension NftCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension NftCollectionViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         presenter?.getNftsCount() ?? 0
     }
@@ -257,4 +256,21 @@ extension NftCollectionViewController: UICollectionViewDelegate, UICollectionVie
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        //согласно макету имеем сумму расстояния между ячейками 19, вычитаем из общей ширины collectionView и делим на количество ячеек
+        let allSpacing: CGFloat = 19
+        let width = (collectionView.bounds.width - allSpacing) / 3
+        return CGSize(width: width, height: 192)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 8
+        
+    }    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 9
+    }
+    
 }

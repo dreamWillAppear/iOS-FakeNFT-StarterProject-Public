@@ -43,6 +43,7 @@ final class CatalogTableCell: UITableViewCell {
     // MARK: - Private Methods
     
     private func setupUI() {
+      
         let selectedBackground = UIView()
         selectedBackground.backgroundColor = .ypLightGrey
         selectedBackground.layer.masksToBounds = true
@@ -59,17 +60,19 @@ final class CatalogTableCell: UITableViewCell {
     }
     
     private func setupLayout(for views: [UIView]) {
+        contentView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        
         views.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         NSLayoutConstraint.activate([
             nftCollectionCover.topAnchor.constraint(equalTo: contentView.topAnchor),
-            nftCollectionCover.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            nftCollectionCover.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            nftCollectionCover.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            nftCollectionCover.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
             nftCollectionCover.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -47),
             
             nftCollectionLabel.topAnchor.constraint(equalTo: nftCollectionCover.bottomAnchor, constant: 4),
-            nftCollectionLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor)
+            nftCollectionLabel.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor)
         ])
     }
 }

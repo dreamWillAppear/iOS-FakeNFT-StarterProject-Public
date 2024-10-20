@@ -79,8 +79,8 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol {
             
             nftCollectionTableView.topAnchor.constraint(equalTo: filterButton.bottomAnchor, constant: 18),
             nftCollectionTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            nftCollectionTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            nftCollectionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            nftCollectionTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            nftCollectionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 }

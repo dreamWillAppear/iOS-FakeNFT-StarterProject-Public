@@ -158,7 +158,7 @@ final class NftCollectionViewCell: UICollectionViewCell {
         let whiteHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypWhiteUniversal ?? .white).withRenderingMode(.alwaysOriginal)
         let redHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypRedUniversal ?? .red).withRenderingMode(.alwaysOriginal)
         let likeButtonImage = isLiked ? redHeartImage : whiteHeartImage
-        likeButton.imageView?.image = likeButtonImage
+        likeButton.setImage(likeButtonImage, for: .normal)
     }
     
     private func updateCartButtonState(isInCart: Bool) {

@@ -19,6 +19,7 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol, Loadin
         let button = UIButton(type: .system)
         var image = UIImage(named: "filter.button")?.withTintColor(.ypBlack ?? .black, renderingMode: .alwaysOriginal)
         button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(didTapFilterButton), for: .touchUpInside)
         return button
     }()
     
@@ -94,6 +95,39 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol, Loadin
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
+    
+    private func showSelectFilterAlert()  {
+        let alert = UIAlertController(
+            title: "Сортировка",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        
+        let sortByNameAction = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+            
+        }
+        
+        let sortByCountAction = UIAlertAction(title: "По количеству NFT", style: .default) { [weak self] _ in
+            
+        }
+        
+        let closeAlertAction =  UIAlertAction(title: "Закрыть", style: .cancel) { _ in
+            self.dismiss(animated: true)
+        }
+        
+        [sortByNameAction, sortByCountAction, closeAlertAction].forEach {
+            alert.addAction($0)
+        }
+        
+        present(alert, animated: true)
+    }
+    
+    //MARK: - Actions
+    
+    @objc private func didTapFilterButton() {
+        showSelectFilterAlert()
+    }
+    
 }
 
 extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {

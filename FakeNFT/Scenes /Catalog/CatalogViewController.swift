@@ -2,9 +2,14 @@ import UIKit
 
 protocol CatalogViewProtocol: AnyObject {
     func reloadData()
+    func setLoadingViewVisible(_ visible: Bool)
 }
 
-final class CatalogViewController: UIViewController, CatalogViewProtocol {
+final class CatalogViewController: UIViewController, CatalogViewProtocol, LoadingView {
+    
+    // MARK: - Public Properties
+    
+    internal lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Private Properties
     
@@ -41,7 +46,6 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol {
         nftCollectionTableView.delegate = self
         nftCollectionTableView.dataSource = self
         nftCollectionTableView.register(CatalogTableCell.self, forCellReuseIdentifier: CatalogTableCell.reuseIdentifier)
-        
         presenter.onViewDidLoad()
         setupUI()
     }
@@ -52,10 +56,14 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol {
         nftCollectionTableView.reloadData()
     }
     
+    func  setLoadingViewVisible(_ visible: Bool) {
+        visible ? showLoading() : hideLoading()
+    }
+    
     // MARK: - Private Methods
     
     private func setupUI() {
-        let views =  [filterButton, nftCollectionTableView]
+        let views =  [filterButton, nftCollectionTableView, activityIndicator]
         
         view.backgroundColor = .ypWhite
         
@@ -80,7 +88,10 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol {
             nftCollectionTableView.topAnchor.constraint(equalTo: filterButton.bottomAnchor, constant: 18),
             nftCollectionTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             nftCollectionTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            nftCollectionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            nftCollectionTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
 }

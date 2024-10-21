@@ -1,5 +1,4 @@
 import UIKit
-import Kingfisher
 
 protocol CatalogPresenterProtocol {
     func onViewDidLoad()
@@ -57,6 +56,8 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     //MARK: - Private Methods
     
     private func fetchNftCollections() {
+        view?.setLoadingViewVisible(true)
+        
         networkService.loadCollections { [weak self] result in
             switch result {
                 case .success(let result):
@@ -65,6 +66,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
                 case .failure(let error):
                     print("LOG ERROR: CatalogPresenter networkService.loadCollections – \(String(describing: error))")
             }
+            self?.view?.setLoadingViewVisible(false)
         }
     }
     

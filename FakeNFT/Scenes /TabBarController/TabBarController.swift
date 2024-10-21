@@ -33,11 +33,9 @@ final class TabBarController: UITabBarController {
         
         let appearance = tabBar.standardAppearance
 
-        let profileController = UIViewController()
+        let profileController = ProfileViewController()
         
-        let catalogController = TestCatalogViewController(
-            servicesAssembly: servicesAssembly
-        )
+        let catalogController = UIViewController()
         
         let cartController = UIViewController()
         
@@ -55,6 +53,6 @@ final class TabBarController: UITabBarController {
 
         viewControllers = [profileController, catalogController, cartController, statisticsController]
         
-        selectedIndex = 1 //при старте приложения будет открыта вторая вкладка
+        selectedIndex = 0
     }
 }

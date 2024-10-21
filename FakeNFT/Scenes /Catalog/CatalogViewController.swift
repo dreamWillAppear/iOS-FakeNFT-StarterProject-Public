@@ -95,11 +95,11 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cover = presenter.getCollectionCover(at: indexPath.row)
+        let coverURL = presenter.getCollectionCoverURL(at: indexPath.row)
         let label = presenter.getCollectionLabel(at: indexPath.row)
         let cell = tableView.dequeueReusableCell(withIdentifier: CatalogTableCell.reuseIdentifier, for: indexPath) as? CatalogTableCell
         
-        cell?.setupCell(cover: cover, label: label)
+        cell?.setupCell(coverURL: coverURL, label: label)
         
         return cell ?? .init()
     }
@@ -108,7 +108,7 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
         let collectionPresenter = NftCollectionPresenter(view: nil)
         let collectionViewController = NftCollectionViewController(presenter: collectionPresenter)
         collectionPresenter.setView(collectionViewController)
-    
+        
         collectionViewController.modalPresentationStyle = .fullScreen
         present(collectionViewController, animated: true, completion: nil)
         

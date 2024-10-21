@@ -5,6 +5,8 @@ protocol CatalogPresenterProtocol {
     func getCollectionCount() -> Int
     func getCollectionLabel(at index: Int) -> String
     func getCollectionCoverURL(at index: Int) -> URL
+    func sortByName()
+    func sortByCount()
 }
 
 final class CatalogPresenter: CatalogPresenterProtocol {
@@ -15,12 +17,16 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     
     private let networkClient = DefaultNetworkClient()
     private lazy var networkService = CatalogService(networkClient: networkClient)
-    private var nftCollections: [CatalogViewModel] = []
+    
+    private var nftCollections: [CatalogViewModel] = [] {
+        didSet {
+            view?.reloadData()
+        }
+    }
     
     private var nftCollectionsResult: [CatalogResultModel] = [] {
         didSet {
             nftCollections = convertResultToViewModel(result: nftCollectionsResult)
-            view?.reloadData()
         }
     }
     
@@ -45,13 +51,21 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
     
     func getCollectionLabel(at index: Int) -> String {
-        nftCollections[index].nftCollectionName
+        "\(nftCollections[index].nftCollectionName) (\(nftCollections[index].nftsCount))"
     }
     
     func getCollectionCoverURL(at index: Int) -> URL {
         nftCollections[index].nftCollectionCoverURL
     }
     
+    func sortByName() {
+        var sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftCollectionName < $1.nftCollectionName }
+        nftCollections = sortedNfts
+    }
+    
+    func sortByCount() {
+        
+    }
     
     //MARK: - Private Methods
     
@@ -76,7 +90,8 @@ final class CatalogPresenter: CatalogPresenterProtocol {
             collections.append(
                 CatalogViewModel(
                     nftCollectionCoverURL: URL(string: $0.cover) ?? URL(fileURLWithPath: ""),
-                    nftCollectionName: $0.name
+                    nftCollectionName: $0.name,
+                    nftsCount: $0.nftCount
                 )
             )
         }

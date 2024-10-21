@@ -64,7 +64,8 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
     
     func sortByCount() {
-        
+        var sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftsCount > $1.nftsCount }
+        nftCollections = sortedNfts
     }
     
     //MARK: - Private Methods

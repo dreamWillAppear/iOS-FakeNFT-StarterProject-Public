@@ -104,11 +104,11 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol, Loadin
         )
         
         let sortByNameAction = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
-            
+            self?.presenter.sortByName()
         }
         
         let sortByCountAction = UIAlertAction(title: "По количеству NFT", style: .default) { [weak self] _ in
-            
+            self?.presenter.sortByCount()
         }
         
         let closeAlertAction =  UIAlertAction(title: "Закрыть", style: .cancel) { _ in

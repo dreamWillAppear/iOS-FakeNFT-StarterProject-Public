@@ -9,6 +9,8 @@ import UIKit
 
 final class EditProfileViewController: UIViewController, EditProfileViewProtocol, UITextViewDelegate {
 
+    var profile: Profile?
+    
     var presenter: EditProfilePresenterProtocol?
     
     private var avatarImageView: UIImageView = {
@@ -177,7 +179,7 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
     }
     
     func updateProfile(_ profile: Profile) {
-        avatarImageView.image = UIImage(named: profile.avatarImageName)
+//        avatarImageView.image = profile.avatarImage
         nameTextView.text = profile.name
         descriptionTextView.text = profile.description
         websiteTextView.text = profile.website

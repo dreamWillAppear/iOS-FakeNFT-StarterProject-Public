@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController, ProfileViewProtocol {
     
     var presenter: ProfilePresenterProtocol?
+    var profile: Profile?
     
     let cellData = [
         "Мои NFT (112)",
@@ -27,14 +29,12 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     private var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "avatar")
         return imageView
     }()
     
     private var nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Joaquin Phoenix"
         label.font = .headline3
         return label
     }()
@@ -43,7 +43,6 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.text = "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям."
         label.font = .caption2
         return label
     }()
@@ -51,7 +50,6 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     private var websiteLink: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Joaquin Phoenix.com"
         label.font = .caption1
         label.textColor = .ypBlueUniversal
         return label
@@ -73,6 +71,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
         
+        presenter = ProfilePresenter(view: self)
         presenter?.loadProfileData()
     }
     
@@ -118,7 +117,23 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     }
     
     func updateProfile(_ profile: Profile) {
-        avatarImageView.image = UIImage(named: profile.avatarImageName)
+        self.profile = profile
+        let imageURL = URL(string: profile.avatarImageURL)
+        
+        avatarImageView.kf.setImage(with: imageURL) { [weak self] result in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    print("Avatar is successfully loaded")
+                case .failure(let error):
+                    print("[ProfileViewController: avatarImageURL]: Error while loading image.\(error)")
+                }
+            }
+        }
+        
+        //avatarImageView.image = profile.avatarImageURL
         nameLabel.text = profile.name
         descriptionLabel.text = profile.description
         websiteLink.text = profile.website
@@ -126,6 +141,8 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     
     @objc private func editButtonTapped() {
         let editProfileVC = EditProfileViewController()
+        editProfileVC.profile = self.profile
+        
         let popover = UIPopoverPresentationController(presentedViewController: editProfileVC, presenting: self)
         popover.sourceView = self.view
         popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)

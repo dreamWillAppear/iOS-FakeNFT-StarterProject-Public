@@ -5,10 +5,10 @@
 //  Created by Bakgeldi Alkhabay on 17.10.2024.
 //
 
-import Foundation
+import UIKit
 
 struct Profile {
-    let avatarImageName: String
+    let avatarImageURL: String
     let name: String
     let description: String
     let website: String

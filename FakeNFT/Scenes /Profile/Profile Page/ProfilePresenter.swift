@@ -19,13 +19,50 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
     
     func loadProfileData() {
-        let profile = Profile(
-            avatarImageName: "avatar",
-            name: "Joaquin Phoenix",
-            description: "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.",
-            website: "Joaquin Phoenix.com"
-        )
-        view?.updateProfile(profile)
+        guard let url = URL(string: "\(RequestConstants.baseURL)/api/v1/profile/1") else {
+            print("Invalid URL")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
+
+        let task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            if let error = error {
+                print("Error: \(error.localizedDescription)")
+                return
+            }
+
+            guard let data = data else {
+                print("No data received")
+                return
+            }
+
+            do {
+                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    if let name = json["name"] as? String,
+                       let avatar = json["avatar"] as? String,
+                       let description = json["description"] as? String,
+                       let website = json["website"] as? String {
+                        
+                        let profile = Profile(
+                            avatarImageURL: avatar,
+                            name: name,
+                            description: description,
+                            website: website
+                        )
+                        DispatchQueue.main.async {
+                            self?.view?.updateProfile(profile)
+                        }
+                    }
+                }
+            } catch {
+                print("JSON parsing error: \(error.localizedDescription)")
+            }
+        }
+
+        task.resume()
     }
 }
 

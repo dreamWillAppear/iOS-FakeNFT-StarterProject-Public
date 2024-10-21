@@ -1,10 +1,11 @@
 import UIKit
+import Kingfisher
 
 protocol CatalogPresenterProtocol {
     func onViewDidLoad()
     func getCollectionCount() -> Int
-    func getCollectionCover(at index: Int) -> UIImage
     func getCollectionLabel(at index: Int) -> String
+    func getCollectionCoverURL(at index: Int) -> URL
 }
 
 final class CatalogPresenter: CatalogPresenterProtocol {
@@ -12,7 +13,17 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     // MARK: - Private Properties
     
     private weak var view: CatalogViewProtocol?
+    
+    private let networkClient = DefaultNetworkClient()
+    private lazy var networkService = CatalogService(networkClient: networkClient)
     private var nftCollections: [CatalogViewModel] = []
+    
+    private var nftCollectionsResult: [CatalogResultModel] = [] {
+        didSet {
+            nftCollections = convertResultToViewModel(result: nftCollectionsResult)
+            view?.reloadData()
+        }
+    }
     
     // MARK: - Initializers
     
@@ -27,26 +38,48 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
     
     func onViewDidLoad() {
-        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverPeach")!, nftCollectionName: "Peach (11)"))
-        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverBlue")!, nftCollectionName: "Blue (6)"))
-        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverBrown")!, nftCollectionName: "Brown (8)"))
-        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverGreen")!, nftCollectionName: "Green (7)"))
-        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverGray")!, nftCollectionName: "Gray (5)"))
-        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverYellow")!, nftCollectionName: "Yellow (999)"))
-        nftCollections.append(CatalogViewModel(nftCollectionCover: UIImage(named: "MokeCoverWhite")!, nftCollectionName: "White (99)"))
-        
-        view?.reloadData()
+        fetchNftCollections()
     }
     
     func getCollectionCount() -> Int {
         nftCollections.count
     }
     
-    func getCollectionCover(at index: Int) -> UIImage {
-        nftCollections[index].nftCollectionCover
-    }
-    
     func getCollectionLabel(at index: Int) -> String {
         nftCollections[index].nftCollectionName
     }
+    
+    func getCollectionCoverURL(at index: Int) -> URL {
+        nftCollections[index].nftCollectionCoverURL
+    }
+    
+    
+    //MARK: - Private Methods
+    
+    private func fetchNftCollections() {
+        networkService.loadCollections { [weak self] result in
+            switch result {
+                case .success(let result):
+                    self?.nftCollectionsResult = result
+                    print("LOG CatalogPresenter networkService.loadCollections – Success!")
+                case .failure(let error):
+                    print("LOG ERROR: CatalogPresenter networkService.loadCollections – \(String(describing: error))")
+            }
+        }
+    }
+    
+    private func convertResultToViewModel(result: [CatalogResultModel]) -> [CatalogViewModel] {
+        var collections: [CatalogViewModel] = []
+        result.forEach {
+            collections.append(
+                CatalogViewModel(
+                    nftCollectionCoverURL: URL(string: $0.cover) ?? URL(fileURLWithPath: ""),
+                    nftCollectionName: $0.name
+                )
+            )
+        }
+        
+        return collections
+    }
+    
 }

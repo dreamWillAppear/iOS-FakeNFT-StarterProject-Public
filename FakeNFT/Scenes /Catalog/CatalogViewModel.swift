@@ -1,6 +1,6 @@
 import UIKit
 
 struct CatalogViewModel {
-    let nftCollectionCover: UIImage
+    let nftCollectionCoverURL: URL
     let nftCollectionName: String
 }

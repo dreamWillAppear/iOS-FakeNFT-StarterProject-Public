@@ -9,6 +9,12 @@ protocol CatalogPresenterProtocol {
     func sortByCount()
 }
 
+private enum SelectedFilter: String {
+    case key = "selectedFilter"
+    case byNameValue = "byName"
+    case byCountValue = "byCount"
+}
+
 final class CatalogPresenter: CatalogPresenterProtocol {
     
     // MARK: - Private Properties
@@ -17,6 +23,8 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     
     private let networkClient = DefaultNetworkClient()
     private lazy var networkService = CatalogService(networkClient: networkClient)
+    
+    private let userDefaults = UserDefaults.standard
     
     private var nftCollections: [CatalogViewModel] = [] {
         didSet {
@@ -27,6 +35,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     private var nftCollectionsResult: [CatalogResultModel] = [] {
         didSet {
             nftCollections = convertResultToViewModel(result: nftCollectionsResult)
+            checkSelectedFilter()
         }
     }
     
@@ -34,6 +43,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     
     init(view: CatalogViewProtocol?) {
         self.view = view
+        
     }
     
     //MARK: - Public Methods
@@ -59,13 +69,15 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
     
     func sortByName() {
-        var sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftCollectionName < $1.nftCollectionName }
+        let sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftCollectionName < $1.nftCollectionName }
         nftCollections = sortedNfts
+        userDefaults.set(SelectedFilter.byNameValue.rawValue, forKey: SelectedFilter.key.rawValue)
     }
     
     func sortByCount() {
-        var sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftsCount > $1.nftsCount }
+        let sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftsCount > $1.nftsCount }
         nftCollections = sortedNfts
+        userDefaults.set(SelectedFilter.byCountValue.rawValue, forKey: SelectedFilter.key.rawValue)
     }
     
     //MARK: - Private Methods
@@ -98,6 +110,19 @@ final class CatalogPresenter: CatalogPresenterProtocol {
         }
         
         return collections
+    }
+    
+    private func checkSelectedFilter() {
+        let selectedFilter = userDefaults.string(forKey: SelectedFilter.key.rawValue)
+        
+        switch selectedFilter {
+            case SelectedFilter.byNameValue.rawValue:
+                sortByName()
+            case SelectedFilter.byCountValue.rawValue:
+                sortByCount()
+            default:
+                return
+        }
     }
     
 }

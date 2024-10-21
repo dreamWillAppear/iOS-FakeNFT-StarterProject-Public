@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class CatalogTableCell: UITableViewCell {
     
@@ -35,8 +36,8 @@ final class CatalogTableCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupCell(cover: UIImage, label: String){
-        nftCollectionCover.image = cover
+    func setupCell(coverURL: URL, label: String){
+        nftCollectionCover.kf.setImage(with: coverURL)
         nftCollectionLabel.text = label
     }
     

@@ -150,7 +150,8 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let collectionPresenter = NftCollectionPresenter(view: nil)
+        let collectionId = presenter.getCollectionId(at: indexPath.row)
+        let collectionPresenter = NftCollectionPresenter(view: nil, collectionId: collectionId)
         let collectionViewController = NftCollectionViewController(presenter: collectionPresenter)
         collectionPresenter.setView(collectionViewController)
         
@@ -158,5 +159,8 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
         present(collectionViewController, animated: true, completion: nil)
         
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        // TODO: удалить лог
+        print("LOG Collection id: \(collectionId)")
     }
 }

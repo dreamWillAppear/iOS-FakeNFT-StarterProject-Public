@@ -5,6 +5,7 @@ protocol CatalogPresenterProtocol {
     func getCollectionCount() -> Int
     func getCollectionLabel(at index: Int) -> String
     func getCollectionCoverURL(at index: Int) -> URL
+    func getCollectionId(at index: Int) -> String
     func sortByName()
     func sortByCount()
 }
@@ -16,7 +17,7 @@ private enum SelectedFilter: String {
 }
 
 final class CatalogPresenter: CatalogPresenterProtocol {
-    
+
     // MARK: - Private Properties
     
     private weak var view: CatalogViewProtocol?
@@ -68,6 +69,10 @@ final class CatalogPresenter: CatalogPresenterProtocol {
         nftCollections[index].nftCollectionCoverURL
     }
     
+    func getCollectionId(at index: Int) -> String {
+        nftCollections[index].nftCollectionId
+    }
+    
     func sortByName() {
         let sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftCollectionName < $1.nftCollectionName }
         nftCollections = sortedNfts
@@ -104,7 +109,8 @@ final class CatalogPresenter: CatalogPresenterProtocol {
                 CatalogViewModel(
                     nftCollectionCoverURL: URL(string: $0.cover) ?? URL(fileURLWithPath: ""),
                     nftCollectionName: $0.name,
-                    nftsCount: $0.nftCount
+                    nftsCount: $0.nftCount,
+                    nftCollectionId: $0.id
                 )
             )
         }

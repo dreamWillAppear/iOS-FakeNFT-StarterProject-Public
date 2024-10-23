@@ -43,6 +43,7 @@ final class PaymentViewController: UIViewController {
         button.addTarget(self, action: #selector(Self.didTapPaymentButton), for: .touchDown)
         button.clipsToBounds = true
         button.layer.cornerRadius = 16
+        button.isEnabled = false
         return button
     }()
     
@@ -60,12 +61,10 @@ final class PaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .ypWhite
         setupNavItems()
         setupViews()
         setupDelegates()
         setupLinkTextView()
-        tabBarItem.accessibilityElementsHidden = true
     }
     
     private func setupNavItems() {
@@ -78,6 +77,7 @@ final class PaymentViewController: UIViewController {
     }
     
     private func setupViews() {
+        view.backgroundColor = .ypWhite
         [paymentView,
          collectionView].forEach{
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -122,6 +122,7 @@ final class PaymentViewController: UIViewController {
         attributedString.setAttributes([.link: url, .paragraphStyle: titleParagraphStyle],
                                        range: NSMakeRange(45, 30))
         self.linkTextView.attributedText = attributedString
+        self.linkTextView.textColor = .ypBlack
         self.linkTextView.isUserInteractionEnabled = true
         self.linkTextView.isEditable = false
         self.linkTextView.backgroundColor = .clear
@@ -131,9 +132,44 @@ final class PaymentViewController: UIViewController {
         ]
     }
     
+    private func showAlert() {
+        let alert = UIAlertController(title: "Не удалось произвести \nоплату",
+                                      message: nil,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Отмена", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+            self.switchActions(style: action.style)
+            self.navigationController?.popToRootViewController(animated: true)
+        }))
+        alert.addAction(UIAlertAction(title: "Повторить", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+            self.switchActions(style: action.style)
+        }))
+        self.present(alert, animated: true)
+    }
+    
+    private func switchActions(style: UIAlertAction.Style) {
+        switch style {
+        case .default:
+            return
+        case .cancel:
+            return
+        case .destructive:
+            return
+        @unknown default:
+            return
+        }
+    }
+    
     @objc
     private func didTapPaymentButton() {
-        
+        let isSuccesss = [true, false].randomElement() ?? false
+        if isSuccesss {
+            let successViewController = SuccessViewController()
+            navigationController?.pushViewController(successViewController, animated: true)
+        } else {
+            showAlert()
+        }
     }
 }
 
@@ -142,6 +178,7 @@ extension PaymentViewController: UICollectionViewDelegate {
         let cell = collectionView.cellForItem(at: indexPath) as? PaymentCollectionViewCell
         cell?.containerView.layer.borderWidth = 1
         cell?.containerView.layer.borderColor = UIColor.ypBlack?.cgColor
+        paymentButton.isEnabled = true
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {

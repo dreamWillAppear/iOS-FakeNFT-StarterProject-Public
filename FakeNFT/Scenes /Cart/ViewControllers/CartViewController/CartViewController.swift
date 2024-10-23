@@ -139,16 +139,20 @@ final class CartViewController: UIViewController {
         let alert = UIAlertController(title: "Сортировка",
                                       message: nil,
                                       preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: {action in
+        alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
             self.switchActions(style: action.style)
         }))
-        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: {action in
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
             self.switchActions(style: action.style)
         }))
-        alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: {action in
+        alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
             self.switchActions(style: action.style)
         }))
-        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: {action in
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: { [weak self] action in
+            guard let self = self else { return }
             self.switchActions(style: action.style)
         }))
         self.present(alert, animated: true)

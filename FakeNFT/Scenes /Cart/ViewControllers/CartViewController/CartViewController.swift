@@ -77,6 +77,11 @@ final class CartViewController: UIViewController {
         setupNavItems()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.tabBarController?.tabBar.isHidden = false
+    }
+    
     private func setupNavItems() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortButton)
         let backItem = UIBarButtonItem()
@@ -175,6 +180,7 @@ final class CartViewController: UIViewController {
     @objc
     private func didTapforPaymentButton() {
         let paymentViewController = PaymentViewController()
+        navigationController?.tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(paymentViewController, animated: true)
     }
 }
@@ -211,12 +217,12 @@ extension CartViewController: UITableViewDataSource {
 
 extension CartViewController: CartTableViewCellDelegate {
     
-    func imageListCellDidTapLike(_ cell: CartTableViewCell) {
+    func cartCellDidTapDelete(_ cell: CartTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         guard let data = self.data else { return }
         let deleteViewController = DeleteViewController()
         deleteViewController.dataNft = data[indexPath.row]
-        deleteViewController.modalPresentationStyle = .overCurrentContext
+        deleteViewController.modalPresentationStyle = .overFullScreen
         self.present(deleteViewController, animated: true)
     }
 }

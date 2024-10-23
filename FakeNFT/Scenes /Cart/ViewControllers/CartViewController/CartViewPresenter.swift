@@ -13,7 +13,7 @@ protocol CartViewPresenterProtocol {
 
 final class CartViewPresenter: CartViewPresenterProtocol {
     
-    private let data = CartEnum.cart
+    private let data = MokeEnum.cart
     
     func getDataNft() -> [NftCart] {
         return data

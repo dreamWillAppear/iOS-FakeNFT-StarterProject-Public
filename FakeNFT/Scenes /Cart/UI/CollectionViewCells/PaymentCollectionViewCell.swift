@@ -43,12 +43,6 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
         setupViews()
     }
     
-//    override func draw(_ rect: CGRect) {
-//        super.draw(rect)
-//        emojiViewContainer.layer.cornerRadius = emojiViewContainer.frame.size.width / 2
-//        plusButton.layer.cornerRadius = plusButton.frame.size.width / 2
-//    }
-    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }

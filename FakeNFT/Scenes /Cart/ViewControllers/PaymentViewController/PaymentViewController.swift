@@ -9,7 +9,8 @@ import UIKit
 
 final class PaymentViewController: UIViewController {
     
-    private let payment = MokeEnum.payment
+    private var presenter: PaymentViewPresenterProtocol?
+    private var payment: [Payment]?
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -61,6 +62,8 @@ final class PaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter = PaymentViewPresenter()
+        self.payment = presenter?.getPaymentData()
         setupNavItems()
         setupViews()
         setupDelegates()
@@ -190,6 +193,7 @@ extension PaymentViewController: UICollectionViewDelegate {
 
 extension PaymentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let payment = payment else { return 0 }
         return payment.count
     }
     
@@ -200,6 +204,7 @@ extension PaymentViewController: UICollectionViewDataSource {
         ) as? PaymentCollectionViewCell else {
             return UICollectionViewCell()
         }
+        guard let payment = payment else { return UICollectionViewCell() }
         let index = payment[indexPath.row]
         cell.paymentImage.image = index.image
         cell.paymentName.text = index.fullName

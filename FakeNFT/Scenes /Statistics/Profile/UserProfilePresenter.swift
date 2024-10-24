@@ -9,29 +9,28 @@ import Foundation
 
 protocol UserProfilePresenterProtocol {
     func profile() -> Profile?
-    func presenterForCollection() -> NFTCollectionPresenter
+    func presenterForCollection() -> NFTCollectionPresenter?
     func webSiteURL() -> String?
 }
 
 final class UserProfilePresenter: UserProfilePresenterProtocol {
-    let userProfileIndex: Int
-    let store: UserProfileStoreProtocol
-    init(userProfileIndex: Int) {
-        self.userProfileIndex = userProfileIndex
-        self.store = UserProfileStore()
+    let profileData: Profile?
+    init(profile: Profile?) {
+        self.profileData = profile
     }
     
     func profile() -> Profile? {
-        return store.profile(for: userProfileIndex)
+        return profileData
     }
     
-    func presenterForCollection() -> NFTCollectionPresenter {
-        let presenter = NFTCollectionPresenter()
+    func presenterForCollection() -> NFTCollectionPresenter? {
+        guard let profileData else { return nil }
+        let presenter = NFTCollectionPresenter(nfts: profileData.nfts)
         return presenter
     }
     
     func webSiteURL() -> String? {
-        return store.webSiteURLString(for: userProfileIndex)
+        return profileData?.website
     }
 }
 

@@ -30,6 +30,7 @@ final class NFTCollectionViewController: UIViewController {
     init(presenter: NFTCollectionPresenter) {
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
+        presenter.view = self
     }
     
     required init?(coder: NSCoder) {
@@ -72,6 +73,10 @@ final class NFTCollectionViewController: UIViewController {
     @objc private func close() {
         navigationController?.popViewController(animated: true)
     }
+    
+    func reloadCollectionView() {
+        collectionView.reloadData()
+    }
 }
 
 extension NFTCollectionViewController: UICollectionViewDataSource {
@@ -81,7 +86,8 @@ extension NFTCollectionViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        cell.setupCell(nftName: nft.name, nftPrice: nft.price, imageURLString: nft.imageURLString, rating: nft.rating)
+        
+        cell.setupCell(nftName: nft.name, nftPrice: nft.price, imageURLString: nft.images[0], rating: nft.rating)
         return cell
         
     }

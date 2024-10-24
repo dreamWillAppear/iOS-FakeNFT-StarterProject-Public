@@ -62,8 +62,7 @@ final class NFTCollectionCell: UICollectionViewCell {
         starRating.setStars(rating: rating)
         
         let imageURL = URL(string: imageURLString)
-//        nftImageView.kf.setImage(with: imageURL)
-        nftImageView.image = UIImage(named: "card1")
+        nftImageView.kf.setImage(with: imageURL)
         
         addSubviews()
         applyConstraints()

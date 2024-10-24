@@ -51,5 +51,6 @@ class UserProfileWebView: UIViewController, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
     }
+
 }
 

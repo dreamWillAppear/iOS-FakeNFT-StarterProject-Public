@@ -121,7 +121,7 @@ final class UserProfileViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     @objc private func openCollectionButtonTapped() {
-        let presenterForCollection = presenter.presenterForCollection()
+        guard let presenterForCollection = presenter.presenterForCollection() else { return }
         let vc = NFTCollectionViewController(presenter: presenterForCollection)
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -138,11 +138,11 @@ final class UserProfileViewController: UIViewController {
     private func setupUI() {
         guard let profile = presenter.profile() else { return }
         updateInfo(
-            nftNumber: profile.nftNumber,
-            image: profile.image,
+            nftNumber: profile.nfts.count,
+            image: profile.avatar,
             name: profile.name,
             description: profile.description,
-            profileURL: profile.profileURL
+            profileURL: profile.website
         )
     }
     

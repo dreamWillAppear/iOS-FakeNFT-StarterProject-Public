@@ -14,7 +14,6 @@ final class CatalogService: CatalogServiceProtocol {
         self.networkClient = networkClient
     }
     
-    
     func loadCollections(completion: @escaping CatalogCompletion) {
         let request = CatalogRequest()
         networkClient.send(request: request, type: [CatalogResultModel].self ) { result in

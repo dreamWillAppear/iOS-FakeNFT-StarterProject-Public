@@ -9,7 +9,7 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol, Loadin
     
     // MARK: - Public Properties
     
-    internal lazy var activityIndicator = UIActivityIndicatorView()
+    lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Private Properties
     
@@ -127,7 +127,6 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol, Loadin
     @objc private func didTapFilterButton() {
         showSelectFilterAlert()
     }
-    
 }
 
 extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {

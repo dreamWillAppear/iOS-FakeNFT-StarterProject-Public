@@ -17,7 +17,7 @@ private enum SelectedFilter: String {
 }
 
 final class CatalogPresenter: CatalogPresenterProtocol {
-
+    
     // MARK: - Private Properties
     
     private weak var view: CatalogViewProtocol?
@@ -44,7 +44,6 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     
     init(view: CatalogViewProtocol?) {
         self.view = view
-        
     }
     
     //MARK: - Public Methods

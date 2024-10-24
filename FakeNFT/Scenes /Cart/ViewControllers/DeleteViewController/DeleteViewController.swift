@@ -39,7 +39,7 @@ final class DeleteViewController: UIViewController {
         button.backgroundColor = .ypBlack
         button.setTitle("Удалить", for: .normal)
         button.setTitleColor(.ypRedUniversal, for: .normal)
-        button.addTarget(self, action: #selector(Self.didTapDeleteButton), for: .touchDown)
+        button.addTarget(self, action: #selector(Self.didTapDeleteButton), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 12
         return button
@@ -50,7 +50,7 @@ final class DeleteViewController: UIViewController {
         button.backgroundColor = .ypBlack
         button.setTitle("Вернуться", for: .normal)
         button.setTitleColor(.ypWhite, for: .normal)
-        button.addTarget(self, action: #selector(Self.didTapCancelButton), for: .touchDown)
+        button.addTarget(self, action: #selector(Self.didTapCancelButton), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 12
         return button

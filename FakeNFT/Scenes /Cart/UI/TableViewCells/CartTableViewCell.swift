@@ -8,7 +8,7 @@
 import UIKit
 
 protocol CartTableViewCellDelegate: AnyObject {
-    func imageListCellDidTapLike(_ cell: CartTableViewCell)
+    func cartCellDidTapDelete(_ cell: CartTableViewCell)
 }
 
 final class CartTableViewCell: UITableViewCell {
@@ -122,7 +122,7 @@ final class CartTableViewCell: UITableViewCell {
     
     @objc
     private func didTapDeleteButton() {
-        delegate?.imageListCellDidTapLike(self)
+        delegate?.cartCellDidTapDelete(self)
     }
     
     required init?(coder: NSCoder) {

@@ -72,6 +72,7 @@ final class RatingTableViewController: UIViewController, RatingTableViewControll
     }
 
     override func viewDidLoad() {
+        view.backgroundColor = UIColor.ypWhite
         tableView.dataSource = self
         tableView.delegate = self
 

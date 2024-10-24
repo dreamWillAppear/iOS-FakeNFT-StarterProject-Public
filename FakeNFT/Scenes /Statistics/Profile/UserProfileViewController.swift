@@ -20,7 +20,6 @@ final class UserProfileViewController: UIViewController {
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "square.and.arrow.up.circle.fill")
         imageView.layer.cornerRadius = 35
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -30,7 +29,6 @@ final class UserProfileViewController: UIViewController {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Joaquin Phoenix"
         label.font = .boldSystemFont(ofSize: 24)
         return label
     }()
@@ -38,9 +36,6 @@ final class UserProfileViewController: UIViewController {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = """
-        Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.
-        """
         label.numberOfLines = 0
         label.textAlignment = .left
         label.font = .systemFont(ofSize: 16)
@@ -234,5 +229,6 @@ final class UserProfileViewController: UIViewController {
         descriptionLabel.text = description
     }
     
-    private func updateProfileURL(profileURL: String) { }
+    private func updateProfileURL(profileURL: String) {
+    }
 }

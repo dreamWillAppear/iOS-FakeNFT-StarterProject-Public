@@ -7,26 +7,10 @@
 
 import Foundation
 
-
-struct Profile: Codable {
-    let name: String
-    let avatar: String
-    let rating: String
-    let description: String
-    let website: String
-    let id: String
-    let nfts: [String]
-}
-
-
 final class StatisticNetworkServise {
-    // MARK: - Public Properties
-    
-    // MARK: - Private Properties
     private let url: String = NetworkConstants.baseURL
     private let token: String = NetworkConstants.token
     
-    // MARK: - Public Methods
     func fetchUsers(completion: @escaping (Result<[Profile], Error>) -> Void) {
         guard let url = URL(string: "\(self.url)/api/v1/users") else { return }
         var request = URLRequest(url: url)

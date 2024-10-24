@@ -111,6 +111,8 @@ final class UserProfileViewController: UIViewController {
         setupConstraints()
         backButton.setImage(UIImage(named: backButtonImageName), for: .normal)
         backButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+        nftCollectionView.addTarget(self, action: #selector(openCollectionButtonTapped), for: .touchUpInside)
+        websiteButton.addTarget(self, action: #selector(openWebsite), for: .touchUpInside)
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
@@ -118,6 +120,20 @@ final class UserProfileViewController: UIViewController {
     @objc private func close() {
         navigationController?.popViewController(animated: true)
     }
+    @objc private func openCollectionButtonTapped() {
+        let presenterForCollection = presenter.presenterForCollection()
+        let vc = NFTCollectionViewController(presenter: presenterForCollection)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func openWebsite() {
+        guard let url = presenter.webSiteURL() else { return }
+        let webVC = UserProfileWebView(url: url)
+        let navController = UINavigationController(rootViewController: webVC)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true, completion: nil)
+    }
+
     
     private func setupUI() {
         guard let profile = presenter.profile() else { return }

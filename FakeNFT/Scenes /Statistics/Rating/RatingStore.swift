@@ -8,48 +8,60 @@
 
 import Foundation
 
-
 protocol RatingStoreProtocol {
     func numberOfRatings() -> Int
-    func rating(for index: Int) -> Rating?
+    func rating(for index: Int) -> Profile?
 }
 
 enum SortingKeys: String {
-    case score = "score"
+    case score = "rating"
     case name = "name"
 }
 
 final class RatingStore: RatingStoreProtocol {
+    let statisticsService: StatisticNetworkServise
+    weak var presenter: RatingTablePresenter?
+    
+    init() {
+        self.statisticsService = StatisticNetworkServise()
+    }
+    
     private var sortingKey: SortingKeys {
         get {
-            let keyString = UserDefaults.standard.string(forKey: "sortingKey") ?? "score"
+            let keyString = UserDefaults.standard.string(forKey: "sortingKey") ?? "rating"
             return SortingKeys(rawValue: keyString) ?? .score
         } set {
             UserDefaults.standard.setValue(newValue.rawValue, forKey: "sortingKey")
         }
     }
 
-    var sortedRating: [Rating] {
+    var sortedRating: [Profile] {
         unsortedRatings.sorted { [weak self] in
             switch self?.sortingKey {
             case .score:
-                return $0.score > $1.score
+                return $0.rating > $1.rating
             case .name:
                 return $0.name < $1.name
             default:
-                return $0.score < $1.score
+                return $0.rating < $1.rating
             }
         }
     }
 
-    private let unsortedRatings: [Rating] = [
-        Rating(imageURLString: "https://via.placeholder.com/200", name: "Sasha", score: 215),
-        Rating(imageURLString: "https://images.unsplash.com/photo-1547721064-da6cfb341d50", name: "Oleg", score: 105),
-        Rating(imageURLString: "https://www.example.com/image.jpg", name: "Zlata", score: 200),
-        Rating(imageURLString: "https://images.unsplash.com/photo-1547721064-da6cfb341d50", name: "Artem", score: 110),
-        Rating(imageURLString: "https://www.example.com/image.jpg", name: "Jenya", score: 88)
-    ]
+    private var unsortedRatings: [Profile] = []
 
+    func fetchRatings() {
+        statisticsService.fetchUsers() { [weak self] result in
+            switch result {
+            case .success(let ratings):
+                self?.unsortedRatings = ratings
+                self?.presenter?.reloadData()
+            case .failure:
+                break
+            }
+        }
+    }
+    
     private func changeKey(sortingKey: SortingKeys) {
         self.sortingKey = sortingKey
     }
@@ -58,7 +70,8 @@ final class RatingStore: RatingStoreProtocol {
         return sortedRating.count
     }
 
-    func rating(for index: Int) -> Rating? {
+    func rating(for index: Int) -> Profile? {
+        if index > sortedRating.count - 1 { return nil }
         return sortedRating[index]
     }
 

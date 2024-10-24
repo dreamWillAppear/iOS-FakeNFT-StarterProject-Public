@@ -20,7 +20,6 @@ final class UserProfileViewController: UIViewController {
     private let profileImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "square.and.arrow.up.circle.fill")
         imageView.layer.cornerRadius = 35
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFill
@@ -30,7 +29,6 @@ final class UserProfileViewController: UIViewController {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Joaquin Phoenix"
         label.font = .boldSystemFont(ofSize: 24)
         return label
     }()
@@ -38,9 +36,6 @@ final class UserProfileViewController: UIViewController {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = """
-        Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям.
-        """
         label.numberOfLines = 0
         label.textAlignment = .left
         label.font = .systemFont(ofSize: 16)
@@ -111,6 +106,8 @@ final class UserProfileViewController: UIViewController {
         setupConstraints()
         backButton.setImage(UIImage(named: backButtonImageName), for: .normal)
         backButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+        nftCollectionView.addTarget(self, action: #selector(openCollectionButtonTapped), for: .touchUpInside)
+        websiteButton.addTarget(self, action: #selector(openWebsite), for: .touchUpInside)
 
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     }
@@ -118,15 +115,29 @@ final class UserProfileViewController: UIViewController {
     @objc private func close() {
         navigationController?.popViewController(animated: true)
     }
+    @objc private func openCollectionButtonTapped() {
+        guard let presenterForCollection = presenter.presenterForCollection() else { return }
+        let vc = NFTCollectionViewController(presenter: presenterForCollection)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func openWebsite() {
+        guard let url = presenter.webSiteURL() else { return }
+        let webVC = UserProfileWebView(url: url)
+        let navController = UINavigationController(rootViewController: webVC)
+        navController.modalPresentationStyle = .fullScreen
+        present(navController, animated: true, completion: nil)
+    }
+
     
     private func setupUI() {
         guard let profile = presenter.profile() else { return }
         updateInfo(
-            nftNumber: profile.nftNumber,
-            image: profile.image,
+            nftNumber: profile.nfts.count,
+            image: profile.avatar,
             name: profile.name,
             description: profile.description,
-            profileURL: profile.profileURL
+            profileURL: profile.website
         )
     }
     
@@ -218,5 +229,6 @@ final class UserProfileViewController: UIViewController {
         descriptionLabel.text = description
     }
     
-    private func updateProfileURL(profileURL: String) { }
+    private func updateProfileURL(profileURL: String) {
+    }
 }

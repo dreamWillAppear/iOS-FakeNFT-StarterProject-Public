@@ -72,6 +72,7 @@ final class RatingTableViewController: UIViewController, RatingTableViewControll
     }
 
     override func viewDidLoad() {
+        view.backgroundColor = UIColor.ypWhite
         tableView.dataSource = self
         tableView.delegate = self
 
@@ -129,7 +130,7 @@ extension RatingTableViewController: UITableViewDataSource, UITableViewDelegate 
             return UITableViewCell()
         }
         cell.selectionStyle = .none
-        cell.setupCell(position: indexPath.row + 1, score: cellInfo.score, name: cellInfo.name, imageString: cellInfo.imageURLString)
+        cell.setupCell(position: indexPath.row + 1, score: cellInfo.rating, name: cellInfo.name, imageString: cellInfo.avatar)
 
         return cell
     }

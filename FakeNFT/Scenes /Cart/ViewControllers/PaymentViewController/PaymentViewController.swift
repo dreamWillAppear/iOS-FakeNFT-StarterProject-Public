@@ -164,6 +164,16 @@ final class PaymentViewController: UIViewController {
         }
     }
     
+    private func isSelectedCell(cell: PaymentCollectionViewCell?, isSelected: Bool) {
+        if isSelected {
+            cell?.containerView.layer.borderWidth = 1
+            cell?.containerView.layer.borderColor = UIColor.ypBlack?.cgColor
+        } else {
+            cell?.containerView.layer.borderWidth = 0
+            cell?.containerView.layer.borderColor = UIColor.clear.cgColor
+        }
+    }
+    
     @objc
     private func didTapPaymentButton() {
         let isSuccesss = [true, false].randomElement() ?? false
@@ -179,15 +189,13 @@ final class PaymentViewController: UIViewController {
 extension PaymentViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? PaymentCollectionViewCell
-        cell?.containerView.layer.borderWidth = 1
-        cell?.containerView.layer.borderColor = UIColor.ypBlack?.cgColor
+        self.isSelectedCell(cell: cell, isSelected: true)
         paymentButton.isEnabled = true
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? PaymentCollectionViewCell
-        cell?.containerView.layer.borderWidth = 0
-        cell?.containerView.layer.borderColor = UIColor.clear.cgColor
+        self.isSelectedCell(cell: cell, isSelected: false)
     }
 }
 
@@ -216,7 +224,9 @@ extension PaymentViewController: UICollectionViewDataSource {
 extension PaymentViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.frame.width - 7) / 2, height: ((collectionView.frame.width - 7) / 2) * 0.27)
+        let width: CGFloat = (collectionView.frame.width - 7) / 2
+        let height: CGFloat = width * 0.27
+        return CGSize(width: width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {

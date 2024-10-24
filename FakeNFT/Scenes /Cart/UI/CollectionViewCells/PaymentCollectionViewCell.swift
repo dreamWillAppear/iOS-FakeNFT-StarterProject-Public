@@ -18,8 +18,8 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
     }()
     
     lazy var paymentImage: UIImageView = {
-        let imageVIew = UIImageView()
-        return imageVIew
+        let imageView = UIImageView()
+        return imageView
     }()
     
     lazy var paymentName: UILabel = {

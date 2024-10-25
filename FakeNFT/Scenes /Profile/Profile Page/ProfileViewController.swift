@@ -120,12 +120,12 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         self.profile = profile
         let imageURL = URL(string: profile.avatarImageURL)
         
-        avatarImageView.kf.setImage(with: imageURL) { [weak self] result in
-            guard let self = self else { return }
-            
+        avatarImageView.kf.setImage(with: imageURL) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(_):
+                    self.avatarImageView.layer.cornerRadius = 34
+                    self.avatarImageView.clipsToBounds = true
                     print("Avatar is successfully loaded")
                 case .failure(let error):
                     print("[ProfileViewController: avatarImageURL]: Error while loading image.\(error)")
@@ -133,23 +133,9 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
             }
         }
         
-        //avatarImageView.image = profile.avatarImageURL
         nameLabel.text = profile.name
         descriptionLabel.text = profile.description
         websiteLink.text = profile.website
-    }
-    
-    @objc private func editButtonTapped() {
-        let editProfileVC = EditProfileViewController()
-        editProfileVC.profile = self.profile
-        
-        let popover = UIPopoverPresentationController(presentedViewController: editProfileVC, presenting: self)
-        popover.sourceView = self.view
-        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
-        popover.permittedArrowDirections = []
-        
-        editProfileVC.modalPresentationStyle = .popover
-        present(editProfileVC, animated: true, completion: nil)
     }
 }
 
@@ -200,5 +186,27 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         default:
             break
         }
+    }
+}
+
+
+extension ProfileViewController: EditProfileViewControllerDelegate {
+    func didUpdateProfile() {
+        presenter?.loadProfileData()
+        dismiss(animated: true)
+    }
+    
+    @objc private func editButtonTapped() {
+        let editProfileVC = EditProfileViewController()
+        editProfileVC.profile = self.profile
+        editProfileVC.delegate = self
+        
+        let popover = UIPopoverPresentationController(presentedViewController: editProfileVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        
+        editProfileVC.modalPresentationStyle = .popover
+        present(editProfileVC, animated: true, completion: nil)
     }
 }

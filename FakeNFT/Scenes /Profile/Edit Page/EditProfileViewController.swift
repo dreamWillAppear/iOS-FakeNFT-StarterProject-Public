@@ -39,7 +39,8 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
     private var changePhotoButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Сменить\n фото", for: .normal)
+        let title = "Сменить\n фото"
+        button.setTitle(title, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 10, weight: .medium)
         button.titleLabel?.numberOfLines = 0
         button.titleLabel?.textAlignment = .center
@@ -254,7 +255,9 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
               let description = descriptionTextView.text,
               let website = websiteTextView.text,
               let avatarURL = self.avatarURL else { return }
-        presenter?.saveProfile(name: name, description: description, website: website, avatarURL: avatarURL)
+        
+        let profile = Profile(avatarImageURL: avatarURL, name: name, description: description, website: website)
+        presenter?.saveProfile(profile: profile)
     }
     
     @objc private func closeButtonTapped() {

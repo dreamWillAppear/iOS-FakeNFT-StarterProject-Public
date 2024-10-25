@@ -18,8 +18,8 @@ final class EditProfilePresenter: EditProfilePresenterProtocol {
         
     }
     
-    func saveProfile(name: String, description: String, website: String, avatarURL: String) {
-        print("Profile saved: \(name), \(description), \(website), \(avatarURL)")
+    func saveProfile(profile: Profile) {
+        print("Profile saved: \(profile.name), \(profile.description), \(profile.website), \(profile.avatarImageURL)")
         
         let urlString = "\(RequestConstants.baseURL)/api/v1/profile/1"
         guard let url = URL(string: urlString) else { return }
@@ -27,15 +27,17 @@ final class EditProfilePresenter: EditProfilePresenterProtocol {
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         
-        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        let contentType = "application/x-www-form-urlencoded"
+        let accept = "application/json"
+        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+        request.setValue(accept, forHTTPHeaderField: "Accept")
         request.setValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
         
         let params = [
-            "name": name,
-            "description": description,
-            "avatar": avatarURL,
-            "website": website
+            "name": profile.name,
+            "description": profile.description,
+            "avatar": profile.avatarImageURL,
+            "website": profile.website
         ]
         let bodyString = params.map { "\($0.key)=\($0.value)" }.joined(separator: "&")
         request.httpBody = bodyString.data(using: .utf8)

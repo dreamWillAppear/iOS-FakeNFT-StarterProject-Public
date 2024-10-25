@@ -10,12 +10,6 @@ protocol CatalogPresenterProtocol: AnyObject {
     func sortByCount()
 }
 
-private enum SelectedFilter: String {
-    case key = "selectedFilter"
-    case byNameValue = "byName"
-    case byCountValue = "byCount"
-}
-
 final class CatalogPresenter: CatalogPresenterProtocol {
     
     // MARK: - Private Properties
@@ -25,7 +19,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     private let networkClient = DefaultNetworkClient()
     private lazy var networkService = CatalogService(networkClient: networkClient)
     
-    private let userDefaults = UserDefaults.standard
+    private let userDefaultsManager = UserDefaultsManager()
     
     private var nftCollections: [CatalogViewModel] = [] {
         didSet {
@@ -87,13 +81,13 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     func sortByName() {
         let sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftCollectionName < $1.nftCollectionName }
         nftCollections = sortedNfts
-        userDefaults.set(SelectedFilter.byNameValue.rawValue, forKey: SelectedFilter.key.rawValue)
+        userDefaultsManager.saveCatalogFilterByName()
     }
     
     func sortByCount() {
         let sortedNfts: [CatalogViewModel] = nftCollections.sorted { $0.nftsCount > $1.nftsCount }
         nftCollections = sortedNfts
-        userDefaults.set(SelectedFilter.byCountValue.rawValue, forKey: SelectedFilter.key.rawValue)
+        userDefaultsManager.saveCatalogFilterByCount()
     }
     
     //MARK: - Private Methods
@@ -130,12 +124,14 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
     
     private func checkSelectedFilter() {
-        let selectedFilter = userDefaults.string(forKey: SelectedFilter.key.rawValue)
+        guard let selectedFilter = userDefaultsManager.checkCatalogFilter() else {
+            return
+        }
         
         switch selectedFilter {
-            case SelectedFilter.byNameValue.rawValue:
+            case SelectedFilterEnum.byNameValue.rawValue:
                 sortByName()
-            case SelectedFilter.byCountValue.rawValue:
+            case SelectedFilterEnum.byCountValue.rawValue:
                 sortByCount()
             default:
                 return

@@ -5,6 +5,5 @@ struct NftCollectionViewModel {
     let cover: UIImage
     let authorName: String
     let description: String
-    let nfts: [NftViewModel] 
+    let nfts: [NftViewModel]
 }
-

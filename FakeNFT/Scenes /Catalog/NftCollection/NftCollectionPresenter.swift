@@ -11,12 +11,14 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     //MARK: - Private Properties
     
     private weak var view: NftCollectionViewProtocol?
+    private var collectionId: String
     private var nfts: [NftViewModel] = []
     
     // MARK: - Initializers
     
-    init(view: NftCollectionViewProtocol?) {
+    init(view: NftCollectionViewProtocol?, collectionId: String) {
         self.view = view
+        self.collectionId = collectionId
     }
     
     //MARK: - Public Methods

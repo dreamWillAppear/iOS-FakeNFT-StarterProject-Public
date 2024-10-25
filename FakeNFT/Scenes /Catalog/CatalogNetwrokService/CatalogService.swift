@@ -16,15 +16,7 @@ final class CatalogService: CatalogServiceProtocol {
     
     func loadCollections(completion: @escaping CatalogCompletion) {
         let request = CatalogRequest()
-        networkClient.send(request: request, type: [CatalogResultModel].self ) { result in
-            
-            switch result {
-                case .success(let result):
-                    completion(.success(result))
-                case.failure(let error):
-                    completion(.failure(error))
-            }
-        }
+        networkClient.send(request: request, type: [CatalogResultModel].self, onResponse: completion)
     }
 }
 

@@ -19,6 +19,11 @@ final class WebViewController: UIViewController, WKNavigationDelegate {
         setupWebView()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        ProgressHUD.dismiss()
+    }
+    
     private func setupWebView() {
         webView.navigationDelegate = self
         guard let url = URL(string: "https://yandex.ru/legal/practicum_termsofuse/") else { return }

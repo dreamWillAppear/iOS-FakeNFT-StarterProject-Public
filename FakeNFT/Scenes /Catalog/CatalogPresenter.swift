@@ -1,6 +1,6 @@
 import UIKit
 
-protocol CatalogPresenterProtocol {
+protocol CatalogPresenterProtocol: AnyObject {
     func onViewDidLoad()
     func getCollectionCount() -> Int
     func getCollectionLabel(at index: Int) -> String

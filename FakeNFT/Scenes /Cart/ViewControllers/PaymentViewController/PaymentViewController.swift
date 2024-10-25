@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 
 final class PaymentViewController: UIViewController {
     
@@ -29,10 +30,23 @@ final class PaymentViewController: UIViewController {
         view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         return view
     }()
+
+    private lazy var agreementLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Совершая покупку, вы соглашаетесь с условиями"
+        label.font = .systemFont(ofSize: 13, weight: .regular)
+        label.textColor = .ypBlack
+        return label
+    }()
     
-    private lazy var linkTextView: UITextView = {
-       let textView = UITextView()
-        return textView
+    private lazy var agreementButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .clear
+        button.setTitle("Пользовательского соглашения", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 13, weight: .regular)
+        button.setTitleColor(.ypBlueUniversal, for: .normal)
+        button.addTarget(self, action: #selector(Self.didTapTextView), for: .touchUpInside)
+        return button
     }()
     
     private lazy var paymentButton: UIButton = {
@@ -41,7 +55,7 @@ final class PaymentViewController: UIViewController {
         button.setTitle("Оплатить", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         button.setTitleColor(.ypWhite, for: .normal)
-        button.addTarget(self, action: #selector(Self.didTapPaymentButton), for: .touchDown)
+        button.addTarget(self, action: #selector(Self.didTapPaymentButton), for: .touchUpInside)
         button.clipsToBounds = true
         button.layer.cornerRadius = 16
         button.isEnabled = false
@@ -67,7 +81,6 @@ final class PaymentViewController: UIViewController {
         setupNavItems()
         setupViews()
         setupDelegates()
-        setupLinkTextView()
     }
     
     private func setupNavItems() {
@@ -88,7 +101,8 @@ final class PaymentViewController: UIViewController {
         }
         
         [paymentButton,
-         linkTextView].forEach{
+         agreementLabel,
+         agreementButton].forEach{
             $0.translatesAutoresizingMaskIntoConstraints = false
             paymentView.addSubview($0)
         }
@@ -109,30 +123,12 @@ final class PaymentViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            linkTextView.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor, constant: 16),
-            linkTextView.topAnchor.constraint(equalTo: paymentView.topAnchor, constant: 16),
-            linkTextView.trailingAnchor.constraint(equalTo: paymentView.trailingAnchor, constant: -16),
-            linkTextView.heightAnchor.constraint(equalToConstant: 44)
+            agreementLabel.topAnchor.constraint(equalTo: paymentView.topAnchor, constant: 16),
+            agreementLabel.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor, constant: 16),
+            
+            agreementButton.topAnchor.constraint(equalTo: agreementLabel.bottomAnchor, constant: 0),
+            agreementButton.leadingAnchor.constraint(equalTo: agreementLabel.leadingAnchor)
         ])
-    }
-    
-    private func setupLinkTextView() {
-        let titleParagraphStyle = NSMutableParagraphStyle()
-        titleParagraphStyle.lineSpacing = 4
-        titleParagraphStyle.paragraphSpacing = 4
-        let attributedString = NSMutableAttributedString(string: "Совершая покупку, вы соглашаетесь с условиями \nПользовательского соглашения")
-        guard let url = URL(string: "https://yandex.ru/legal/practicum_termsofuse/") else { return }
-        attributedString.setAttributes([.link: url, .paragraphStyle: titleParagraphStyle],
-                                       range: NSMakeRange(45, 30))
-        self.linkTextView.attributedText = attributedString
-        self.linkTextView.textColor = .ypBlack
-        self.linkTextView.isUserInteractionEnabled = true
-        self.linkTextView.isEditable = false
-        self.linkTextView.backgroundColor = .clear
-        self.linkTextView.linkTextAttributes = [
-            .foregroundColor: UIColor.ypBlueUniversal,
-            .font: UIFont.systemFont(ofSize: 13, weight: .regular)
-        ]
     }
     
     private func showAlert() {
@@ -176,13 +172,20 @@ final class PaymentViewController: UIViewController {
     
     @objc
     private func didTapPaymentButton() {
-        let isSuccesss = [true, false].randomElement() ?? false
-        if isSuccesss {
+        guard let isSuccess = presenter?.getResultOfPayment() else { return }
+        if isSuccess {
             let successViewController = SuccessViewController()
             navigationController?.pushViewController(successViewController, animated: true)
         } else {
             showAlert()
         }
+    }
+    
+    @objc
+    private func didTapTextView() {
+        let webView = WebViewController()
+        webView.modalPresentationStyle = .automatic
+        self.present(webView, animated: true)
     }
 }
 

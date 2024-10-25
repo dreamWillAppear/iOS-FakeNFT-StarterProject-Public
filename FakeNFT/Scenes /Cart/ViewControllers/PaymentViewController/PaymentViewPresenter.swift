@@ -9,6 +9,7 @@ import Foundation
 
 protocol PaymentViewPresenterProtocol {
     func getPaymentData() -> [Payment]
+    func getResultOfPayment() -> Bool
 }
 
 final class PaymentViewPresenter: PaymentViewPresenterProtocol {
@@ -17,5 +18,9 @@ final class PaymentViewPresenter: PaymentViewPresenterProtocol {
     
     func getPaymentData() -> [Payment] {
         return data
+    }
+    
+    func getResultOfPayment() -> Bool {
+        return [true, false].randomElement() ?? false
     }
 }

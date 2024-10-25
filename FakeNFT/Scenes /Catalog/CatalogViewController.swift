@@ -3,9 +3,10 @@ import UIKit
 protocol CatalogViewProtocol: AnyObject {
     func reloadData()
     func setLoadingViewVisible(_ visible: Bool)
+    func showNetworkError()
 }
 
-final class CatalogViewController: UIViewController, CatalogViewProtocol, LoadingView {
+final class CatalogViewController: UIViewController, CatalogViewProtocol, LoadingView, ErrorView {
     
     // MARK: - Public Properties
     
@@ -59,6 +60,15 @@ final class CatalogViewController: UIViewController, CatalogViewProtocol, Loadin
     
     func  setLoadingViewVisible(_ visible: Bool) {
         visible ? showLoading() : hideLoading()
+    }
+    
+    func showNetworkError() {
+        let error = ErrorModel(
+            message: "Не удалось получить данные",
+            actionText: "Повторить",
+            action: presenter.onViewDidLoad
+        )
+        showError(error)
     }
     
     // MARK: - Private Methods

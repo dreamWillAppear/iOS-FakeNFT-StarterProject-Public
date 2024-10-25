@@ -105,9 +105,9 @@ final class CatalogPresenter: CatalogPresenterProtocol {
             switch result {
                 case .success(let result):
                     self?.nftCollectionsResult = result
-                    print("LOG CatalogPresenter networkService.loadCollections – Success!")
                 case .failure(let error):
                     print("LOG ERROR: CatalogPresenter networkService.loadCollections – \(String(describing: error))")
+                    self?.view?.showNetworkError()
             }
             self?.view?.setLoadingViewVisible(false)
         }

@@ -61,15 +61,27 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
     
     func getCollectionLabel(at index: Int) -> String {
-        "\(nftCollections[index].nftCollectionName) (\(nftCollections[index].nftsCount))"
+        guard index <= nftCollections.count else {
+            return ""
+        }
+        
+        return "\(nftCollections[index].nftCollectionName) (\(nftCollections[index].nftsCount))"
     }
     
     func getCollectionCoverURL(at index: Int) -> URL {
-        nftCollections[index].nftCollectionCoverURL
+        guard index <= nftCollections.count else {
+            return URL(fileURLWithPath: "")
+        }
+        
+        return nftCollections[index].nftCollectionCoverURL
     }
     
     func getCollectionId(at index: Int) -> String {
-        nftCollections[index].nftCollectionId
+        guard index <= nftCollections.count else {
+            return ""
+        }
+        
+        return  nftCollections[index].nftCollectionId
     }
     
     func sortByName() {

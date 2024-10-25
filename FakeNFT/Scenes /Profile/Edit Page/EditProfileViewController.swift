@@ -148,6 +148,9 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
         
         addSubViews()
         applyConstraints()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -257,7 +260,10 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
     @objc private func closeButtonTapped() {
         saveProfileChanges()
         delegate?.didUpdateProfile()
-        //dismiss(animated: true)
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
     
     @objc private func changePhotoButtonTapped() {

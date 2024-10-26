@@ -21,6 +21,7 @@ final class PaymentViewPresenter: PaymentViewPresenterProtocol {
     }
     
     func getResultOfPayment() -> Bool {
-        return [true, false].randomElement() ?? false
+        let isSuccess = [true, false].randomElement() ?? false
+        return isSuccess
     }
 }

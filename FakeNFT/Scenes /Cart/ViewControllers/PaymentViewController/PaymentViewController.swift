@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SafariServices
 
 final class PaymentViewController: UIViewController {
     

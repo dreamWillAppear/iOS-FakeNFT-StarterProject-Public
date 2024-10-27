@@ -6,26 +6,31 @@
 //
 
 import UIKit
+import ProgressHUD
 
-final class NFTCollectionViewController: UIViewController {
+protocol NFTCollectionViewControllerProtocol: AnyObject {
+    func reloadCollectionView()
+    func showProgressHud()
+    func hideProgressHud()
+}
+
+final class NFTCollectionViewController: UIViewController, NFTCollectionViewControllerProtocol {
+    let presenter: NFTCollectionPresenter
+    
     private let backButtonImageName = "backwardButton"
     private let navTitleText = "Коллекция NFT"
-    
-    private let collectionView = {
+    private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
-    
-    private let backButton = {
+    private let backButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    let presenter: NFTCollectionPresenter
     
     init(presenter: NFTCollectionPresenter) {
         self.presenter = presenter
@@ -39,25 +44,45 @@ final class NFTCollectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupView()
+        applyConstraints()
+        setupBackButton()
+        navigationView()
+        setupCollectionView()
+    }
+    
+    func reloadCollectionView() {
+        collectionView.reloadData()
+    }
+    
+    func showProgressHud() {
+        ProgressHUD.show()
+    }
+    
+    func hideProgressHud() {
+        ProgressHUD.dismiss()
+    }
+    
+    private func setupView() {
         view.addSubview(collectionView)
         view.backgroundColor = UIColor.white
-        collectionView.backgroundColor = UIColor.white
-        
-        
-        applyConstraints()
-        
+    }
+    
+    private func setupBackButton() {
         backButton.setImage(UIImage(named: backButtonImageName), for: .normal)
         backButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-
+    }
+    
+    private func navigationView() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationItem.title = navTitleText
-
+    }
+    
+    private func setupCollectionView() {
+        collectionView.backgroundColor = UIColor.white
         collectionView.delegate = self
         collectionView.dataSource = self
-        
         collectionView.register(NFTCollectionCell.self, forCellWithReuseIdentifier: NFTCollectionCell.reuseIdentifier)
-        
     }
     
     private func applyConstraints() {
@@ -67,15 +92,10 @@ final class NFTCollectionViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
     }
     
     @objc private func close() {
         navigationController?.popViewController(animated: true)
-    }
-    
-    func reloadCollectionView() {
-        collectionView.reloadData()
     }
 }
 
@@ -86,10 +106,8 @@ extension NFTCollectionViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        
         cell.setupCell(nftName: nft.name, nftPrice: nft.price, imageURLString: nft.images[0], rating: nft.rating)
         return cell
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -103,17 +121,29 @@ extension NFTCollectionViewController: UICollectionViewDelegate {
 extension NFTCollectionViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let width = (collectionView.frame.width - 19) / 3
-        let height = (collectionView.frame.height - 32) / 4
-        return CGSize(width: width, height: height)
+//        let width = (collectionView.frame.width - Layout.cellHorizontalInset) / Layout.cellsCountInLine
+//        let height = (collectionView.frame.height - Layout.cellVerticalInset) / Layout.cellsCountInColumn
+//        print(22222,width,height)
+//        return CGSize(width: width, height: height)
+        return CGSize(width: 108, height: 192)
     }
     
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacing: CGFloat) -> CGFloat {
-        10
+        Layout.collectionViewMinimumLineSpacing
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        8
+        Layout.collectionViewMinimumInteritemSpacing
+    }
+}
+
+extension NFTCollectionViewController {
+    enum Layout {
+        static let cellHorizontalInset: CGFloat = 19
+        static let cellVerticalInset: CGFloat = 32
+        static let cellsCountInLine: CGFloat = 3
+        static let cellsCountInColumn: CGFloat = 4
+        static let collectionViewMinimumLineSpacing: CGFloat = 10
+        static let collectionViewMinimumInteritemSpacing: CGFloat = 8
     }
 }

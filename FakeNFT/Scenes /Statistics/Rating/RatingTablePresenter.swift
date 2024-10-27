@@ -5,7 +5,7 @@
 //  Created by Александр  Сухинин on 15.10.2024.
 //
 
-protocol RatingTablePresenterProtocol {
+protocol RatingTablePresenterProtocol: AnyObject {
     func sortingButtonTapped()
     func numberOfItems() -> Int
     func item(at index: Int) -> Profile?
@@ -55,5 +55,15 @@ class RatingTablePresenter: RatingTablePresenterProtocol {
     
     func reloadData() {
         view?.reloadData()
+    }
+}
+
+extension RatingTablePresenter: RatingStoreDelegateProtocol {
+    func showProgressHud() {
+        view?.showProgressHud()
+    }
+    
+    func hideProgressHud() {
+        view?.hideProgressHud()
     }
 }

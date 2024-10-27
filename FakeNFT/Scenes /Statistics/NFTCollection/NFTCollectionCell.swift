@@ -75,40 +75,33 @@ final class NFTCollectionCell: UICollectionViewCell {
     
     private func applyConstraints() {
         NSLayoutConstraint.activate([
-//            nftImageView.widthAnchor.constraint(equalToConstant: 108),
-//            nftImageView.heightAnchor.constraint(equalToConstant: 108),
-            nftImageView.heightAnchor.constraint(equalTo: nftImageView.widthAnchor),
-            nftImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            nftImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            nftImageView.bottomAnchor.constraint(equalTo: starRating.topAnchor, constant: -8),
-            nftImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            nftImageView.topAnchor.constraint(equalTo: topAnchor),
+            nftImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            nftImageView.widthAnchor.constraint(equalToConstant: 108),
+            nftImageView.heightAnchor.constraint(equalToConstant: 108),
             
+            starRating.leadingAnchor.constraint(equalTo: leadingAnchor),
             starRating.topAnchor.constraint(equalTo: nftImageView.bottomAnchor, constant: 8),
-            starRating.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            starRating.trailingAnchor.constraint(equalTo: cartImageView.leadingAnchor),
-            starRating.bottomAnchor.constraint(equalTo: nftNameLabel.topAnchor, constant: -5),
+            starRating.rightAnchor.constraint(equalTo: rightAnchor, constant: -40),
+            starRating.heightAnchor.constraint(equalToConstant: 12),
             
-            nftNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            nftNameLabel.trailingAnchor.constraint(equalTo: cartImageView.leadingAnchor),
-            nftNameLabel.bottomAnchor.constraint(equalTo: nftPriceLabel.topAnchor, constant: -4),
-            nftNameLabel.topAnchor.constraint(equalTo: starRating.bottomAnchor, constant: 5),
+            nftNameLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            nftNameLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
+            nftNameLabel.topAnchor.constraint(equalTo: starRating.bottomAnchor, constant: 4),
             
-            nftPriceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            nftPriceLabel.trailingAnchor.constraint(equalTo: cartImageView.leadingAnchor),
-            nftPriceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -21),
+            nftPriceLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -40),
+            nftPriceLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             nftPriceLabel.topAnchor.constraint(equalTo: nftNameLabel.bottomAnchor, constant: 4),
             
-            cartImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            cartImageView.leadingAnchor.constraint(equalTo: nftNameLabel.trailingAnchor),
-            cartImageView.topAnchor.constraint(equalTo: starRating.bottomAnchor, constant: 5),
-            cartImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
-            cartImageView.heightAnchor.constraint(equalToConstant: 40),
-            cartImageView.widthAnchor.constraint(equalToConstant: 40),
-            
+            likeButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            likeButton.topAnchor.constraint(equalTo: topAnchor),
             likeButton.heightAnchor.constraint(equalToConstant: 40),
             likeButton.widthAnchor.constraint(equalToConstant: 40),
-            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor),
-            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor)
+            
+            cartImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            cartImageView.topAnchor.constraint(equalTo: starRating.bottomAnchor, constant: 4),
+            cartImageView.widthAnchor.constraint(equalToConstant: 40),
+            cartImageView.heightAnchor.constraint(equalToConstant: 40),
         ])
     }
 }

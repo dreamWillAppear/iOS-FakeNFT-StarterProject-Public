@@ -13,6 +13,12 @@ protocol RatingStoreProtocol {
     func rating(for index: Int) -> Profile?
 }
 
+protocol RatingStoreDelegateProtocol: AnyObject {
+    func reloadData()
+    func showProgressHud()
+    func hideProgressHud()
+}
+
 enum SortingKeys: String {
     case score = "rating"
     case name = "name"
@@ -20,7 +26,7 @@ enum SortingKeys: String {
 
 final class RatingStore: RatingStoreProtocol {
     let statisticsService: StatisticNetworkServise
-    weak var presenter: RatingTablePresenter?
+    weak var presenter: RatingStoreDelegateProtocol?
     
     init() {
         self.statisticsService = StatisticNetworkServise()
@@ -51,12 +57,15 @@ final class RatingStore: RatingStoreProtocol {
     private var unsortedRatings: [Profile] = []
 
     func fetchRatings() {
+        presenter?.showProgressHud()
         statisticsService.fetchUsers() { [weak self] result in
             switch result {
             case .success(let ratings):
+                self?.presenter?.hideProgressHud()
                 self?.unsortedRatings = ratings
                 self?.presenter?.reloadData()
             case .failure:
+                self?.presenter?.hideProgressHud()
                 break
             }
         }

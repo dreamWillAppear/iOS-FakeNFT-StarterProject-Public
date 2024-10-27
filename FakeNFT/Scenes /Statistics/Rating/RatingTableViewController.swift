@@ -5,10 +5,13 @@
 //  Created by Александр  Сухинин on 12.10.2024.
 
 import UIKit
+import ProgressHUD
 
 protocol RatingTableViewControllerProtocol: AnyObject {
     func reloadData()
     func showSortOptionsAlert()
+    func showProgressHud()
+    func hideProgressHud()
 }
 
 final class RatingTableViewController: UIViewController, RatingTableViewControllerProtocol {
@@ -44,6 +47,14 @@ final class RatingTableViewController: UIViewController, RatingTableViewControll
         tableView.reloadData()
     }
     
+    func showProgressHud() {
+        ProgressHUD.show()
+    }
+    
+    func hideProgressHud() {
+        ProgressHUD.dismiss()
+    }
+    
     func showSortOptionsAlert() {
         let alert = UIAlertController(
             title: "Сортировка",
@@ -66,11 +77,6 @@ final class RatingTableViewController: UIViewController, RatingTableViewControll
         present(alert, animated: true, completion: nil)
     }
     
-    @objc
-    private func sortingButtonTapped() {
-        presenter.sortingButtonTapped()
-    }
-
     override func viewDidLoad() {
         view.backgroundColor = UIColor.ypWhite
         tableView.dataSource = self
@@ -93,6 +99,11 @@ final class RatingTableViewController: UIViewController, RatingTableViewControll
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
+    @objc
+    private func sortingButtonTapped() {
+        presenter.sortingButtonTapped()
+    }
+    
     private func setupUI() {
         view.addSubview(sortingButton)
         view.addSubview(tableView)

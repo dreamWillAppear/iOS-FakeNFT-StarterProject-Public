@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class UserProfileWebView: UIViewController, WKNavigationDelegate {
+final class UserProfileWebView: UIViewController, WKNavigationDelegate {
     private let backButtonImageName = "backwardButton"
     private let webView = WKWebView()
     private let urlString: String
@@ -56,11 +56,5 @@ class UserProfileWebView: UIViewController, WKNavigationDelegate {
 
     @objc func closeWebView() {
         dismiss(animated: true, completion: nil)
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-    }
-    
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
     }
 }

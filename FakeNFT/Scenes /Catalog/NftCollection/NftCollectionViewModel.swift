@@ -2,8 +2,8 @@ import UIKit
 
 struct NftCollectionViewModel {
     let name: String
-    let cover: UIImage
+    let cover: URL
     let authorName: String
     let description: String
-    let nfts: [NftViewModel]
+    let nfts: [String]
 }

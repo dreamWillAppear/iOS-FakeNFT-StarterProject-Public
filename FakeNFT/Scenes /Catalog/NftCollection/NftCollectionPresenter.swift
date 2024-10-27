@@ -1,9 +1,10 @@
 import UIKit
+import Kingfisher
 
 protocol NftCollectionPresenterProtocol: AnyObject {
     func onViewDidLoad()
     func getCollection() -> NftCollectionViewModel
-    func  getNftsCount() -> Int
+    func getNftsCount() -> Int
 }
 
 final class NftCollectionPresenter: NftCollectionPresenterProtocol {
@@ -13,6 +14,20 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     private weak var view: NftCollectionViewProtocol?
     private var collectionId: String
     private var nfts: [NftViewModel] = []
+    private let networkClient = DefaultNetworkClient()
+    private lazy var networkService = NftCollectionService(networkClient: networkClient, id: collectionId)
+    
+    private var collectionResult = NftCollectionResultModel(name: "", cover: "", nfts: [""], description: "", author: "") {
+        didSet {
+          collectionView = convertResultToViewModel(result: collectionResult)
+        }
+    }
+    
+    private lazy var collectionView = convertResultToViewModel(result: collectionResult) {
+        didSet {
+            view?.displayLoadedData()
+        }
+    }
     
     // MARK: - Initializers
     
@@ -28,48 +43,39 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     }
     
     func onViewDidLoad() {
-        setupMokeData()
-        view?.reloadData()
+        fetchNftCollection()
     }
     
     func getCollection() -> NftCollectionViewModel {
-        NftCollectionViewModel(
-            name: "Peach",
-            cover:  UIImage(named: "MokeCoverPeach")!,
-            authorName: "John Doe",
-            description: "Персиковый — как облака над закатным солнцем в океане. В этой коллекции совмещены трогательная нежность и живая игривость сказочных зефирных зверей.",
-            nfts: nfts
-        )
+      collectionView
     }
-    
+
     func getNftsCount() -> Int {
         nfts.count
     }
     
     //MARK: - Private Methods
     
-    //временный метод с мок-данными для отладки UI
-    private func setupMokeData() {
-        let coverNames = ["MokeCellTater", "MokeCellSusan", "MokeCellRuby", "MokeCellPixi", "MokeCellNacho", "MokeCellDaisy", "MokeCellBiscuit", "MokeCellArchie"]
-        let cellNames =  ["Tater", "Susan", "Ruby", "Pixi", "Nacho", "Daisy", "Biscuit", "Archie"]
-        var nfts: [NftViewModel] = []
-        
-        for (index, coverName) in coverNames.enumerated() {
-            let randomRating = Int.random(in: 0...5)
-            let randomPrice = round((Float.random(in: 5...100)) * 100) / 100 //рандомный Float, округленный до 2х знаков после запятой, с бекенда такое прилетать не будет 
-            let isLiked = Bool.random()
-            let isInCart = Bool.random()
-            
-            nfts.append(NftViewModel(
-                id: "\(String(index + 1))",
-                cover: UIImage(named: coverName)!,
-                name: cellNames[index],
-                isLiked: isLiked,
-                raiting: randomRating,
-                price: randomPrice,
-                isInCart: isInCart
-            ))
+    private func fetchNftCollection() {
+        networkService.loadNftCollection { result  in
+            switch result {
+                case .success(let nftCollection):
+                    self.collectionResult = nftCollection
+                    print(nftCollection)
+                case .failure(let error):
+                    print("LOG ERROR: NftCollectionPresenter networkService.loadNftCollection – \(String(describing: error))")
+            }
         }
-        self.nfts = nfts
     }
+    
+    private func convertResultToViewModel(result: NftCollectionResultModel) -> NftCollectionViewModel {
+        NftCollectionViewModel(
+            name: collectionResult.name,
+            cover: URL(string: result.cover) ?? URL(fileURLWithPath: ""),
+            authorName: collectionResult.author,
+            description: collectionResult.description,
+            nfts: collectionResult.nfts
+        )
+    }
+    
 }

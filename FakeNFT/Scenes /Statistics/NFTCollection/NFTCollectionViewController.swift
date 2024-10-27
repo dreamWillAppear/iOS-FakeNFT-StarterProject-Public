@@ -36,6 +36,7 @@ final class NFTCollectionViewController: UIViewController, NFTCollectionViewCont
         self.presenter = presenter
         super.init(nibName: nil, bundle: nil)
         presenter.view = self
+        presenter.fetch()
     }
     
     required init?(coder: NSCoder) {
@@ -121,10 +122,6 @@ extension NFTCollectionViewController: UICollectionViewDelegate {
 extension NFTCollectionViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-//        let width = (collectionView.frame.width - Layout.cellHorizontalInset) / Layout.cellsCountInLine
-//        let height = (collectionView.frame.height - Layout.cellVerticalInset) / Layout.cellsCountInColumn
-//        print(22222,width,height)
-//        return CGSize(width: width, height: height)
         return CGSize(width: 108, height: 192)
     }
     

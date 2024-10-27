@@ -92,6 +92,7 @@ class RatingTableViewCell: UITableViewCell {
             scoreTextLabel.topAnchor.constraint(equalTo: grayBlock.topAnchor, constant: 26),
             scoreTextLabel.bottomAnchor.constraint(equalTo: grayBlock.bottomAnchor, constant: -26),
             scoreTextLabel.trailingAnchor.constraint(equalTo: grayBlock.trailingAnchor, constant: -16),
+            scoreTextLabel.widthAnchor.constraint(equalToConstant: 40),
             scoreTextLabel.leadingAnchor.constraint(equalTo: nameTextLabel.trailingAnchor, constant: 16)
         ])
     }
@@ -105,16 +106,16 @@ class RatingTableViewCell: UITableViewCell {
         profileImageView.kf.setImage(with: url, placeholder: placeholder)
     }
 
-    private func setupView(position: Int, score: String, name: String, imageString: String) {
+    private func setupView(position: Int, score: Int, name: String, imageString: String) {
         addSubViews()
         setupConstraints()
         setupImage(imageString: imageString)
-        scoreTextLabel.text = score
+        scoreTextLabel.text = "\(score)"
         nameTextLabel.text = name
         positionTextLabel.text = "\(position)"
     }
 
-    func setupCell(position: Int, score: String, name: String, imageString: String) {
+    func setupCell(position: Int, score: Int, name: String, imageString: String) {
         setupView(position: position, score: score, name: name, imageString: imageString)
     }
 

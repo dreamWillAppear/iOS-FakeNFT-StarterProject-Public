@@ -40,7 +40,6 @@
 		3EF3FC9C2CBD9B6C00D982CF /* Rating.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF3FC9B2CBD9B6B00D982CF /* Rating.swift */; };
 		3EF3FC9E2CBE440B00D982CF /* UserProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF3FC9D2CBE440200D982CF /* UserProfilePresenter.swift */; };
 		3EF3FCA02CBE45D200D982CF /* RatingTablePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF3FC9F2CBE45CC00D982CF /* RatingTablePresenter.swift */; };
-		3EF3FCA22CBEDC3900D982CF /* UserProfileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF3FCA12CBEDC3400D982CF /* UserProfileStore.swift */; };
 		3F478ECF29DB474E00F6D39E /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F478ECE29DB474E00F6D39E /* Colors.swift */; };
 		3F478ED129DB476500F6D39E /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F478ED029DB476500F6D39E /* Fonts.swift */; };
 		3F603CCD29DB4A53000C43D7 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3F603CCC29DB4A53000C43D7 /* ProgressHUD */; };
@@ -117,7 +116,6 @@
 		3EF3FC9B2CBD9B6B00D982CF /* Rating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rating.swift; sourceTree = "<group>"; };
 		3EF3FC9D2CBE440200D982CF /* UserProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilePresenter.swift; sourceTree = "<group>"; };
 		3EF3FC9F2CBE45CC00D982CF /* RatingTablePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingTablePresenter.swift; sourceTree = "<group>"; };
-		3EF3FCA12CBEDC3400D982CF /* UserProfileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileStore.swift; sourceTree = "<group>"; };
 		3F478ECE29DB474E00F6D39E /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		3F478ED029DB476500F6D39E /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		3F68069329CBBAF100B4F915 /* FakeNFT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FakeNFT.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -271,7 +269,6 @@
 			isa = PBXGroup;
 			children = (
 				3E2548432CCA21160098F29E /* UserProfileWebView.swift */,
-				3EF3FCA12CBEDC3400D982CF /* UserProfileStore.swift */,
 				3EF3FC9D2CBE440200D982CF /* UserProfilePresenter.swift */,
 				3EF3FC8D2CBD95BC00D982CF /* UserProfileViewController.swift */,
 			);
@@ -627,7 +624,6 @@
 				E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */,
 				3F478ED129DB476500F6D39E /* Fonts.swift in Sources */,
 				0C79EE6A2A76DE1000EE90EA /* NftDetailAssembly.swift in Sources */,
-				3EF3FCA22CBEDC3900D982CF /* UserProfileStore.swift in Sources */,
 				3E2548442CCA21200098F29E /* UserProfileWebView.swift in Sources */,
 				3FC8C39329D246BA0081F015 /* DateFormatters+Presets.swift in Sources */,
 				0CFCB7422A78013E0009A829 /* Nft.swift in Sources */,

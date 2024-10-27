@@ -45,27 +45,26 @@ final class RatingStore: RatingStoreProtocol {
         unsortedRatings.sorted { [weak self] in
             switch self?.sortingKey {
             case .score:
-                return $0.rating > $1.rating
+                return $0.nfts.count > $1.nfts.count
             case .name:
                 return $0.name < $1.name
             default:
-                return $0.rating < $1.rating
+                return $0.nfts.count > $1.nfts.count
             }
         }
     }
 
     private var unsortedRatings: [Profile] = []
 
-    func fetchRatings() {
+    func fetchRatings(completionOnSuccess: @escaping () -> Void, completionOnFailure: @escaping () -> Void) {
         presenter?.showProgressHud()
         statisticsService.fetchUsers() { [weak self] result in
             switch result {
             case .success(let ratings):
-                self?.presenter?.hideProgressHud()
                 self?.unsortedRatings = ratings
-                self?.presenter?.reloadData()
+                completionOnSuccess()
             case .failure:
-                self?.presenter?.hideProgressHud()
+                completionOnFailure()
                 break
             }
         }

@@ -7,23 +7,14 @@
 
 import Foundation
 
-final class NFTCollectionPresenter: NFTStoreDelegateProtocol {
+final class NFTCollectionPresenter {
     private let nftsIds: [String]
     private let nftsStore: NFTStore
     weak var view: NFTCollectionViewControllerProtocol?
     init(nfts: [String]) {
         self.nftsIds = nfts
         self.nftsStore = NFTStore(nftIndexes: nfts)
-        nftsStore.presenter = self
-        nftsStore.fetch()
-    }
-    
-    func showProgressHud() {
-        view?.showProgressHud()
-    }
-    
-    func hideProgressHud() {
-        view?.hideProgressHud()
+
     }
     
     func getNFTsNumber() -> Int {
@@ -34,8 +25,31 @@ final class NFTCollectionPresenter: NFTStoreDelegateProtocol {
         nftsStore.nftForIndex(index: index)
     }
     
-    func reloadView() {
-        view?.reloadCollectionView()
+    func fetch() {
+        fetchData()
     }
     
+    private func showProgressHud() {
+        view?.showProgressHud()
+    }
+    
+    private func hideProgressHud() {
+        view?.hideProgressHud()
+    }
+    
+   
+    private func reloadView() {
+        view?.reloadCollectionView()
+    }
+
+    private func fetchData() {
+        showProgressHud()
+        nftsStore.fetch(completionOnSuccess: { [weak self] in
+            self?.hideProgressHud()
+            self?.reloadView()
+        },
+                        completionOnFailure: { [weak self] in
+            self?.hideProgressHud()
+        })
+    }
 }

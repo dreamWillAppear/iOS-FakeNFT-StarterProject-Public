@@ -141,7 +141,7 @@ extension RatingTableViewController: UITableViewDataSource, UITableViewDelegate 
             return UITableViewCell()
         }
         cell.selectionStyle = .none
-        cell.setupCell(position: indexPath.row + 1, score: cellInfo.rating, name: cellInfo.name, imageString: cellInfo.avatar)
+        cell.setupCell(position: indexPath.row + 1, score: cellInfo.nfts.count, name: cellInfo.name, imageString: cellInfo.avatar)
 
         return cell
     }

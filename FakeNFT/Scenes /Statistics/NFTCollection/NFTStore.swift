@@ -4,16 +4,10 @@
 //
 //  Created by Александр  Сухинин on 24.10.2024.
 //
-
-protocol NFTStoreDelegateProtocol: AnyObject {
-    func reloadView()
-    func showProgressHud()
-    func hideProgressHud()
-}
+import Foundation
 
 final class NFTStore {
     let statisticsService = StatisticNetworkServise()
-    weak var presenter: NFTStoreDelegateProtocol?
     
     private let nftIndexes: [String]
     private var nftList: [NftInfo] = []
@@ -23,24 +17,29 @@ final class NFTStore {
         self.nftIndexes = nftIndexes
     }
     
-    func fetch() {
-        fetchNfts(nftIndexes: nftIndexes)
+    func fetch(completionOnSuccess: @escaping () -> Void, completionOnFailure: @escaping () -> Void) {
+        fetchNfts(nftIndexes: nftIndexes, completionOnSuccess: completionOnSuccess, completionOnFailure: completionOnFailure)
     }
     
-    private func fetchNfts(nftIndexes: [String]) {
-        presenter?.showProgressHud()
+    private func fetchNfts(nftIndexes: [String], completionOnSuccess: @escaping () -> Void, completionOnFailure: @escaping () -> Void) {
+        let group = DispatchGroup()
         for index in nftIndexes {
+            group.enter()
             statisticsService.fetchNft(id: index) { [weak self] result in
                 switch result {
                 case .success(let nft):
-                    self?.presenter?.hideProgressHud()
                     self?.nftList.append(nft)
-                    self?.presenter?.reloadView()
+                    group.leave()
                 case .failure:
-                    self?.presenter?.hideProgressHud()
+                    completionOnFailure()
+                    group.leave()
                     break
                 }
             }
+        }
+        
+        group.notify(queue: .main) {
+            completionOnSuccess()
         }
     }
     

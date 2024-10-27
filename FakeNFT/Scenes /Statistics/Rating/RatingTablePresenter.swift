@@ -22,7 +22,12 @@ class RatingTablePresenter: RatingTablePresenterProtocol {
         self.view = view
         
         store.presenter = self
-        store.fetchRatings()
+        store.fetchRatings( completionOnSuccess: { [weak self] in
+            self?.view?.hideProgressHud()
+            self?.view?.reloadData()
+        } , completionOnFailure: { [weak self] in
+            self?.view?.hideProgressHud()
+        })
     }
     
     func sortingButtonTapped() {

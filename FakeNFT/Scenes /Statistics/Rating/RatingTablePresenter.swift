@@ -5,10 +5,10 @@
 //  Created by Александр  Сухинин on 15.10.2024.
 //
 
-protocol RatingTablePresenterProtocol {
+protocol RatingTablePresenterProtocol: AnyObject {
     func sortingButtonTapped()
     func numberOfItems() -> Int
-    func item(at index: Int) -> Rating?
+    func item(at index: Int) -> Profile?
     func setView(view: RatingTableViewControllerProtocol)
     func presenterForProfileViewController(for index: Int) -> UserProfilePresenter
     func sortItemsByKey(key: SortingKeys)
@@ -17,8 +17,17 @@ protocol RatingTablePresenterProtocol {
 class RatingTablePresenter: RatingTablePresenterProtocol {
     weak var view: RatingTableViewControllerProtocol?
     private let store = RatingStore()
+    
     func setView(view: any RatingTableViewControllerProtocol) {
         self.view = view
+        
+        store.presenter = self
+        store.fetchRatings( completionOnSuccess: { [weak self] in
+            self?.view?.hideProgressHud()
+            self?.view?.reloadData()
+        } , completionOnFailure: { [weak self] in
+            self?.view?.hideProgressHud()
+        })
     }
     
     func sortingButtonTapped() {
@@ -38,12 +47,28 @@ class RatingTablePresenter: RatingTablePresenterProtocol {
         return store.numberOfRatings()
     }
 
-    func item(at index: Int) -> Rating? {
-        return store.rating(for: index)
+    func item(at index: Int) -> Profile? {
+        let profile = store.rating(for: index)
+        return profile
     }
     
     func presenterForProfileViewController(for index: Int) -> UserProfilePresenter {
-        let userProfilePresenter = UserProfilePresenter(userProfileIndex: index)
+        let profile = item(at: index)
+        let userProfilePresenter = UserProfilePresenter(profile: profile)
         return userProfilePresenter
+    }
+    
+    func reloadData() {
+        view?.reloadData()
+    }
+}
+
+extension RatingTablePresenter: RatingStoreDelegateProtocol {
+    func showProgressHud() {
+        view?.showProgressHud()
+    }
+    
+    func hideProgressHud() {
+        view?.hideProgressHud()
     }
 }

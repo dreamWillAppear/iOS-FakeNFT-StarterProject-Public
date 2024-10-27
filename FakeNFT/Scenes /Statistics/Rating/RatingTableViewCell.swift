@@ -92,6 +92,7 @@ class RatingTableViewCell: UITableViewCell {
             scoreTextLabel.topAnchor.constraint(equalTo: grayBlock.topAnchor, constant: 26),
             scoreTextLabel.bottomAnchor.constraint(equalTo: grayBlock.bottomAnchor, constant: -26),
             scoreTextLabel.trailingAnchor.constraint(equalTo: grayBlock.trailingAnchor, constant: -16),
+            scoreTextLabel.widthAnchor.constraint(equalToConstant: 40),
             scoreTextLabel.leadingAnchor.constraint(equalTo: nameTextLabel.trailingAnchor, constant: 16)
         ])
     }

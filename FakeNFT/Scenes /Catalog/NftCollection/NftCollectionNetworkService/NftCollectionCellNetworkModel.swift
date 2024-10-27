@@ -7,4 +7,5 @@ struct NftCollectionCellResultModel: Decodable {
     let description: String
     let price: Float
     let author: String
+    let id: String
 }

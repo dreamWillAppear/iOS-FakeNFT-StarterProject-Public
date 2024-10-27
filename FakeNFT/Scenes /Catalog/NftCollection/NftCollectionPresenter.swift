@@ -16,7 +16,8 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     private var nfts: [NftViewModel] = []
     private let networkClient = DefaultNetworkClient()
     private lazy var networkService = NftCollectionService(networkClient: networkClient, id: collectionId)
-    
+    private lazy var cellNetworkService = NftCollectionCellService(networkClient: networkClient)
+        
     private var collectionResult = NftCollectionResultModel(name: "", cover: "", nfts: [""], description: "", author: "") {
         didSet {
           collectionView = convertResultToViewModel(result: collectionResult)
@@ -28,6 +29,8 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
             view?.displayLoadedData()
         }
     }
+    
+    private var allNfts: [NftCollectionCellResultModel] = []
     
     // MARK: - Initializers
     
@@ -44,6 +47,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func onViewDidLoad() {
         fetchNftCollection()
+        fetchAllNfts()
     }
     
     func getCollection() -> NftCollectionViewModel {
@@ -61,9 +65,20 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
             switch result {
                 case .success(let nftCollection):
                     self.collectionResult = nftCollection
-                    print(nftCollection)
                 case .failure(let error):
-                    print("LOG ERROR: NftCollectionPresenter networkService.loadNftCollection – \(String(describing: error))")
+                    print("LOG ERROR: NftCollectionPresenter fetchNftCollection – \(String(describing: error))")
+            }
+        }
+    }
+    
+    private func fetchAllNfts() {
+        cellNetworkService.loadNftCollection { result in
+            switch result {
+                case .success(let nfts):
+                    self.allNfts = nfts
+                    print(nfts)
+                case .failure(let error):
+                    print("LOG ERROR: NftCollectionPresenter fetchAllNfts() – \(String(describing: error))")
             }
         }
     }

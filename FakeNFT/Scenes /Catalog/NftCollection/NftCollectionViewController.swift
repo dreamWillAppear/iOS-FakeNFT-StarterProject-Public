@@ -1,6 +1,7 @@
 import UIKit
 
 protocol NftCollectionViewProtocol: AnyObject {
+    func displayLoadedData()
     func reloadData()
 }
 
@@ -99,9 +100,19 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         updateCollectionViewHeight()
     }
     
-    func setCover(image: UIImage) {
-        cover.image = image
-    }
+    func displayLoadedData() {
+        guard let collection = collection else {
+            print("LOG ERROR NftCollectionViewController: collection for UI is nil")
+            return
+        }
+        
+        cover.kf.setImage(with: collection.cover)
+        setDescription(
+            title: collection.name,
+            author: collection.authorName,
+            description: collection.description
+        )
+   }
     
     func setDescription(title: String, author: String, description: String) {
         let authorString = "Автор коллекции: "
@@ -138,12 +149,6 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     // MARK: - Private Methods
     
     private func setupUI() {
-        setCover(image: collection?.cover ?? UIImage())
-        setDescription(
-            title: collection?.name ?? "",
-            author: collection?.authorName ?? "",
-            description: collection?.description ?? ""
-        )
         
         let views = [cover, descriptionTextView, nftCollectionView]
         
@@ -206,7 +211,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
             nftCollectionView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -16)
         ])
     }
-    
+        
     private func updateCollectionViewHeight()  {
         let itemsCount = presenter?.getNftsCount() ?? 0
         let itemsPerRow = 3
@@ -243,16 +248,7 @@ extension NftCollectionViewController: UICollectionViewDelegate, UICollectionVie
             return .init()
         }
         
-        let nft = collection.nfts[indexPath.item]
-        
-        cell.configureCell(
-            cover: nft.cover,
-            name: nft.name,
-            isLiked: nft.isLiked,
-            raitng: nft.raiting,
-            price: nft.price,
-            isInCart: nft.isInCart
-        )
+
         
         return cell
     }

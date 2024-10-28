@@ -220,7 +220,6 @@ final class StatisticNetworkServise {
                 }
             } else {
                 let httpResponse = response as? HTTPURLResponse
-                print(httpResponse?.statusCode,1231231241)
                 let statusCodeError = NSError(domain: "", code: httpResponse?.statusCode ?? 500, userInfo: nil)
                 DispatchQueue.main.async {
                     completion(.failure(statusCodeError))

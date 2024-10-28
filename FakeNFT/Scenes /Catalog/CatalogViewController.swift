@@ -168,8 +168,5 @@ extension CatalogViewController: UITableViewDelegate, UITableViewDataSource {
         present(collectionViewController, animated: true, completion: nil)
         
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        // TODO: удалить лог
-        print("LOG Collection id: \(collectionId)")
     }
 }

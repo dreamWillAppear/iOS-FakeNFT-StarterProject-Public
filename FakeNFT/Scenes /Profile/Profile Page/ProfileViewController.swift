@@ -13,11 +13,8 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     var presenter: ProfilePresenterProtocol?
     var profile: Profile?
     
-    let cellData = [
-        "Мои NFT (112)",
-        "Избранные NFT",
-        "О разработчике"
-    ]
+    private var nftCount = 0
+    private var favouriteCount = 0
     
     private var editButton: UIButton = {
         let button = UIButton()
@@ -52,6 +49,7 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .caption1
         label.textColor = .ypBlueUniversal
+        label.isUserInteractionEnabled = true
         return label
     }()
     
@@ -70,6 +68,8 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         setupTableView()
         
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openWebsite))
+        websiteLink.addGestureRecognizer(tapGesture)
         
         presenter = ProfilePresenter(view: self)
         presenter?.loadProfileData()
@@ -116,6 +116,12 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         tableView.separatorStyle = .none
     }
     
+    @objc private func openWebsite() {
+        let webVC = WebViewController()
+        webVC.modalPresentationStyle = .fullScreen
+        present(webVC, animated: true, completion: nil)
+    }
+    
     func updateProfile(_ profile: Profile) {
         self.profile = profile
         let imageURL = URL(string: profile.avatarImageURL)
@@ -136,19 +142,31 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         nameLabel.text = profile.name
         descriptionLabel.text = profile.description
         websiteLink.text = profile.website
+        nftCount = profile.nfts.count
+        favouriteCount = profile.likes.count
+    
+        tableView.reloadData()
     }
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cellData.count
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        cell.textLabel?.text = cellData[indexPath.row]
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "Мои NFT (\(nftCount))"
+        case 1:
+            cell.textLabel?.text = "Избранные NFT (\(favouriteCount))"
+        default:
+            cell.textLabel?.text = "О разработчике"
+        }
+        
         cell.textLabel?.font = .bodyBold
         
         let chevronImage = UIImage(systemName: "chevron.right",
@@ -184,7 +202,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             present(favouritesVC, animated: false, completion: nil)
             
         default:
-            break
+            openWebsite()
         }
     }
 }

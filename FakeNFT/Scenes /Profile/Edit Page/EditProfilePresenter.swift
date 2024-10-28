@@ -5,7 +5,7 @@
 //  Created by Bakgeldi Alkhabay on 17.10.2024.
 //
 
-import UIKit
+import Foundation
 
 final class EditProfilePresenter: EditProfilePresenterProtocol {
     weak var view: EditProfileViewProtocol?
@@ -62,11 +62,4 @@ final class EditProfilePresenter: EditProfilePresenterProtocol {
         
         task.resume()
     }
-}
-
-struct ProfileUpdateRequest: Codable {
-    let name: String
-    let description: String
-    let avatar: String
-    let website: String
 }

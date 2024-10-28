@@ -64,6 +64,7 @@
 		FCF32CDB2CC1420700828852 /* FavouritesViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */; };
 		FCF32CDD2CC1421300828852 /* FavouritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */; };
 		FCF32CDF2CC1422F00828852 /* FavouriteNFTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */; };
+		FCF32CF12CCFA88B00828852 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CF02CCFA88B00828852 /* WebViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,6 +145,7 @@
 		FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewProtocol.swift; sourceTree = "<group>"; };
 		FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPresenter.swift; sourceTree = "<group>"; };
 		FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNFTModel.swift; sourceTree = "<group>"; };
+		FCF32CF02CCFA88B00828852 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -414,6 +416,7 @@
 				FCF32CAE2CBE672800828852 /* ProfileViewController.swift */,
 				FCF32CBD2CC0E60200828852 /* ProfilePresenter.swift */,
 				FCF32CBF2CC0E65E00828852 /* ProfileViewProtocol.swift */,
+				FCF32CF02CCFA88B00828852 /* WebViewController.swift */,
 			);
 			path = "Profile Page";
 			sourceTree = "<group>";
@@ -640,6 +643,7 @@
 				FCF32CB92CBFD8DE00828852 /* FavouriteNFTCell.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
+				FCF32CF12CCFA88B00828852 /* WebViewController.swift in Sources */,
 				FCF32CDB2CC1420700828852 /* FavouritesViewProtocol.swift in Sources */,
 				FCF32CC72CC0E9F800828852 /* EditProfilePresenter.swift in Sources */,
 				0C79EE632A76DD1900EE90EA /* RequestConstants.swift in Sources */,

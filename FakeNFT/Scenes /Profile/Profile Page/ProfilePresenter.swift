@@ -44,13 +44,17 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                     if let name = json["name"] as? String,
                        let avatar = json["avatar"] as? String,
                        let description = json["description"] as? String,
-                       let website = json["website"] as? String {
+                       let website = json["website"] as? String,
+                       let nfts = json["nfts"] as? [String],
+                       let likes = json["likes"] as? [String] {
                         
                         let profile = Profile(
                             avatarImageURL: avatar,
                             name: name,
                             description: description,
-                            website: website
+                            website: website,
+                            nfts: nfts,
+                            likes: likes
                         )
                         DispatchQueue.main.async {
                             self?.view?.updateProfile(profile)

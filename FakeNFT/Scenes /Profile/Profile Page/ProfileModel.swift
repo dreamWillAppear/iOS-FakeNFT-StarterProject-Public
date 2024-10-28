@@ -5,11 +5,13 @@
 //  Created by Bakgeldi Alkhabay on 17.10.2024.
 //
 
-import UIKit
+import Foundation
 
 struct Profile {
     let avatarImageURL: String
     let name: String
     let description: String
     let website: String
+    let nfts: [String]
+    let likes: [String]
 }

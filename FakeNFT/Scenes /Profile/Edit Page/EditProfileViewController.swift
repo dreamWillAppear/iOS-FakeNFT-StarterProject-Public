@@ -256,7 +256,7 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
               let website = websiteTextView.text,
               let avatarURL = self.avatarURL else { return }
         
-        let profile = Profile(avatarImageURL: avatarURL, name: name, description: description, website: website)
+        let profile = Profile(avatarImageURL: avatarURL, name: name, description: description, website: website, nfts: [], likes: [])
         presenter?.saveProfile(profile: profile)
     }
     

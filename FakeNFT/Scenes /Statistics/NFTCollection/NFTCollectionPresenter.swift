@@ -30,14 +30,14 @@ final class NFTCollectionPresenter {
         fetchFavourites()
     }
     
-    func updateFavouritesBy(index: Int) {
+    func updateFavouritesBy(index: Int, toAdd: Bool) {
         guard let id = getNFTForIndex(index: index)?.id else { return }
-        updateFavourites(nft: id)
+        updateFavourites(nft: id, toAdd: toAdd)
     }
     
-    func updateCartBy(index: Int) {
+    func updateCartBy(index: Int, toAdd: Bool) {
         guard let id = getNFTForIndex(index: index)?.id else { return }
-        updateCart(nft: id)
+        updateCart(nft: id, toAdd: toAdd)
     }
     
     func isInCart(index: Int) -> Bool {
@@ -94,9 +94,14 @@ final class NFTCollectionPresenter {
         })
     }
     
-    private func updateFavourites(nft: String) {
+    private func updateFavourites(nft: String, toAdd: Bool) {
         var ids = nftsStore.getFavouriteList()
-        ids.append(nft)
+        if toAdd {
+            ids.append(nft)
+        } else {
+            ids.removeAll(where: { $0 == nft } )
+        }
+        
         let favourites = FavoutiteNft(likes: ids)
         showProgressHud()
         nftsStore.updateFavouriteByNft(nfts: favourites, completionOnSuccess: { [weak self] in
@@ -107,9 +112,13 @@ final class NFTCollectionPresenter {
         })
     }
     
-    private func updateCart(nft: String) {
+    private func updateCart(nft: String, toAdd: Bool) {
         var ids = nftsStore.getCartList()
-        ids.append(nft)
+        if toAdd {
+            ids.append(nft)
+        } else {
+            ids.removeAll(where: { $0 == nft } )
+        }
         let cart = CartOrder(nfts: ids)
         showProgressHud()
         nftsStore.updateCartByNft(nfts: cart, completionOnSuccess: { [weak self] in

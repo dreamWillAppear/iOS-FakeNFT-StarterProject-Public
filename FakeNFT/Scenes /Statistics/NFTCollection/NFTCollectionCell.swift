@@ -9,12 +9,14 @@ import UIKit
 import Kingfisher
 
 protocol NFTCollectionCellDelegate: AnyObject {
-    func cartButtonTapped(_ cell: NFTCollectionCell)
-    func likeButtonTapped(_ cell: NFTCollectionCell)
+    func cartButtonTapped(_ cell: NFTCollectionCell, isAlreadyInCart: Bool)
+    func likeButtonTapped(_ cell: NFTCollectionCell, isAlreadyInFavourites: Bool)
 }
 
 final class NFTCollectionCell: UICollectionViewCell {
     weak var delegate: NFTCollectionCellDelegate?
+    private var isAlreadyInCart: Bool = false
+    private var isAlreadyInFavourite: Bool = false
     private let starRating: StarRatingView = {
         let rating = StarRatingView()
         rating.translatesAutoresizingMaskIntoConstraints = false
@@ -78,10 +80,12 @@ final class NFTCollectionCell: UICollectionViewCell {
     
     func setFavourite(_ isFav: Bool) {
         likeButton.setImage(isFav ? Self.likedButtonImage : Self.unlikedButtonImage, for: .normal)
+        isAlreadyInFavourite = isFav
     }
     
     func setInCart(_ inCart: Bool) {
         cartButton.setImage(inCart ? Self.inCartImage : Self.notInCartImage, for: .normal)
+        isAlreadyInCart = inCart
     }
     
     
@@ -95,11 +99,11 @@ final class NFTCollectionCell: UICollectionViewCell {
     }
     
     @objc private func likeButtonTapped() {
-        delegate?.likeButtonTapped(self)
+        delegate?.likeButtonTapped(self, isAlreadyInFavourites: isAlreadyInFavourite)
     }
     
     @objc private func cartButtonTapped() {
-        delegate?.cartButtonTapped(self)
+        delegate?.cartButtonTapped(self, isAlreadyInCart: isAlreadyInCart)
     }
     
     private func applyConstraints() {

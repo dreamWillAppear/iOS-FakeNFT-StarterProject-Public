@@ -150,15 +150,15 @@ extension NFTCollectionViewController {
 }
 
 extension NFTCollectionViewController: NFTCollectionCellDelegate {
-    func cartButtonTapped(_ cell: NFTCollectionCell) {
+    func cartButtonTapped(_ cell: NFTCollectionCell, isAlreadyInCart: Bool) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
         
-        presenter.updateCartBy(index: indexPath.row)
+        presenter.updateCartBy(index: indexPath.row, toAdd: !isAlreadyInCart)
     }
     
-    func likeButtonTapped(_ cell: NFTCollectionCell) {
+    func likeButtonTapped(_ cell: NFTCollectionCell, isAlreadyInFavourites: Bool) {
         guard let indexPath = collectionView.indexPath(for: cell) else { return }
         
-        presenter.updateFavouritesBy(index: indexPath.row)
+        presenter.updateFavouritesBy(index: indexPath.row, toAdd: !isAlreadyInFavourites )
     }
 }

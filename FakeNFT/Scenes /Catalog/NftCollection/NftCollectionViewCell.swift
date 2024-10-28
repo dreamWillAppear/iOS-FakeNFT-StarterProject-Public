@@ -73,8 +73,8 @@ final class NftCollectionViewCell: UICollectionViewCell {
     
     //MARK: - Public Methods
     
-    func configureCell(cover: UIImage, name: String, isLiked: Bool, raitng: Int, price: Float, isInCart: Bool) {
-        coverImageView.image = cover
+    func configureCell(cover: URL, name: String, isLiked: Bool, raitng: Int, price: Float, isInCart: Bool) {
+        coverImageView.kf.setImage(with: cover)
         nameLabel.text = name
         priceLabel.text = String(price) + " ETH"
         
@@ -169,4 +169,3 @@ final class NftCollectionViewCell: UICollectionViewCell {
     }
     
 }
-

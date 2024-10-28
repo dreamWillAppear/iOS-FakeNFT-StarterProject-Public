@@ -4,6 +4,7 @@ import Kingfisher
 protocol NftCollectionPresenterProtocol: AnyObject {
     func onViewDidLoad()
     func getCollection() -> NftCollectionViewModel
+    func getNftsForView() -> [NftViewModel]
     func getNftsCount() -> Int
 }
 
@@ -13,24 +14,30 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     private weak var view: NftCollectionViewProtocol?
     private var collectionId: String
-    private var nfts: [NftViewModel] = []
     private let networkClient = DefaultNetworkClient()
     private lazy var networkService = NftCollectionService(networkClient: networkClient, id: collectionId)
-    private lazy var cellNetworkService = NftCollectionCellService(networkClient: networkClient)
-        
+    
     private var collectionResult = NftCollectionResultModel(name: "", cover: "", nfts: [""], description: "", author: "") {
         didSet {
-          collectionView = convertResultToViewModel(result: collectionResult)
+            fetchNfts()
+            collectionForView = convertResultToViewModel(result: collectionResult)
         }
     }
     
-    private lazy var collectionView = convertResultToViewModel(result: collectionResult) {
+    private lazy var collectionForView = convertResultToViewModel(result: collectionResult) {
         didSet {
             view?.displayLoadedData()
         }
     }
     
-    private var allNfts: [NftCollectionCellResultModel] = []
+    private var nftsResult: [NftCollectionCellResultModel] = [] {
+        didSet {
+            nftsForView = convertResultToViewModel(result: nftsResult)
+            view?.reloadData()
+        }
+    }
+    
+    private var nftsForView: [NftViewModel] = []
     
     // MARK: - Initializers
     
@@ -46,19 +53,38 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     }
     
     func onViewDidLoad() {
-        fetchNftCollection()
-        fetchAllNfts()
+        fetchDataWithOperationQueue()
     }
     
     func getCollection() -> NftCollectionViewModel {
-      collectionView
+        collectionForView
     }
-
+    
+    func getNftsForView() -> [NftViewModel] {
+        nftsForView
+    }
+    
     func getNftsCount() -> Int {
-        nfts.count
+        nftsForView.count
     }
     
     //MARK: - Private Methods
+    
+    private func fetchDataWithOperationQueue() {
+        let operationQueue = OperationQueue()
+        
+        let fetchCollectionOperation = BlockOperation {
+            self.fetchNftCollection()
+        }
+        
+        let fetchNftsOperation = BlockOperation {
+            self.fetchNfts()
+        }
+        
+        fetchNftsOperation.addDependency(fetchCollectionOperation)
+        
+        operationQueue.addOperations([fetchCollectionOperation, fetchNftsOperation], waitUntilFinished: false)
+    }
     
     private func fetchNftCollection() {
         networkService.loadNftCollection { result  in
@@ -71,14 +97,18 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         }
     }
     
-    private func fetchAllNfts() {
-        cellNetworkService.loadNftCollection { result in
-            switch result {
-                case .success(let nfts):
-                    self.allNfts = nfts
-                    print(nfts)
-                case .failure(let error):
-                    print("LOG ERROR: NftCollectionPresenter fetchAllNfts() – \(String(describing: error))")
+    private func fetchNfts() {
+        collectionResult.nfts.forEach { [weak self] in
+            guard let self = self else { return }
+            let networkService = NftCollectionCellService(networkClient: self.networkClient, id: $0)
+            
+            networkService.loadNftCollection { result in
+                switch result {
+                    case .success(let nft):
+                        self.nftsResult.append(nft)
+                    case .failure(let error):
+                        print("LOG ERROR: NftCollectionPresenter fetchNfts – \(String(describing: error))")
+                }
             }
         }
     }
@@ -91,6 +121,25 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
             description: collectionResult.description,
             nfts: collectionResult.nfts
         )
+    }
+    
+    private func convertResultToViewModel(result: [NftCollectionCellResultModel]) -> [NftViewModel] {
+        var nftsForView: [NftViewModel] = []
+        
+        result.forEach {
+            let nft = NftViewModel(
+                id: $0.id,
+                cover: URL(string: $0.images.first ?? "") ?? URL(fileURLWithPath: ""),
+                name: $0.name,
+                isLiked: true,
+                raiting: $0.rating,
+                price: $0.price,
+                isInCart: true
+            )
+            nftsForView.append(nft)
+        }
+        
+        return nftsForView
     }
     
 }

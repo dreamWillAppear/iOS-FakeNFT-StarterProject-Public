@@ -96,8 +96,8 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     // MARK: - Public Methods
     
     func reloadData() {
-        nftCollectionView.reloadData()
         updateCollectionViewHeight()
+        nftCollectionView.reloadData()
     }
     
     func displayLoadedData() {
@@ -112,7 +112,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
             author: collection.authorName,
             description: collection.description
         )
-   }
+    }
     
     func setDescription(title: String, author: String, description: String) {
         let authorString = "Автор коллекции: "
@@ -211,21 +211,26 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
             nftCollectionView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor, constant: -16)
         ])
     }
-        
+    
     private func updateCollectionViewHeight()  {
         let itemsCount = presenter?.getNftsCount() ?? 0
         let itemsPerRow = 3
         let cellHeight: CGFloat = 192
         let minimumLineSpacing: CGFloat = 9
-        
         let numberOfRows = ceil(Double(itemsCount) / Double(itemsPerRow))
-        
         let totalHeight = CGFloat(numberOfRows) * cellHeight + CGFloat(numberOfRows - 1) * minimumLineSpacing
+        
+        nftCollectionView.constraints.forEach {
+            if $0.firstAttribute == .height {
+                $0.isActive = false
+            }
+        }
         
         NSLayoutConstraint.activate([
             nftCollectionView.heightAnchor.constraint(equalToConstant: totalHeight)
         ])
     }
+    
     
     //MARK: - Actions
     
@@ -243,12 +248,22 @@ extension NftCollectionViewController: UICollectionViewDelegate, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NftCollectionViewCell.reuseIdentifier, for: indexPath) as? NftCollectionViewCell,
-              let collection = presenter?.getCollection() else {
+        
+        guard  let nftsForView = presenter?.getNftsForView().sorted(by: { $0.name < $1.name } ),
+               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NftCollectionViewCell.reuseIdentifier, for: indexPath) as? NftCollectionViewCell else {
             return .init()
         }
         
-
+        let nft = nftsForView[indexPath.row]
+        
+        cell.configureCell(
+            cover: nft.cover,
+            name: nft.name,
+            isLiked: nft.isLiked,
+            raitng: nft.raiting,
+            price: nft.price,
+            isInCart: nft.isInCart
+        )
         
         return cell
     }
@@ -262,7 +277,6 @@ extension NftCollectionViewController: UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 8
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

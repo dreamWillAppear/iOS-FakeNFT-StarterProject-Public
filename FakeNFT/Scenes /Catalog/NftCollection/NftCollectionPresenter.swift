@@ -97,6 +97,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
                 case .success(let nftCollection):
                     self.collectionResult = nftCollection
                 case .failure(let error):
+                    self.view?.showNetworkError()
                     print("LOG ERROR: NftCollectionPresenter fetchNftCollection – \(String(describing: error))")
             }
         }
@@ -112,6 +113,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
                     case .success(let nft):
                         self.nftsResult.append(nft)
                     case .failure(let error):
+                        self.view?.showNetworkError()
                         print("LOG ERROR: NftCollectionPresenter fetchNfts – \(String(describing: error))")
                 }
             }

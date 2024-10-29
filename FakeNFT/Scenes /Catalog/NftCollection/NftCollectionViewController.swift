@@ -2,13 +2,14 @@ import UIKit
 
 protocol NftCollectionViewProtocol: AnyObject {
     func setLoadingViewVisible(_ visible: Bool)
+    func showNetworkError()
     func displayLoadedData()
     func reloadData()
 }
 
 final class NftCollectionViewController: UIViewController, NftCollectionViewProtocol, LoadingView, ErrorView  {
     
-    //MARK: - Public Prioperties
+    //MARK: - Public Properties
     
     lazy var activityIndicator = UIActivityIndicatorView()
     
@@ -123,6 +124,16 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         DispatchQueue.main.async { [weak self] in
             visible ? self?.activityIndicator.startAnimating() : self?.activityIndicator.stopAnimating()
         }
+    }
+    
+    func showNetworkError() {
+        guard let presenter = presenter else { return }
+        let error = ErrorModel(
+            message: "Не удалось получить данные",
+            actionText: "Повторить",
+            action: presenter.onViewDidLoad
+        )
+        showError(error)
     }
     
     // MARK: - Private Methods

@@ -295,13 +295,15 @@ extension NftCollectionViewController: UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard  let nftsForView = presenter?.getNftsForView().sorted(by: { $0.name < $1.name } ),
+        guard  let nftsForView = presenter?.getNftsForView(),
                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NftCollectionViewCell.reuseIdentifier, for: indexPath) as? NftCollectionViewCell else {
             return .init()
         }
         
         let nft = nftsForView[indexPath.row]
         
+        cell.delegate = self
+        cell.indexPath = indexPath
         cell.configureCell(
             cover: nft.cover,
             name: nft.name,
@@ -339,6 +341,18 @@ extension NftCollectionViewController: UITextViewDelegate {
         showWebView(urlString: authorLinkUrlString)
         
         return true
+    }
+    
+}
+
+extension NftCollectionViewController: NftCollectionViewCellDelegate {
+    
+    func didTapLikeButton(at indexPath: IndexPath) {
+        presenter?.didTapLikeButtonFromCell(at: indexPath)
+    }
+    
+    func didTapCartButton(at indexPath: IndexPath) {
+        presenter?.didTapCartButtonFromCell(at: indexPath)
     }
     
 }

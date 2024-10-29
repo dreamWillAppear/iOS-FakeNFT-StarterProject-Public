@@ -6,10 +6,12 @@ protocol NftCollectionPresenterProtocol: AnyObject {
     func getCollection() -> NftCollectionViewModel
     func getNftsForView() -> [NftViewModel]
     func getNftsCount() -> Int
+    func didTapLikeButtonFromCell(at indexPath: IndexPath)
+    func didTapCartButtonFromCell(at indexPath: IndexPath)
 }
 
 final class NftCollectionPresenter: NftCollectionPresenterProtocol {
-    
+
     //MARK: - Private Properties
     
     private weak var view: NftCollectionViewProtocol?
@@ -38,6 +40,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     private var nftsForView: [NftViewModel] = [] {
         didSet {
+            nftsForView = nftsForView.sorted(by: { $0.name < $1.name } )
             view?.setLoadingViewVisible(false)
         }
     }
@@ -69,6 +72,16 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func getNftsCount() -> Int {
         nftsForView.count
+    }
+    
+    func didTapLikeButtonFromCell(at indexPath: IndexPath) {
+        let nftId = nftsForView[indexPath.row].id
+        print("LOG didTapLikeButtonFromCell for nft id \(nftId)")
+    }
+    
+    func didTapCartButtonFromCell(at indexPath: IndexPath) {
+        let nftId = nftsForView[indexPath.row].id
+        print("LOG didTapCartButtonFromCell for nft id \(nftId)")
     }
     
     //MARK: - Private Methods

@@ -1,4 +1,5 @@
 import UIKit
+import WebKit
 
 protocol NftCollectionViewProtocol: AnyObject {
     func setLoadingViewVisible(_ visible: Bool)
@@ -16,6 +17,8 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     // MARK: - Private Properties
     
     private let presenter: NftCollectionPresenterProtocol?
+    
+    private let authorLinkUrlString = "https://practicum.yandex.ru/ios-developer"
     
     private lazy var collection = presenter?.getCollection()
     
@@ -55,6 +58,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     private lazy var descriptionTextView: UITextView = {
         let textView = UITextView()
+        textView.delegate = self
         textView.isEditable = false
         textView.isScrollEnabled = false
         textView.backgroundColor = .clear
@@ -78,6 +82,12 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         
         return collectionView
     }()
+    
+    private lazy var webView: WKWebView = {
+        let webView = WKWebView(frame: .zero)
+        
+        return webView
+    } ()
     
     //MARK: - Init
     
@@ -139,7 +149,6 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     // MARK: - Private Methods
     
     private func setupUI() {
-        
         let views = [cover, descriptionTextView, nftCollectionView, activityIndicator]
         
         view.backgroundColor = .ypWhite
@@ -225,7 +234,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         
         let authorRange = (descriptionText as NSString).range(of: author)
         attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 15, weight: .regular), range: authorRange)
-        attributedText.addAttribute(.link, value: "https://practicum.yandex.ru/ios-developer/", range: authorRange)
+        attributedText.addAttribute(.link, value: "authorLink", range: authorRange)
         attributedText.addAttribute(.foregroundColor, value: UIColor.blue, range: authorRange)
         attributedText.addAttribute(.kern, value: 0.2, range: authorRange)
         
@@ -254,6 +263,19 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         NSLayoutConstraint.activate([
             nftCollectionView.heightAnchor.constraint(equalToConstant: totalHeight)
         ])
+    }
+    
+    private func showWebView(urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        
+        let webView = WKWebView()
+        let webViewController = UIViewController()
+        
+        webViewController.view = webView
+        
+        webView.load(URLRequest(url: url))
+        
+        present(webViewController, animated: true)
     }
     
     //MARK: - Actions
@@ -305,6 +327,18 @@ extension NftCollectionViewController: UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 9
+    }
+    
+}
+
+extension NftCollectionViewController: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        guard URL.absoluteString == "authorLink" else { return false }
+        
+        showWebView(urlString: authorLinkUrlString)
+        
+        return true
     }
     
 }

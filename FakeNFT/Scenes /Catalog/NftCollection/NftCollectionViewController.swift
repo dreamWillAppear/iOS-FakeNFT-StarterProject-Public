@@ -1,11 +1,16 @@
 import UIKit
 
 protocol NftCollectionViewProtocol: AnyObject {
+    func setLoadingViewVisible(_ visible: Bool)
     func displayLoadedData()
     func reloadData()
 }
 
-final class NftCollectionViewController: UIViewController, NftCollectionViewProtocol {
+final class NftCollectionViewController: UIViewController, NftCollectionViewProtocol, LoadingView, ErrorView  {
+    
+    //MARK: - Public Prioperties
+    
+    lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Private Properties
     
@@ -114,43 +119,17 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         )
     }
     
-    func setDescription(title: String, author: String, description: String) {
-        let authorString = "Автор коллекции: "
-        let descriptionText = "\(title)\n\n\(authorString)\(author)\n\(description)"
-        
-        let attributedText = NSMutableAttributedString(string: descriptionText)
-        
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.16
-        
-        let descriptionTextRange = (descriptionText as NSString).range(of: descriptionText)
-        attributedText.addAttribute(.kern, value: -0.08, range: descriptionTextRange)
-        
-        let titleRange = (descriptionText as NSString).range(of: title)
-        attributedText.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 22), range: titleRange)
-        
-        let authorStringRange = (descriptionText as NSString).range(of: authorString)
-        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .regular), range: authorStringRange)
-        
-        let authorRange = (descriptionText as NSString).range(of: author)
-        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 15, weight: .regular), range: authorRange)
-        attributedText.addAttribute(.link, value: "https://practicum.yandex.ru/ios-developer/", range: authorRange)
-        attributedText.addAttribute(.foregroundColor, value: UIColor.blue, range: authorRange)
-        attributedText.addAttribute(.kern, value: 0.2, range: authorRange)
-        
-        let descriptionRange = (descriptionText as NSString).range(of: description)
-        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .regular), range: descriptionRange)
-        
-        attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
-        
-        descriptionTextView.attributedText = attributedText
+    func setLoadingViewVisible(_ visible: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            visible ? self?.activityIndicator.startAnimating() : self?.activityIndicator.stopAnimating()
+        }
     }
     
     // MARK: - Private Methods
     
     private func setupUI() {
         
-        let views = [cover, descriptionTextView, nftCollectionView]
+        let views = [cover, descriptionTextView, nftCollectionView, activityIndicator]
         
         view.backgroundColor = .ypWhite
         
@@ -180,6 +159,9 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         }
         
         NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
             backButton.widthAnchor.constraint(equalToConstant: 24),
             backButton.heightAnchor.constraint(equalToConstant: 24),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 9),
@@ -212,6 +194,38 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         ])
     }
     
+    private func setDescription(title: String, author: String, description: String) {
+        let authorString = "Автор коллекции: "
+        let descriptionText = "\(title)\n\n\(authorString)\(author)\n\(description)"
+        
+        let attributedText = NSMutableAttributedString(string: descriptionText)
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.16
+        
+        let descriptionTextRange = (descriptionText as NSString).range(of: descriptionText)
+        attributedText.addAttribute(.kern, value: -0.08, range: descriptionTextRange)
+        
+        let titleRange = (descriptionText as NSString).range(of: title)
+        attributedText.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 22), range: titleRange)
+        
+        let authorStringRange = (descriptionText as NSString).range(of: authorString)
+        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .regular), range: authorStringRange)
+        
+        let authorRange = (descriptionText as NSString).range(of: author)
+        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 15, weight: .regular), range: authorRange)
+        attributedText.addAttribute(.link, value: "https://practicum.yandex.ru/ios-developer/", range: authorRange)
+        attributedText.addAttribute(.foregroundColor, value: UIColor.blue, range: authorRange)
+        attributedText.addAttribute(.kern, value: 0.2, range: authorRange)
+        
+        let descriptionRange = (descriptionText as NSString).range(of: description)
+        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .regular), range: descriptionRange)
+        
+        attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
+        
+        descriptionTextView.attributedText = attributedText
+    }
+    
     private func updateCollectionViewHeight()  {
         let itemsCount = presenter?.getNftsCount() ?? 0
         let itemsPerRow = 3
@@ -230,7 +244,6 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
             nftCollectionView.heightAnchor.constraint(equalToConstant: totalHeight)
         ])
     }
-    
     
     //MARK: - Actions
     

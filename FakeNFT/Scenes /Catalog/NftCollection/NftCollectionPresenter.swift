@@ -37,7 +37,11 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         }
     }
     
-    private var nftsForView: [NftViewModel] = []
+    private var nftsForView: [NftViewModel] = [] {
+        didSet {
+            view?.setLoadingViewVisible(false)
+        }
+    }
     
     // MARK: - Initializers
     
@@ -71,6 +75,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     //MARK: - Private Methods
     
     private func fetchDataWithOperationQueue() {
+        view?.setLoadingViewVisible(true)
         let operationQueue = OperationQueue()
         
         let fetchCollectionOperation = BlockOperation {

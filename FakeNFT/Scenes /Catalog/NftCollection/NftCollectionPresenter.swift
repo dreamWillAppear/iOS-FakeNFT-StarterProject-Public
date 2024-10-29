@@ -19,7 +19,6 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     private var collectionResult = NftCollectionResultModel(name: "", cover: "", nfts: [""], description: "", author: "") {
         didSet {
-            fetchNfts()
             collectionForView = convertResultToViewModel(result: collectionResult)
         }
     }
@@ -76,10 +75,15 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     private func fetchDataWithOperationQueue() {
         view?.setLoadingViewVisible(true)
+        
         let operationQueue = OperationQueue()
         
         let fetchCollectionOperation = BlockOperation {
-            self.fetchNftCollection()
+            let semaphore = DispatchSemaphore(value: 0)
+            self.fetchNftCollection {
+                semaphore.signal()
+            }
+            semaphore.wait()
         }
         
         let fetchNftsOperation = BlockOperation {
@@ -91,11 +95,12 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         operationQueue.addOperations([fetchCollectionOperation, fetchNftsOperation], waitUntilFinished: false)
     }
     
-    private func fetchNftCollection() {
+    private func fetchNftCollection(completion: @escaping () -> Void) {
         networkService.loadNftCollection { result  in
             switch result {
                 case .success(let nftCollection):
                     self.collectionResult = nftCollection
+                    completion()
                 case .failure(let error):
                     self.view?.showNetworkError()
                     print("LOG ERROR: NftCollectionPresenter fetchNftCollection – \(String(describing: error))")

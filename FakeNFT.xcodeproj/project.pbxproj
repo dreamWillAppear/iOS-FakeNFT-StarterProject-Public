@@ -64,6 +64,9 @@
 		FD8BD7142CBDAF65001A94C6 /* CatalogTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD8BD7132CBDAF65001A94C6 /* CatalogTableCell.swift */; };
 		FD9514E32CC03EA700EDD369 /* NftCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9514E22CC03EA700EDD369 /* NftCollectionViewCell.swift */; };
 		FD9514E52CC1409800EDD369 /* NftViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9514E42CC1409800EDD369 /* NftViewModel.swift */; };
+		FDA690702CD1A04000964276 /* NftLikesResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA6906F2CD1A04000964276 /* NftLikesResultModel.swift */; };
+		FDA690722CD1AE5900964276 /* NftLikesGetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA690712CD1AE5900964276 /* NftLikesGetRequest.swift */; };
+		FDA690742CD1AEBA00964276 /* NftLikesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA690732CD1AEBA00964276 /* NftLikesService.swift */; };
 		FDA901E52CC568510011D316 /* CatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA901E42CC568510011D316 /* CatalogService.swift */; };
 		FDA901E72CC5703C0011D316 /* CatalogResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA901E62CC5703C0011D316 /* CatalogResultModel.swift */; };
 		FDA901E92CC5A8590011D316 /* CatalogRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA901E82CC5A8590011D316 /* CatalogRequest.swift */; };
@@ -148,6 +151,9 @@
 		FD8BD7132CBDAF65001A94C6 /* CatalogTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogTableCell.swift; sourceTree = "<group>"; };
 		FD9514E22CC03EA700EDD369 /* NftCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCollectionViewCell.swift; sourceTree = "<group>"; };
 		FD9514E42CC1409800EDD369 /* NftViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftViewModel.swift; sourceTree = "<group>"; };
+		FDA6906F2CD1A04000964276 /* NftLikesResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftLikesResultModel.swift; sourceTree = "<group>"; };
+		FDA690712CD1AE5900964276 /* NftLikesGetRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftLikesGetRequest.swift; sourceTree = "<group>"; };
+		FDA690732CD1AEBA00964276 /* NftLikesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftLikesService.swift; sourceTree = "<group>"; };
 		FDA901E42CC568510011D316 /* CatalogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogService.swift; sourceTree = "<group>"; };
 		FDA901E62CC5703C0011D316 /* CatalogResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogResultModel.swift; sourceTree = "<group>"; };
 		FDA901E82CC5A8590011D316 /* CatalogRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogRequest.swift; sourceTree = "<group>"; };
@@ -450,8 +456,19 @@
 				FD6372402CCDAF890096818B /* NftCollectionCellNetworkModel.swift */,
 				FD6372472CCE93F10096818B /* NftCollectionCellRequest.swift */,
 				FD6372492CCE98630096818B /* NftCollectionCellService.swift */,
+				FDA6906E2CD19D4D00964276 /* NftLikesNetworkService */,
 			);
 			path = NftCollectionCellNetworkCervice;
+			sourceTree = "<group>";
+		};
+		FDA6906E2CD19D4D00964276 /* NftLikesNetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				FDA6906F2CD1A04000964276 /* NftLikesResultModel.swift */,
+				FDA690712CD1AE5900964276 /* NftLikesGetRequest.swift */,
+				FDA690732CD1AEBA00964276 /* NftLikesService.swift */,
+			);
+			path = NftLikesNetworkService;
 			sourceTree = "<group>";
 		};
 		FDA901EA2CC5B0A60011D316 /* CatalogNetwrokService */ = {
@@ -611,6 +628,7 @@
 				3F478ECF29DB474E00F6D39E /* Colors.swift in Sources */,
 				0C79EE662A76DDFF00EE90EA /* NftDetailViewController.swift in Sources */,
 				E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */,
+				FDA690722CD1AE5900964276 /* NftLikesGetRequest.swift in Sources */,
 				FD9514E32CC03EA700EDD369 /* NftCollectionViewCell.swift in Sources */,
 				FD4CDD0E2CBF1ADB00638002 /* NftCollectionPresenter.swift in Sources */,
 				3F478ED129DB476500F6D39E /* Fonts.swift in Sources */,
@@ -618,6 +636,7 @@
 				3FC8C39329D246BA0081F015 /* DateFormatters+Presets.swift in Sources */,
 				0CFCB7422A78013E0009A829 /* Nft.swift in Sources */,
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
+				FDA690702CD1A04000964276 /* NftLikesResultModel.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				FD63724A2CCE98630096818B /* NftCollectionCellService.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
@@ -650,6 +669,7 @@
 				FD4CDD092CBF13EB00638002 /* NftCollectionCellViewModel.swift in Sources */,
 				FD8BD7142CBDAF65001A94C6 /* CatalogTableCell.swift in Sources */,
 				FD6372432CCDBFA80096818B /* NftCollectionRequest.swift in Sources */,
+				FDA690742CD1AEBA00964276 /* NftLikesService.swift in Sources */,
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogViewController.swift in Sources */,

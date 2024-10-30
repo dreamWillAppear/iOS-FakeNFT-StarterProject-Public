@@ -46,6 +46,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     }
     
     private var favoriteNft: [String] = []
+    private var nftInCart: [String] = []
     
     // MARK: - Initializers
     
@@ -109,25 +110,64 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
             semaphore.wait()
         }
         
+        let fetchNftsInCartOperation = BlockOperation {
+            let semaphore = DispatchSemaphore(value: 0)
+            self.fetchNftInCart {
+                semaphore.signal()
+            }
+            semaphore.wait()
+        }
+        
         let fetchNftsOperation = BlockOperation {
             self.fetchNfts()
         }
         
-        fetchNftsOperation.addDependency(fetchCollectionOperation)
-        fetchNftsOperation.addDependency(fetchLikesOperation)
+        [fetchCollectionOperation, fetchLikesOperation, fetchNftsInCartOperation].forEach {
+            fetchNftsOperation.addDependency($0)
+        }
         
-        operationQueue.addOperations([fetchCollectionOperation, fetchLikesOperation, fetchNftsOperation], waitUntilFinished: false)
+        operationQueue.addOperations([fetchCollectionOperation, fetchLikesOperation, fetchNftsInCartOperation, fetchNftsOperation], waitUntilFinished: false)
     }
     
     private func fetchNftCollection(completion: @escaping () -> Void) {
-        networkService.loadNftCollection { result  in
+        networkService.loadNftCollection { [weak self]  result  in
             switch result {
                 case .success(let nftCollection):
-                    self.collectionResult = nftCollection
+                    self?.collectionResult = nftCollection
                     completion()
                 case .failure(let error):
-                    self.view?.showNetworkError()
+                    self?.view?.showNetworkError()
                     print("LOG ERROR: NftCollectionPresenter fetchNftCollection – \(String(describing: error))")
+                    completion()
+            }
+        }
+    }
+    
+    private func fetchLikes(completion: @escaping () -> Void) {
+        let networkService = NftLikesService(networkClient: networkClient)
+        
+        networkService.loadNftLikes { [weak self] result in
+            switch result {
+                case .success(let likes):
+                    self?.favoriteNft = likes.likes
+                    completion()
+                case .failure(let error):
+                    print("LOG ERROR: NftCollectionPresenter fetchLikes – \(String(describing: error))")
+                    completion()
+            }
+        }
+    }
+    
+    private func fetchNftInCart(completion: @escaping() -> Void) {
+        let networkService = NftCartService(networkClient: networkClient)
+        
+        networkService.loadNftInCart { [weak self] result in
+            switch result {
+                case .success(let nfts):
+                    self?.nftInCart = nfts.nfts
+                    completion()
+                case .failure(let error):
+                    print("LOG ERROR: NftCollectionPresenter fetchNftInCart – \(String(describing: error))")
                     completion()
             }
         }
@@ -146,22 +186,6 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
                         self.view?.showNetworkError()
                         print("LOG ERROR: NftCollectionPresenter fetchNfts – \(String(describing: error))")
                 }
-            }
-        }
-    }
-    
-    private func fetchLikes(completion: @escaping () -> Void) {
-        let networkService = NftLikesService(networkClient: networkClient)
-        
-        networkService.loadNftLikes { result in
-            switch result {
-                case .success(let likes):
-                    self.favoriteNft = likes.likes
-                    completion()
-                    print(self.favoriteNft)
-                case .failure(let error):
-                    print("LOG ERROR: NftCollectionPresenter fetchLikes – \(String(describing: error))")
-                    completion()
             }
         }
     }
@@ -187,7 +211,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
                 isLiked: favoriteNft.contains($0.id),
                 raiting: $0.rating,
                 price: $0.price,
-                isInCart: true
+                isInCart: nftInCart.contains($0.id)
             )
             nftsForView.append(nft)
         }

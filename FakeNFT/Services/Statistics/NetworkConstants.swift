@@ -11,6 +11,8 @@ enum NetworkConstants {
 
     static let requestHeader = "X-Practicum-Mobile-Token"
 
+    static let get = "GET"
+    static let put = "PUT"
     static let putValue = "application/x-www-form-urlencoded"
     static let putHeader = "Content-Type"
     static let connectionValue = "Keep-alive"

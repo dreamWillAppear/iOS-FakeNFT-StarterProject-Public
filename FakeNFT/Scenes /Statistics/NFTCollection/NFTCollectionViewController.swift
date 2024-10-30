@@ -107,7 +107,11 @@ extension NFTCollectionViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        cell.setupCell(nftName: nft.name, nftPrice: nft.price, imageURLString: nft.images[0], rating: nft.rating)
+        cell.setupCell(nftName: nft.name, nftPrice: nft.price, imageURLString: nft.images[0], rating: nft.rating, delegate: self)
+        
+        cell.setFavourite(presenter.isFavourite(index: indexPath.row))
+        cell.setInCart(presenter.isInCart(index: indexPath.row))
+        
         return cell
     }
     
@@ -142,5 +146,19 @@ extension NFTCollectionViewController {
         static let cellsCountInColumn: CGFloat = 4
         static let collectionViewMinimumLineSpacing: CGFloat = 10
         static let collectionViewMinimumInteritemSpacing: CGFloat = 8
+    }
+}
+
+extension NFTCollectionViewController: NFTCollectionCellDelegate {
+    func cartButtonTapped(_ cell: NFTCollectionCell, isAlreadyInCart: Bool) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        
+        presenter.updateCartBy(index: indexPath.row, toAdd: !isAlreadyInCart)
+    }
+    
+    func likeButtonTapped(_ cell: NFTCollectionCell, isAlreadyInFavourites: Bool) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        
+        presenter.updateFavouritesBy(index: indexPath.row, toAdd: !isAlreadyInFavourites )
     }
 }

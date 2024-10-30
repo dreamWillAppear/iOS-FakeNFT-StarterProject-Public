@@ -8,7 +8,15 @@
 import UIKit
 import Kingfisher
 
+protocol NFTCollectionCellDelegate: AnyObject {
+    func cartButtonTapped(_ cell: NFTCollectionCell, isAlreadyInCart: Bool)
+    func likeButtonTapped(_ cell: NFTCollectionCell, isAlreadyInFavourites: Bool)
+}
+
 final class NFTCollectionCell: UICollectionViewCell {
+    weak var delegate: NFTCollectionCellDelegate?
+    private var isAlreadyInCart: Bool = false
+    private var isAlreadyInFavourite: Bool = false
     private let starRating: StarRatingView = {
         let rating = StarRatingView()
         rating.translatesAutoresizingMaskIntoConstraints = false
@@ -26,11 +34,11 @@ final class NFTCollectionCell: UICollectionViewCell {
     }()
     
     
-    private let cartImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "cartButtonImage")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private let cartButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(notInCartImage, for: .normal)
+        return button
     }()
     
     private let nftNameLabel: UILabel = {
@@ -52,11 +60,12 @@ final class NFTCollectionCell: UICollectionViewCell {
     private let likeButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(NFTCollectionCell.likeButtonImage, for: .normal)
+        button.setImage(unlikedButtonImage, for: .normal)
         return button
     }()
     
-    func setupCell(nftName: String, nftPrice: Double, imageURLString: String, rating: Int) {
+    func setupCell(nftName: String, nftPrice: Double, imageURLString: String, rating: Int, delegate: NFTCollectionCellDelegate) {
+        self.delegate = delegate
         nftNameLabel.text = nftName
         nftPriceLabel.text = "\(nftPrice) ETH"
         starRating.setStars(rating: rating)
@@ -66,11 +75,35 @@ final class NFTCollectionCell: UICollectionViewCell {
         
         addSubviews()
         applyConstraints()
+        setupButtons()
     }
     
+    func setFavourite(_ isFav: Bool) {
+        likeButton.setImage(isFav ? Self.likedButtonImage : Self.unlikedButtonImage, for: .normal)
+        isAlreadyInFavourite = isFav
+    }
+    
+    func setInCart(_ inCart: Bool) {
+        cartButton.setImage(inCart ? Self.inCartImage : Self.notInCartImage, for: .normal)
+        isAlreadyInCart = inCart
+    }
+    
+    
     private func addSubviews() {
-        [nftImageView, nftNameLabel, nftPriceLabel, starRating, cartImageView].forEach { addSubview($0) }
-        nftImageView.addSubview(likeButton)
+        [nftImageView, nftNameLabel, nftPriceLabel, starRating, cartButton, likeButton].forEach { addSubview($0) }
+    }
+    
+    private func setupButtons() {
+        likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
+        cartButton.addTarget(self, action: #selector(cartButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func likeButtonTapped() {
+        delegate?.likeButtonTapped(self, isAlreadyInFavourites: isAlreadyInFavourite)
+    }
+    
+    @objc private func cartButtonTapped() {
+        delegate?.cartButtonTapped(self, isAlreadyInCart: isAlreadyInCart)
     }
     
     private func applyConstraints() {
@@ -98,15 +131,18 @@ final class NFTCollectionCell: UICollectionViewCell {
             likeButton.heightAnchor.constraint(equalToConstant: 40),
             likeButton.widthAnchor.constraint(equalToConstant: 40),
             
-            cartImageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            cartImageView.topAnchor.constraint(equalTo: starRating.bottomAnchor, constant: 4),
-            cartImageView.widthAnchor.constraint(equalToConstant: 40),
-            cartImageView.heightAnchor.constraint(equalToConstant: 40),
+            cartButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            cartButton.topAnchor.constraint(equalTo: starRating.bottomAnchor, constant: 4),
+            cartButton.widthAnchor.constraint(equalToConstant: 40),
+            cartButton.heightAnchor.constraint(equalToConstant: 40),
         ])
     }
 }
 
 extension NFTCollectionCell {
-    static let likeButtonImage = UIImage(named: "likeButtonImage")
+    static let unlikedButtonImage = UIImage(named: "whiteHeart")
+    static let likedButtonImage = UIImage(named: "redHeart")
+    static let notInCartImage = UIImage(named: "notInCartButtonImage")
+    static let inCartImage = UIImage(named: "nftInCart")
     static let reuseIdentifier = "NFTCollectionCell"
 }

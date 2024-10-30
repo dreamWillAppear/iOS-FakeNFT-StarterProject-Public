@@ -7,14 +7,24 @@
 
 import UIKit
 
+protocol EditProfileViewControllerDelegate: AnyObject {
+    func didUpdateProfile()
+}
+
 final class EditProfileViewController: UIViewController, EditProfileViewProtocol, UITextViewDelegate {
 
+    
+    weak var delegate: EditProfileViewControllerDelegate?
+    var profile: Profile?
     var presenter: EditProfilePresenterProtocol?
+    
+    private var avatarURL: String?
     
     private var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "avatar")
+        imageView.layer.cornerRadius = 34
+        imageView.clipsToBounds = true
         return imageView
     }()
     
@@ -24,6 +34,18 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
         overlay.backgroundColor = .ypBlack?.withAlphaComponent(0.6)
         overlay.layer.cornerRadius = 34
         return overlay
+    }()
+    
+    private var changePhotoButton: UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let title = "Сменить\n фото"
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 10, weight: .medium)
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.textAlignment = .center
+        button.setTitleColor(.ypWhiteUniversal, for: .normal)
+        return button
     }()
     
     private var changePhotoLabel: UILabel = {
@@ -114,22 +136,37 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         
+        if presenter == nil {
+            presenter = EditProfilePresenter(view: self)
+        }
+        
         descriptionTextView.delegate = self
         websiteTextView.delegate = self
         
-        presenter?.loadProfileData()
+        loadProfile(profile)
         closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        changePhotoButton.addTarget(self, action: #selector(changePhotoButtonTapped), for: .touchUpInside)
         
         addSubViews()
         applyConstraints()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isBeingDismissed {
+            saveProfileChanges()
+            delegate?.didUpdateProfile()
+        }
     }
     
     private func addSubViews() {
-        [closeButton, avatarImageView, nameLabel, nameTextView, descriptionLabel, descriptionTextView, websiteLabel, websiteTextView].forEach {
+        [closeButton, avatarImageView, changePhotoButton, nameLabel, nameTextView, descriptionLabel, descriptionTextView, websiteLabel, websiteTextView].forEach {
             view.addSubview($0)
         }
         avatarImageView.addSubview(darkOverlayView)
-        darkOverlayView.addSubview(changePhotoLabel)
     }
     
     private func applyConstraints() {
@@ -149,8 +186,8 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
             darkOverlayView.trailingAnchor.constraint(equalTo: avatarImageView.trailingAnchor),
             darkOverlayView.bottomAnchor.constraint(equalTo: avatarImageView.bottomAnchor),
             
-            changePhotoLabel.centerXAnchor.constraint(equalTo: darkOverlayView.centerXAnchor),
-            changePhotoLabel.centerYAnchor.constraint(equalTo: darkOverlayView.centerYAnchor),
+            changePhotoButton.centerXAnchor.constraint(equalTo: darkOverlayView.centerXAnchor),
+            changePhotoButton.centerYAnchor.constraint(equalTo: darkOverlayView.centerYAnchor),
             
             nameLabel.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 24),
             nameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
@@ -176,11 +213,31 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
         ])
     }
     
+    private func loadProfile(_ profile: Profile?) {
+        guard let profile = profile else { return }
+        updateProfile(profile)
+    }
+    
     func updateProfile(_ profile: Profile) {
-        avatarImageView.image = UIImage(named: profile.avatarImageName)
+        let imageURL = URL(string: profile.avatarImageURL)
+        
+        avatarImageView.kf.setImage(with: imageURL) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    self.avatarImageView.layer.cornerRadius = 34
+                    self.avatarImageView.clipsToBounds = true
+                    print("Avatar is successfully loaded")
+                case .failure(let error):
+                    print("[ProfileViewController: avatarImageURL]: Error while loading image.\(error)")
+                }
+            }
+        }
+        
         nameTextView.text = profile.name
         descriptionTextView.text = profile.description
         websiteTextView.text = profile.website
+        avatarURL = profile.avatarImageURL
     }
     
     func textViewDidChange(_ textView: UITextView) {
@@ -196,13 +253,54 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
     @objc private func saveProfileChanges() {
         guard let name = nameTextView.text,
               let description = descriptionTextView.text,
-              let website = websiteTextView.text else { return }
-        presenter?.saveProfile(name: name, description: description, website: website)
+              let website = websiteTextView.text,
+              let avatarURL = self.avatarURL else { return }
+        
+        let profile = Profile(avatarImageURL: avatarURL, name: name, description: description, website: website, nfts: [], likes: [])
+        presenter?.saveProfile(profile: profile)
     }
     
     @objc private func closeButtonTapped() {
-        dismiss(animated: true)
+        saveProfileChanges()
+        delegate?.didUpdateProfile()
     }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    @objc private func changePhotoButtonTapped() {
+        let alertController = UIAlertController(title: "Аватар", message: nil, preferredStyle: .alert)
+        
+        alertController.addTextField { textField in
+            textField.placeholder = "Введите ссылку на фото"
+        }
+        
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+        let doneAction = UIAlertAction(title: "Готово", style: .default) { [weak self] _ in
+            guard let textField = alertController.textFields?.first,
+                  let urlString = textField.text, !urlString.isEmpty,
+                  let imageURL = URL(string: urlString) else { return }
+            
+            self?.avatarImageView.kf.setImage(with: imageURL) { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(_):
+                        self?.avatarImageView.layer.cornerRadius = 34
+                        self?.avatarImageView.clipsToBounds = true
+                        self?.avatarURL = urlString
+                        print("Аватар успешно обновлён")
+                    case .failure(let error):
+                        print("Ошибка при загрузке изображения: \(error)")
+                    }
+                }
+            }
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(doneAction)
+        present(alertController, animated: true, completion: nil)
+    }
+
 }
 
 extension UITextField {
@@ -214,4 +312,3 @@ extension UITextField {
         self.rightViewMode = .always
     }
 }
-

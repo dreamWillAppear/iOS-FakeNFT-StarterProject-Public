@@ -6,16 +6,15 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController, ProfileViewProtocol {
     
     var presenter: ProfilePresenterProtocol?
+    var profile: Profile?
     
-    let cellData = [
-        "Мои NFT (112)",
-        "Избранные NFT",
-        "О разработчике"
-    ]
+    private var nftCount = 0
+    private var favouriteCount = 0
     
     private var editButton: UIButton = {
         let button = UIButton()
@@ -27,14 +26,12 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     private var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "avatar")
         return imageView
     }()
     
     private var nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Joaquin Phoenix"
         label.font = .headline3
         return label
     }()
@@ -43,7 +40,6 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
-        label.text = "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT, и еще больше — на моём сайте. Открыт к коллаборациям."
         label.font = .caption2
         return label
     }()
@@ -51,9 +47,9 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     private var websiteLink: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Joaquin Phoenix.com"
         label.font = .caption1
         label.textColor = .ypBlueUniversal
+        label.isUserInteractionEnabled = true
         return label
     }()
     
@@ -72,7 +68,10 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         setupTableView()
         
         editButton.addTarget(self, action: #selector(editButtonTapped), for: .touchUpInside)
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(openWebsite))
+        websiteLink.addGestureRecognizer(tapGesture)
         
+        presenter = ProfilePresenter(view: self)
         presenter?.loadProfileData()
     }
     
@@ -117,35 +116,57 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         tableView.separatorStyle = .none
     }
     
+    @objc private func openWebsite() {
+        let webVC = WebViewController()
+        webVC.modalPresentationStyle = .fullScreen
+        present(webVC, animated: true, completion: nil)
+    }
+    
     func updateProfile(_ profile: Profile) {
-        avatarImageView.image = UIImage(named: profile.avatarImageName)
+        self.profile = profile
+        let imageURL = URL(string: profile.avatarImageURL)
+        
+        avatarImageView.kf.setImage(with: imageURL) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    self.avatarImageView.layer.cornerRadius = 34
+                    self.avatarImageView.clipsToBounds = true
+                    print("Avatar is successfully loaded")
+                case .failure(let error):
+                    print("[ProfileViewController: avatarImageURL]: Error while loading image.\(error)")
+                }
+            }
+        }
+        
         nameLabel.text = profile.name
         descriptionLabel.text = profile.description
         websiteLink.text = profile.website
-    }
+        nftCount = profile.nfts.count
+        favouriteCount = profile.likes.count
     
-    @objc private func editButtonTapped() {
-        let editProfileVC = EditProfileViewController()
-        let popover = UIPopoverPresentationController(presentedViewController: editProfileVC, presenting: self)
-        popover.sourceView = self.view
-        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
-        popover.permittedArrowDirections = []
-        
-        editProfileVC.modalPresentationStyle = .popover
-        present(editProfileVC, animated: true, completion: nil)
+        tableView.reloadData()
     }
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cellData.count
+        return 3
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
-        cell.textLabel?.text = cellData[indexPath.row]
+        switch indexPath.row {
+        case 0:
+            cell.textLabel?.text = "Мои NFT (\(nftCount))"
+        case 1:
+            cell.textLabel?.text = "Избранные NFT (\(favouriteCount))"
+        default:
+            cell.textLabel?.text = "О разработчике"
+        }
+        
         cell.textLabel?.font = .bodyBold
         
         let chevronImage = UIImage(systemName: "chevron.right",
@@ -181,7 +202,29 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
             present(favouritesVC, animated: false, completion: nil)
             
         default:
-            break
+            openWebsite()
         }
+    }
+}
+
+
+extension ProfileViewController: EditProfileViewControllerDelegate {
+    func didUpdateProfile() {
+        presenter?.loadProfileData()
+        dismiss(animated: true)
+    }
+    
+    @objc private func editButtonTapped() {
+        let editProfileVC = EditProfileViewController()
+        editProfileVC.profile = self.profile
+        editProfileVC.delegate = self
+        
+        let popover = UIPopoverPresentationController(presentedViewController: editProfileVC, presenting: self)
+        popover.sourceView = self.view
+        popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        popover.permittedArrowDirections = []
+        
+        editProfileVC.modalPresentationStyle = .popover
+        present(editProfileVC, animated: true, completion: nil)
     }
 }

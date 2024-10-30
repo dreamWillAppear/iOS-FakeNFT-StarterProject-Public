@@ -8,8 +8,10 @@
 import Foundation
 
 struct Profile {
-    let avatarImageName: String
+    let avatarImageURL: String
     let name: String
     let description: String
     let website: String
+    let nfts: [String]
+    let likes: [String]
 }

@@ -67,6 +67,9 @@
 		FDA690702CD1A04000964276 /* NftLikesResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA6906F2CD1A04000964276 /* NftLikesResultModel.swift */; };
 		FDA690722CD1AE5900964276 /* NftLikesGetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA690712CD1AE5900964276 /* NftLikesGetRequest.swift */; };
 		FDA690742CD1AEBA00964276 /* NftLikesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA690732CD1AEBA00964276 /* NftLikesService.swift */; };
+		FDA690772CD1B9A200964276 /* NftCartService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA690762CD1B9A200964276 /* NftCartService.swift */; };
+		FDA690792CD1B9C500964276 /* NftCartResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA690782CD1B9C500964276 /* NftCartResultModel.swift */; };
+		FDA6907B2CD1BA3100964276 /* NftCartGetRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA6907A2CD1BA3000964276 /* NftCartGetRequest.swift */; };
 		FDA901E52CC568510011D316 /* CatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA901E42CC568510011D316 /* CatalogService.swift */; };
 		FDA901E72CC5703C0011D316 /* CatalogResultModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA901E62CC5703C0011D316 /* CatalogResultModel.swift */; };
 		FDA901E92CC5A8590011D316 /* CatalogRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA901E82CC5A8590011D316 /* CatalogRequest.swift */; };
@@ -154,6 +157,9 @@
 		FDA6906F2CD1A04000964276 /* NftLikesResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftLikesResultModel.swift; sourceTree = "<group>"; };
 		FDA690712CD1AE5900964276 /* NftLikesGetRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftLikesGetRequest.swift; sourceTree = "<group>"; };
 		FDA690732CD1AEBA00964276 /* NftLikesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftLikesService.swift; sourceTree = "<group>"; };
+		FDA690762CD1B9A200964276 /* NftCartService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCartService.swift; sourceTree = "<group>"; };
+		FDA690782CD1B9C500964276 /* NftCartResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCartResultModel.swift; sourceTree = "<group>"; };
+		FDA6907A2CD1BA3000964276 /* NftCartGetRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftCartGetRequest.swift; sourceTree = "<group>"; };
 		FDA901E42CC568510011D316 /* CatalogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogService.swift; sourceTree = "<group>"; };
 		FDA901E62CC5703C0011D316 /* CatalogResultModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogResultModel.swift; sourceTree = "<group>"; };
 		FDA901E82CC5A8590011D316 /* CatalogRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogRequest.swift; sourceTree = "<group>"; };
@@ -445,12 +451,12 @@
 				FD63723E2CCDAE680096818B /* NftCollectionResultModel.swift */,
 				FD6372422CCDBFA80096818B /* NftCollectionRequest.swift */,
 				FD6372442CCDC4070096818B /* NftCollectionService.swift */,
-				FD6372462CCE93AF0096818B /* NftCollectionCellNetworkCervice */,
+				FD6372462CCE93AF0096818B /* NftCollectionCellNetworkService */,
 			);
 			path = NftCollectionNetworkService;
 			sourceTree = "<group>";
 		};
-		FD6372462CCE93AF0096818B /* NftCollectionCellNetworkCervice */ = {
+		FD6372462CCE93AF0096818B /* NftCollectionCellNetworkService */ = {
 			isa = PBXGroup;
 			children = (
 				FD6372402CCDAF890096818B /* NftCollectionCellNetworkModel.swift */,
@@ -458,7 +464,7 @@
 				FD6372492CCE98630096818B /* NftCollectionCellService.swift */,
 				FDA6906E2CD19D4D00964276 /* NftLikesNetworkService */,
 			);
-			path = NftCollectionCellNetworkCervice;
+			path = NftCollectionCellNetworkService;
 			sourceTree = "<group>";
 		};
 		FDA6906E2CD19D4D00964276 /* NftLikesNetworkService */ = {
@@ -467,8 +473,19 @@
 				FDA6906F2CD1A04000964276 /* NftLikesResultModel.swift */,
 				FDA690712CD1AE5900964276 /* NftLikesGetRequest.swift */,
 				FDA690732CD1AEBA00964276 /* NftLikesService.swift */,
+				FDA690752CD1B95900964276 /* NftCartNetworkService */,
 			);
 			path = NftLikesNetworkService;
+			sourceTree = "<group>";
+		};
+		FDA690752CD1B95900964276 /* NftCartNetworkService */ = {
+			isa = PBXGroup;
+			children = (
+				FDA690782CD1B9C500964276 /* NftCartResultModel.swift */,
+				FDA6907A2CD1BA3000964276 /* NftCartGetRequest.swift */,
+				FDA690762CD1B9A200964276 /* NftCartService.swift */,
+			);
+			path = NftCartNetworkService;
 			sourceTree = "<group>";
 		};
 		FDA901EA2CC5B0A60011D316 /* CatalogNetwrokService */ = {
@@ -638,6 +655,7 @@
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				FDA690702CD1A04000964276 /* NftLikesResultModel.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
+				FDA6907B2CD1BA3100964276 /* NftCartGetRequest.swift in Sources */,
 				FD63724A2CCE98630096818B /* NftCollectionCellService.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
@@ -648,12 +666,14 @@
 				FD6372452CCDC4070096818B /* NftCollectionService.swift in Sources */,
 				3F68069929CBBAF100B4F915 /* SceneDelegate.swift in Sources */,
 				0C79EE6C2A76DE2E00EE90EA /* ServicesAssemly.swift in Sources */,
+				FDA690772CD1B9A200964276 /* NftCartService.swift in Sources */,
 				FD4CDD102CBF1D8700638002 /* NftCollectionViewController.swift in Sources */,
 				FD63723F2CCDAE680096818B /* NftCollectionResultModel.swift in Sources */,
 				FDA901E92CC5A8590011D316 /* CatalogRequest.swift in Sources */,
 				FD8BD7102CBC9DFC001A94C6 /* CatalogViewController.swift in Sources */,
 				FDA901E52CC568510011D316 /* CatalogService.swift in Sources */,
 				0CFCB74E2A7817DC0009A829 /* NftStorage.swift in Sources */,
+				FDA690792CD1B9C500964276 /* NftCartResultModel.swift in Sources */,
 				FDA901E72CC5703C0011D316 /* CatalogResultModel.swift in Sources */,
 				3FC8C39129D2453B0081F015 /* ExamplePutRequest.swift in Sources */,
 				0CFCB7462A78064B0009A829 /* NftDetailCellModel.swift in Sources */,

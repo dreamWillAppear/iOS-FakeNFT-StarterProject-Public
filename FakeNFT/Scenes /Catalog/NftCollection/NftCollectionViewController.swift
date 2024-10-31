@@ -6,6 +6,7 @@ protocol NftCollectionViewProtocol: AnyObject {
     func showNetworkError()
     func displayLoadedData()
     func updateLikeButtonState(for indexPath: IndexPath, isLiked: Bool)
+    func updateCartButtonState(for indexPath: IndexPath, isInCart: Bool)
     func reloadData()
 }
 
@@ -154,13 +155,20 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         }
     }
     
+    func updateCartButtonState(for indexPath: IndexPath, isInCart: Bool) {
+        DispatchQueue.main.async { [weak nftCollectionView] in
+            let cell = nftCollectionView?.cellForItem(at: indexPath) as? NftCollectionViewCell
+            cell?.updateCartButtonState(isInCart: isInCart)
+        }
+    }
+    
     // MARK: - Private Methods
     
     private func setupUI() {
         let views = [cover, descriptionTextView, nftCollectionView]
         
         view.backgroundColor = .ypWhite
-          
+        
         [mainScrollView, backButton, activityIndicator].forEach {
             view.addSubview($0)
         }
@@ -180,7 +188,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     private func setupLayout(for views: [UIView]) {
         let window = UIApplication.shared.windows.first
         let windowSafeAreaTopInset = window?.safeAreaInsets.top ?? 50
-
+        
         [activityIndicator, backButton, mainStackView, mainScrollView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }

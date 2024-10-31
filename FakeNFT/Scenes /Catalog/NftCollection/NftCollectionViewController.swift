@@ -5,6 +5,7 @@ protocol NftCollectionViewProtocol: AnyObject {
     func setLoadingViewVisible(_ visible: Bool)
     func showNetworkError()
     func displayLoadedData()
+    func updateLikeButtonState(for indexPath: IndexPath, isLiked: Bool)
     func reloadData()
 }
 
@@ -146,15 +147,24 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         showError(error)
     }
     
+    func updateLikeButtonState(for indexPath: IndexPath, isLiked: Bool) {
+        DispatchQueue.main.async { [weak nftCollectionView] in
+            let cell = nftCollectionView?.cellForItem(at: indexPath) as? NftCollectionViewCell
+            cell?.updateLikeButtonState(isLiked: isLiked)
+        }
+    }
+    
     // MARK: - Private Methods
     
     private func setupUI() {
-        let views = [cover, descriptionTextView, nftCollectionView, activityIndicator]
+        let views = [cover, descriptionTextView, nftCollectionView]
         
         view.backgroundColor = .ypWhite
+          
+        [mainScrollView, backButton, activityIndicator].forEach {
+            view.addSubview($0)
+        }
         
-        view.addSubview(mainScrollView)
-        view.addSubview(backButton)
         mainScrollView.addSubview(mainStackView)
         
         setupMainStackView(for: views)
@@ -170,9 +180,10 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     private func setupLayout(for views: [UIView]) {
         let window = UIApplication.shared.windows.first
         let windowSafeAreaTopInset = window?.safeAreaInsets.top ?? 50
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        mainStackView.translatesAutoresizingMaskIntoConstraints = false
-        mainScrollView.translatesAutoresizingMaskIntoConstraints = false
+
+        [activityIndicator, backButton, mainStackView, mainScrollView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         views.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false

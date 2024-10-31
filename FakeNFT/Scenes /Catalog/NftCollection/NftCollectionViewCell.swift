@@ -92,6 +92,13 @@ final class NftCollectionViewCell: UICollectionViewCell {
         updateCartButtonState(isInCart: isInCart)
     }
     
+    func updateLikeButtonState(isLiked: Bool) {
+       let whiteHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypWhiteUniversal ?? .white).withRenderingMode(.alwaysOriginal)
+       let redHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypRedUniversal ?? .red).withRenderingMode(.alwaysOriginal)
+       let likeButtonImage = isLiked ? redHeartImage : whiteHeartImage
+       likeButton.setImage(likeButtonImage, for: .normal)
+   }
+    
     // MARK: - Private Properties
     
     private func setupUI() {
@@ -162,14 +169,7 @@ final class NftCollectionViewCell: UICollectionViewCell {
             whiteStarImage
         }
     }
-    
-    private func updateLikeButtonState(isLiked: Bool) {
-        let whiteHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypWhiteUniversal ?? .white).withRenderingMode(.alwaysOriginal)
-        let redHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypRedUniversal ?? .red).withRenderingMode(.alwaysOriginal)
-        let likeButtonImage = isLiked ? redHeartImage : whiteHeartImage
-        likeButton.setImage(likeButtonImage, for: .normal)
-    }
-    
+        
     private func updateCartButtonState(isInCart: Bool) {
         let addToCartImage = UIImage(named: "AddToCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
         let removeFromCartImage = UIImage(named: "RemoveFromCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
@@ -178,9 +178,8 @@ final class NftCollectionViewCell: UICollectionViewCell {
     }
     
     //MARK: - Actions
-    
+
     @objc private func didTapLikeButton() {
-        updateLikeButtonState(isLiked: [true, false].randomElement()!)
         guard let indexPath = indexPath else { return }
         delegate?.didTapLikeButton(at: indexPath)
     }

@@ -45,6 +45,12 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         }
     }
     
+    private var currentProfileData = NftLikesResultModel(name: "", avatar: "", description: "", website: "", nfts: [], likes: [], id: "") {
+        didSet {
+            favoriteNft = currentProfileData.likes
+        }
+    }
+    
     private var favoriteNft: [String] = []
     private var nftInCart: [String] = []
     
@@ -79,7 +85,10 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func didTapLikeButtonFromCell(at indexPath: IndexPath) {
         let nftId = nftsForView[indexPath.row].id
-        print("LOG didTapLikeButtonFromCell for nft id \(nftId)")
+        updateLikeAndFetchState(for: nftId) { [weak view] isLiked in
+            view?.updateLikeButtonState(for: indexPath, isLiked:isLiked)
+            view?.setLoadingViewVisible(false)
+        }
     }
     
     func didTapCartButtonFromCell(at indexPath: IndexPath) {
@@ -148,8 +157,8 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         
         networkService.loadNftLikes { [weak self] result in
             switch result {
-                case .success(let likes):
-                    self?.favoriteNft = likes.likes
+                case .success(let profileData):
+                    self?.currentProfileData = profileData
                     completion()
                 case .failure(let error):
                     print("LOG ERROR: NftCollectionPresenter fetchLikes – \(String(describing: error))")
@@ -186,6 +195,30 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
                         self.view?.showNetworkError()
                         print("LOG ERROR: NftCollectionPresenter fetchNfts – \(String(describing: error))")
                 }
+            }
+        }
+    }
+    
+    private func updateLikeAndFetchState(for nftId: String, completion: @escaping (Bool) -> Void) {
+        view?.setLoadingViewVisible(true)
+        var updatedLikedNfts = currentProfileData.likes
+        var isLiked = false
+        if updatedLikedNfts.contains(nftId) {
+            updatedLikedNfts.removeAll(where: { $0 == nftId })
+        } else {
+            updatedLikedNfts.append(nftId)
+        }
+        
+        let networkService = NftLikesService(networkClient: networkClient)
+        
+        networkService.updateLikes(nftsIds: updatedLikedNfts, currentProfileData: currentProfileData) { [weak self] result in
+            switch result {
+                case .success(let updatedResult):
+                    isLiked = updatedResult.likes.contains(nftId)
+                    self?.currentProfileData = updatedResult
+                    completion(isLiked)
+                case.failure(let error):
+                    completion(isLiked)
             }
         }
     }

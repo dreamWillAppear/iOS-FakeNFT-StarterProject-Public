@@ -52,7 +52,14 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     }
     
     private var favoriteNft: [String] = []
-    private var nftInCart: [String] = []
+    
+    private var currentCartData = NftCartResultModel(nfts: [], id: "") {
+        didSet {
+            nftsInCart = currentCartData.nfts
+        }
+    }
+    
+    private var nftsInCart: [String] = []
     
     // MARK: - Initializers
     
@@ -83,6 +90,8 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         nftsForView.count
     }
     
+    //MARK: - Did Tap Buttons Methods
+    
     func didTapLikeButtonFromCell(at indexPath: IndexPath) {
         let nftId = nftsForView[indexPath.row].id
         updateLikeAndFetchState(for: nftId) { [weak view] isLiked in
@@ -93,7 +102,10 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func didTapCartButtonFromCell(at indexPath: IndexPath) {
         let nftId = nftsForView[indexPath.row].id
-        print("LOG didTapCartButtonFromCell for nft id \(nftId)")
+        updateCartAndFetchState(for: nftId) { [weak view] isInCart in
+            view?.updateCartButtonState(for: indexPath, isInCart: isInCart)
+            view?.setLoadingViewVisible(false)
+        }
     }
     
     //MARK: - Private Methods
@@ -172,8 +184,8 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         
         networkService.loadNftInCart { [weak self] result in
             switch result {
-                case .success(let nfts):
-                    self?.nftInCart = nfts.nfts
+                case .success(let cartData):
+                    self?.currentCartData = cartData
                     completion()
                 case .failure(let error):
                     print("LOG ERROR: NftCollectionPresenter fetchNftInCart – \(String(describing: error))")
@@ -202,7 +214,8 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     private func updateLikeAndFetchState(for nftId: String, completion: @escaping (Bool) -> Void) {
         view?.setLoadingViewVisible(true)
         var updatedLikedNfts = currentProfileData.likes
-        var isLiked = false
+        var isLiked = updatedLikedNfts.contains(nftId)
+        
         if updatedLikedNfts.contains(nftId) {
             updatedLikedNfts.removeAll(where: { $0 == nftId })
         } else {
@@ -218,7 +231,34 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
                     self?.currentProfileData = updatedResult
                     completion(isLiked)
                 case.failure(let error):
+                    print("LOG ERROR: NftCollectionPresenter updateLikeAndFetchState – \(String(describing: error))")
                     completion(isLiked)
+            }
+        }
+    }
+    
+    private func updateCartAndFetchState(for nftId: String, completion: @escaping (Bool) -> Void) {
+        view?.setLoadingViewVisible(true)
+        var updatedNftsInCart = currentCartData.nfts
+        var isInCart = updatedNftsInCart.contains(nftId)
+        
+        if updatedNftsInCart.contains(nftId) {
+            updatedNftsInCart.removeAll(where: { $0 == nftId })
+        } else {
+            updatedNftsInCart.append(nftId)
+        }
+        
+        let networkService = NftCartService(networkClient: networkClient)
+        
+        networkService.updateCart(nftsIds: updatedNftsInCart, currentCartData: currentCartData) {[weak self] result in
+            switch result {
+                case .success(let updatedResult):
+                    self?.currentCartData = updatedResult
+                    isInCart = updatedResult.nfts.contains(nftId)
+                    completion(isInCart)
+                case.failure(let error):
+                    print("LOG ERROR: NftCollectionPresenter updateCartAndFetchState – \(String(describing: error))")
+                    completion(isInCart)
             }
         }
     }
@@ -244,7 +284,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
                 isLiked: favoriteNft.contains($0.id),
                 raiting: $0.rating,
                 price: $0.price,
-                isInCart: nftInCart.contains($0.id)
+                isInCart: nftsInCart.contains($0.id)
             )
             nftsForView.append(nft)
         }

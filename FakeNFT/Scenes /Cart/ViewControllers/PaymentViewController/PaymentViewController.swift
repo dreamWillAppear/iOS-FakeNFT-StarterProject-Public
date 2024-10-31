@@ -11,7 +11,6 @@ final class PaymentViewController: UIViewController {
     
     private var paymentServiceObserver: NSObjectProtocol?
     private var presenter: PaymentViewPresenterProtocol?
-    private var payment: [Payment]?
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -77,7 +76,6 @@ final class PaymentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = PaymentViewPresenter()
-        self.payment = presenter?.getPaymentData()
         presenter?.fetchPayment()
         setupNavItems()
         setupViews()

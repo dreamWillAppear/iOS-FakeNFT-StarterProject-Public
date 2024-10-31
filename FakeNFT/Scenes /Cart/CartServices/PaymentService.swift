@@ -44,7 +44,6 @@ final class PaymentService {
                 case .success(let decodedData):
                     self.paymentInfo = decodedData
                     DispatchQueue.main.async {
-//                        self.paymentInfo += decodedData
                         self.task = nil
                         NotificationCenter.default
                             .post(name: PaymentService.didChangeNotification,

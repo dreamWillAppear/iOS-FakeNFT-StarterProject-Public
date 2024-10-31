@@ -9,7 +9,6 @@ import Foundation
 import ProgressHUD
 
 protocol PaymentViewPresenterProtocol {
-    func getPaymentData() -> [Payment]
     func getResultOfPayment() -> Bool
     func fetchPayment()
     var paymentData: [PaymentResult]? { get set }
@@ -17,14 +16,9 @@ protocol PaymentViewPresenterProtocol {
 
 final class PaymentViewPresenter: PaymentViewPresenterProtocol {
     
-    private let data = MokeEnum.payment
     private let paymentService = PaymentService.shared
     
     var paymentData: [PaymentResult]?
-    
-    func getPaymentData() -> [Payment] {
-        return data
-    }
     
     func getResultOfPayment() -> Bool {
         let isSuccess = [true, false].randomElement() ?? false

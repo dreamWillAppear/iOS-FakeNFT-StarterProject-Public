@@ -1,5 +1,4 @@
 import UIKit
-import WebKit
 
 protocol NftCollectionViewProtocol: AnyObject {
     func setLoadingViewVisible(_ visible: Bool)
@@ -84,12 +83,6 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         
         return collectionView
     }()
-    
-    private lazy var webView: WKWebView = {
-        let webView = WKWebView(frame: .zero)
-        
-        return webView
-    } ()
     
     //MARK: - Init
     
@@ -287,14 +280,11 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     private func showWebView(urlString: String) {
         guard let url = URL(string: urlString) else { return }
         
-        let webView = WKWebView()
-        let webViewController = UIViewController()
+        let webViewViewController = NftCollectionWebViewViewController(url: url)
+        let navigationController = UINavigationController(rootViewController: webViewViewController)
+        navigationController.modalPresentationStyle = .fullScreen
         
-        webViewController.view = webView
-        
-        webView.load(URLRequest(url: url))
-        
-        present(webViewController, animated: true)
+        present(navigationController, animated: true)
     }
     
     //MARK: - Actions

@@ -17,9 +17,7 @@ final class PaymentService {
     private(set) var paymentInfo: [PaymentResult] = []
     
     static let didChangeNotification = Notification.Name(rawValue: "PaymentProviderDidChange")
-    
-//    private let nftsService = NftsService.shared
-    
+        
     private init() {}
     
     private func makePaymentRequest() -> URLRequest? {

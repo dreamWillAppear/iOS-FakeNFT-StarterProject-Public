@@ -42,7 +42,6 @@ final class CartService {
                 case .success(let decodedData):
                     self.cartInfo = decodedData
                     DispatchQueue.main.async {
-//                        self.cartInfo += decodedData
                         self.task = nil
                         NotificationCenter.default
                             .post(name: CartService.didChangeNotification,

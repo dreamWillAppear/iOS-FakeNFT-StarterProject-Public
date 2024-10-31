@@ -223,7 +223,6 @@ extension PaymentViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         guard let payment = presenter?.paymentData else { return UICollectionViewCell() }
-//        cell.paymentImage.image = payment[indexPath.row].image
         cell.paymentName.text = payment[indexPath.row].title
         cell.paymentShortName.text = payment[indexPath.row].name
         let urlString = payment[indexPath.row].image

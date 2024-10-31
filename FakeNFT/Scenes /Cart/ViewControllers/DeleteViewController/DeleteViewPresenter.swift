@@ -26,11 +26,9 @@ final class DeleteViewPresenter: DeleteViewPresenterProtocol {
         deleteService.fetchPayment(order: order, deletetedNft: deletetedNft) { result in
             switch result {
             case .success(_):
-                print("delete is successful")
                 self.view?.didDelete()
                 self.view?.dismissVC()
             case .failure(_):
-                print("error with delete nft from order")
                 self.view?.dismissVC()
             }
         }

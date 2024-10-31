@@ -36,7 +36,6 @@ final class NftsService {
         assert(Thread.isMainThread)
         guard task == nil else { return }
         guard let request = makeNftRequest(idNft: idfNft) else {
-            completion(.failure(preconditionFailure("Error: cant construct url")))
             return 
         }
         let task = urlSession.cartObjectTask(for: request) { [weak self] (result: Result<NftResult, Error>) in

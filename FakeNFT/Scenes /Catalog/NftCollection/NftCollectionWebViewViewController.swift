@@ -13,19 +13,6 @@ final class NftCollectionWebViewViewController: UIViewController {
         return webView
     } ()
     
-    private lazy var backButton: UIButton = {
-        let button = UIButton(type: .system)
-        let image = UIImage(systemName: "chevron.backward")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
-        button.setImage(image, for: .normal)
-        button.addTarget(
-            self,
-            action: #selector(didTapBackButton),
-            for: .touchUpInside
-        )
-        
-        return button
-    }()
-    
     // MARK: - Init
     
     init(url: URL) {
@@ -48,16 +35,22 @@ final class NftCollectionWebViewViewController: UIViewController {
     //MARK: - Private Methods
     
     private func setupUI() {
-        view = webView
-        view.addSubview(backButton)
+        view.addSubview(webView)
         
-        backButton.translatesAutoresizingMaskIntoConstraints = false
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.backward")?.withTintColor(.ypBlackUniversal ?? .black).withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(didTapBackButton)
+        )
+        
+        webView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            backButton.widthAnchor.constraint(equalToConstant: 24),
-            backButton.heightAnchor.constraint(equalToConstant: 24),
-            backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 9),
-            backButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 55)
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            webView.topAnchor.constraint(equalTo: view.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
     

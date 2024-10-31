@@ -228,6 +228,9 @@ extension PaymentViewController: UICollectionViewDataSource {
 //        cell.paymentImage.image = payment[indexPath.row].image
         cell.paymentName.text = payment[indexPath.row].title
         cell.paymentShortName.text = payment[indexPath.row].name
+        let urlString = payment[indexPath.row].image
+        let url = URL(string: urlString)
+        cell.paymentImage.kf.setImage(with: url)
         return cell
     }
 }

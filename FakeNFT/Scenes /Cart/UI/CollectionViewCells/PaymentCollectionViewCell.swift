@@ -19,6 +19,9 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
     
     lazy var paymentImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = .ypBlackUniversal
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 6
         return imageView
     }()
     

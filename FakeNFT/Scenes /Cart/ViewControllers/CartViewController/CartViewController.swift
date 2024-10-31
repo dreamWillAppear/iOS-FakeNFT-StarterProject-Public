@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol CartViewControllerProtocol: AnyObject {
     var presenter: CartViewPresenterProtocol? { get set }
@@ -18,10 +19,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     
     var presenter: CartViewPresenterProtocol?
     
-    let cartService = CartService.shared
-    let nftService = NftsService.shared
 
-    
     private var data: CartResult?
     private var arrayOfNfts: [NftResult] = []
     
@@ -165,22 +163,48 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         ])
     }
     
+    private func sortByPrice() {
+        guard let nfts = presenter?.getNfts() else { return }
+        self.arrayOfNfts = nfts.sorted{ (value1, value2) in
+            return value1.price > value2.price
+        }
+    }
+    
+    private func sortByRating() {
+        guard let nfts = presenter?.getNfts() else { return }
+        self.arrayOfNfts = nfts.sorted{ (value1, value2) in
+            return value1.rating > value2.rating
+        }
+    }
+    
+    private func sortByName() {
+        guard let nfts = presenter?.getNfts() else { return }
+        self.arrayOfNfts = nfts.sorted{ (value1, value2) in
+            
+            return value1.name < value2.name
+        }
+    }
+    
     private func showAlert() {
         let alert = UIAlertController(title: "Сортировка",
                                       message: nil,
                                       preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
+            self.sortByPrice()
+            self.tableView.reloadData()
         }))
         alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
+            self.sortByRating()
+            self.tableView.reloadData()
         }))
         alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
+            self.sortByName()
+            self.tableView.reloadData()
         }))
-        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: { [weak self] action in
-            guard let self = self else { return }
-        }))
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
         self.present(alert, animated: true)
     }
     
@@ -190,13 +214,13 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     }
     
     private func setupPaymentLabels() {
-        let nfts = nftService.arrayOfNfts
+        guard let nfts = presenter?.getNfts() else { return }
         var price: Double = 0.0
         nfts.forEach{
             price += $0.price
         }
         self.countNFTLabel.text = "\(nfts.count) NFT"
-        self.priceNFTLabel.text = "\(String(format: "%.2f", price)) NFT".replacingOccurrences(of: ".", with: ",")
+        self.priceNFTLabel.text = "\(String(format: "%.2f", price)) ETH".replacingOccurrences(of: ".", with: ",")
     }
     
     @objc
@@ -222,10 +246,17 @@ extension CartViewController: UITableViewDelegate {
 extension CartViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if nftService.arrayOfNfts.count != self.data?.nfts.count {
+        guard let nfts = presenter?.getNfts() else { return 0 }
+        if nfts.count != self.data?.nfts.count {
             paymentViewIsHidden(bool: true)
         }
-        guard let nfts = presenter?.cardData?.nfts else { return 0 }
+        guard let orderIds = presenter?.getIdNfts() else { return 0 }
+        if nfts.count < orderIds.count {
+            ProgressHUD.animate()
+        } else {
+            ProgressHUD.dismiss()
+        }
+        guard let nfts = presenter?.getIdNfts() else { return 0 }
         return nfts.count
     }
 
@@ -235,7 +266,12 @@ extension CartViewController: UITableViewDataSource {
             for: indexPath
         ) as? CartTableViewCell else { return UITableViewCell()}
         cell.delegate = self
-        let nfts = nftService.arrayOfNfts
+        guard var nfts = presenter?.getNfts() else { return UITableViewCell() }
+        if nfts.count == self.arrayOfNfts.count {
+            nfts = self.arrayOfNfts
+        } else {
+            self.arrayOfNfts = nfts
+        }
         if nfts.isEmpty {
             return UITableViewCell()
         }
@@ -261,14 +297,23 @@ extension CartViewController: UITableViewDataSource {
     }
 }
 
-extension CartViewController: CartTableViewCellDelegate {
+extension CartViewController: CartTableViewCellDelegate, DeleteViewDelegate {
     
     func cartCellDidTapDelete(_ cell: CartTableViewCell) {
-        let nfts = nftService.arrayOfNfts
+        guard let order = presenter?.getOrder() else { return }
+        guard let nfts = presenter?.getNfts() else { return }
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let deleteViewController = DeleteViewController()
+        deleteViewController.order = order
         deleteViewController.dataNft = nfts[indexPath.row]
+        deleteViewController.delegate = self
         deleteViewController.modalPresentationStyle = .overFullScreen
         self.present(deleteViewController, animated: true)
+    }
+    
+    func didDelete() {
+        self.presenter?.deleteCash()
+        self.presenter?.fetchCart()
+        self.tableView.reloadData()
     }
 }

@@ -36,10 +36,7 @@ final class PaymentService {
     func fetchPayment(completion: @escaping (Result<[PaymentResult], Error>) -> Void) {
         assert(Thread.isMainThread)
         guard task == nil else { return }
-        guard let request = makePaymentRequest() else {
-            completion(.failure(preconditionFailure("Error: cant construct url")))
-            return
-        }
+        guard let request = makePaymentRequest() else { return }
         let task = urlSession.cartObjectTask(for: request) { [weak self] (result: Result<[PaymentResult], Error>) in
             guard let self = self else { return }
             DispatchQueue.main.async {

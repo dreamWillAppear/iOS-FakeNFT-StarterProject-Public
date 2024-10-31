@@ -11,9 +11,11 @@ import ProgressHUD
 protocol CartViewPresenterProtocol {
     var view: CartViewControllerProtocol?{ get set }
     var cardData: CartResult? { get set }
-    
+    func getNfts() -> [NftResult]
+    func getIdNfts() -> [String]?
     func fetchCart()
-
+    func getOrder() -> CartResult?
+    func deleteCash()
 }
 
 final class CartViewPresenter: CartViewPresenterProtocol {
@@ -40,7 +42,7 @@ final class CartViewPresenter: CartViewPresenterProtocol {
                 self.cardData = decodedData
                 nftsService.fetchNfts(idsfNft: decodedData.nfts) { resultNft in
                     switch resultNft {
-                    case .success(let nftModel):
+                    case .success(_):
                         print(self.nftsService.arrayOfNfts)
                     case .failure(_):
                         print("WWWWW")
@@ -51,5 +53,23 @@ final class CartViewPresenter: CartViewPresenterProtocol {
                 print("fail cart")
             }
         }
+    }
+    
+    func getNfts() -> [NftResult] {
+        return nftsService.arrayOfNfts
+    }
+    
+    func getIdNfts() -> [String]? {
+        return cardData?.nfts
+    }
+    
+    func getOrder() -> CartResult? {
+        return cardData
+    }
+    
+    func deleteCash() {
+        nftsService.arrayOfNfts = []
+        cartService.cartInfo = nil
+        cardData = nil
     }
 }

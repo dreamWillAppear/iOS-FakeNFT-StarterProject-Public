@@ -69,10 +69,7 @@ final class NftsService {
         guard task == nil else { return }
         for id in idsfNft {
             DispatchQueue.main.async {
-                guard let request = self.makeNftRequest(idNft: id) else {
-                    completion(.failure(preconditionFailure("Error: cant construct url")))
-                    return
-                }
+                guard let request = self.makeNftRequest(idNft: id) else { return }
                 let task = self.urlSession.cartObjectTask(for: request) { [weak self] (result: Result<NftResult, Error>) in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
@@ -80,10 +77,6 @@ final class NftsService {
                         case .success(let decodedData):
                             self.arrayOfNfts.append(decodedData)
                             DispatchQueue.main.async {
-//                                NotificationCenter.default
-//                                    .post(name: NftsService.didChangeNotification,
-//                                          object: self,
-//                                          userInfo: ["URL": decodedData])
                                 NotificationCenter.default
                                     .post(name: CartService.didChangeNotification,
                                             object: self,

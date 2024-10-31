@@ -7,11 +7,23 @@
 
 import UIKit
 
-final class CartViewController: UIViewController {
+protocol CartViewControllerProtocol: AnyObject {
+    var presenter: CartViewPresenterProtocol? { get set }
+}
+
+final class CartViewController: UIViewController, CartViewControllerProtocol {
+    
+    private var cartServiceObserver: NSObjectProtocol?
+    private var nftServiceObserver: NSObjectProtocol?
     
     var presenter: CartViewPresenterProtocol?
     
-    private var data: [NftCart]?
+    let cartService = CartService.shared
+    let nftService = NftsService.shared
+
+    
+    private var data: CartResult?
+    private var arrayOfNfts: [NftResult] = []
     
     private lazy var sortButton: UIButton = {
         let button = UIButton.systemButton(
@@ -46,7 +58,7 @@ final class CartViewController: UIViewController {
     
     private lazy var countNFTLabel: UILabel = {
         let label = UILabel()
-        label.text = "3 NFT"
+        label.text = ""
         label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textColor = .ypBlack
         return label
@@ -54,7 +66,7 @@ final class CartViewController: UIViewController {
     
     private lazy var priceNFTLabel: UILabel = {
         let label = UILabel()
-        label.text = "5,34 ETH"
+        label.text = ""
         label.font = .systemFont(ofSize: 17, weight: .bold)
         label.textColor = .ypGreenUniversal
         return label
@@ -62,7 +74,9 @@ final class CartViewController: UIViewController {
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(CartTableViewCell.self, forCellReuseIdentifier: CartTableViewCell.reuseIdentifier)
+        tableView.register(
+            CartTableViewCell.self,
+            forCellReuseIdentifier: CartTableViewCell.reuseIdentifier)
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         tableView.allowsSelection = false
@@ -71,10 +85,26 @@ final class CartViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter = CartViewPresenter()
+        presenter = CartViewPresenter(view: self)
+        presenter?.fetchCart()
         setupViews()
-        self.data = presenter?.getDataNft()
         setupNavItems()
+        cartServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: CartService.didChangeNotification,
+                object: nil,
+                queue: .main) { [weak self] _ in
+                    guard let self = self else { return }
+                    tableView.reloadData()
+                }
+        nftServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: NftsService.didChangeNotification,
+                object: nil,
+                queue: .main) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.tableView.reloadData()
+                }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -141,39 +171,32 @@ final class CartViewController: UIViewController {
                                       preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
-            self.switchActions(style: action.style)
         }))
         alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
-            self.switchActions(style: action.style)
         }))
         alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
-            self.switchActions(style: action.style)
         }))
         alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: { [weak self] action in
             guard let self = self else { return }
-            self.switchActions(style: action.style)
         }))
         self.present(alert, animated: true)
     }
     
-    private func switchActions(style: UIAlertAction.Style) {
-        switch style {
-        case .default:
-            return
-        case .cancel:
-            return
-        case .destructive:
-            return
-        @unknown default:
-            return
-        }
+    private func paymentViewIsHidden(bool: Bool) {
+        paymentView.isHidden = bool
+        forPaymentButton.isHidden = bool
     }
     
-    private func makeGradeImage(grade: Int) -> UIImage? {
-        let image = "grade\(grade)"
-        return UIImage(named: image)
+    private func setupPaymentLabels() {
+        let nfts = nftService.arrayOfNfts
+        var price: Double = 0.0
+        nfts.forEach{
+            price += $0.price
+        }
+        self.countNFTLabel.text = "\(nfts.count) NFT"
+        self.priceNFTLabel.text = "\(String(format: "%.2f", price)) NFT".replacingOccurrences(of: ".", with: ",")
     }
     
     @objc
@@ -199,22 +222,41 @@ extension CartViewController: UITableViewDelegate {
 extension CartViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let data = self.data else { return 0 }
-        return data.count
+        if nftService.arrayOfNfts.count != self.data?.nfts.count {
+            paymentViewIsHidden(bool: true)
+        }
+        guard let nfts = presenter?.cardData?.nfts else { return 0 }
+        return nfts.count
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CartTableViewCell.reuseIdentifier,
             for: indexPath
         ) as? CartTableViewCell else { return UITableViewCell()}
-        guard let data = self.data else { return UITableViewCell() }
         cell.delegate = self
-        cell.backgroundColor = .clear
-        cell.nameNFT.text = data[indexPath.row].name
-        cell.priceNFT.text = "\(data[indexPath.row].price) ETH".replacingOccurrences(of: ".", with: ",")
-        cell.imageNFT.image = data[indexPath.row].image
-        cell.gradeNFT.image = makeGradeImage(grade: data[indexPath.row].grade)
+        let nfts = nftService.arrayOfNfts
+        if nfts.isEmpty {
+            return UITableViewCell()
+        }
+        if nfts.count - 1 < indexPath.row {
+            return UITableViewCell()
+        }
+        paymentViewIsHidden(bool: false)
+        setupPaymentLabels()
+        cell.setupCell(nft: nfts[indexPath.row])
+        guard let imageUrl = URL(string: nfts[indexPath.row].images[0]) else {
+            return cell
+        }
+        cell.imageNFT.kf.indicatorType = .activity
+        cell.imageNFT.kf.setImage(with: imageUrl, placeholder: UIImage()) { result in
+            switch result {
+            case .success(_):
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            case .failure(let error):
+                print("[ImagesListViewController]: \(error)")
+            }
+        }
         return cell
     }
 }
@@ -222,10 +264,10 @@ extension CartViewController: UITableViewDataSource {
 extension CartViewController: CartTableViewCellDelegate {
     
     func cartCellDidTapDelete(_ cell: CartTableViewCell) {
+        let nfts = nftService.arrayOfNfts
         guard let indexPath = tableView.indexPath(for: cell) else { return }
-        guard let data = self.data else { return }
         let deleteViewController = DeleteViewController()
-        deleteViewController.dataNft = data[indexPath.row]
+        deleteViewController.dataNft = nfts[indexPath.row]
         deleteViewController.modalPresentationStyle = .overFullScreen
         self.present(deleteViewController, animated: true)
     }

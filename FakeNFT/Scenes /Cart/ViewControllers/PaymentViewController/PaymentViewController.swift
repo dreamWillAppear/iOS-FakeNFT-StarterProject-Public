@@ -9,6 +9,7 @@ import UIKit
 
 final class PaymentViewController: UIViewController {
     
+    private var paymentServiceObserver: NSObjectProtocol?
     private var presenter: PaymentViewPresenterProtocol?
     private var payment: [Payment]?
     
@@ -77,9 +78,18 @@ final class PaymentViewController: UIViewController {
         super.viewDidLoad()
         presenter = PaymentViewPresenter()
         self.payment = presenter?.getPaymentData()
+        presenter?.fetchPayment()
         setupNavItems()
         setupViews()
         setupDelegates()
+        paymentServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: PaymentService.didChangeNotification,
+                object: nil,
+                queue: .main) { [weak self] _ in
+                    guard let self = self else { return }
+                    collectionView.reloadData()
+                }
     }
     
     private func setupNavItems() {
@@ -203,7 +213,7 @@ extension PaymentViewController: UICollectionViewDelegate {
 
 extension PaymentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let payment = payment else { return 0 }
+        guard let payment = presenter?.paymentData else { return 0 }
         return payment.count
     }
     
@@ -214,11 +224,10 @@ extension PaymentViewController: UICollectionViewDataSource {
         ) as? PaymentCollectionViewCell else {
             return UICollectionViewCell()
         }
-        guard let payment = payment else { return UICollectionViewCell() }
-        let index = payment[indexPath.row]
-        cell.paymentImage.image = index.image
-        cell.paymentName.text = index.fullName
-        cell.paymentShortName.text = index.shortName
+        guard let payment = presenter?.paymentData else { return UICollectionViewCell() }
+//        cell.paymentImage.image = payment[indexPath.row].image
+        cell.paymentName.text = payment[indexPath.row].title
+        cell.paymentShortName.text = payment[indexPath.row].name
         return cell
     }
 }

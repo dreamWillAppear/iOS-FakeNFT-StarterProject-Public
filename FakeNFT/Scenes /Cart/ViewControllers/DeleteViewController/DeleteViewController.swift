@@ -9,12 +9,12 @@ import UIKit
 
 final class DeleteViewController: UIViewController {
     
-    var dataNft: NftCart?
+    var dataNft: NftResult?
     
     private lazy var nftImageView: UIImageView = {
         let imageView = UIImageView()
-        let image: UIImage = dataNft?.image ?? UIImage()
-        imageView.image = image
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
         return imageView
     }()
     
@@ -63,6 +63,10 @@ final class DeleteViewController: UIViewController {
     }
     
     private func setupViews() {
+        guard let imageUrlString = dataNft?.images[0] else { return }
+        guard let imageUrl = URL(string: imageUrlString) else { return }
+        self.nftImageView.kf.indicatorType = .activity
+        self.nftImageView.kf.setImage(with: imageUrl)
         [nftImageView,
          deleteLabel,
          buttonsView].forEach{

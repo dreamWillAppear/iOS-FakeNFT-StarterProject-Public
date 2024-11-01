@@ -279,17 +279,13 @@ extension CartViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let nfts = presenter?.getNfts() else { return 0 }
-        if nfts.count != self.data?.nfts.count {
-            paymentViewIsHidden(bool: true)
-        }
         guard let orderIds = presenter?.getIdNfts() else { return 0 }
         if nfts.count < orderIds.count {
             UICartBlockingProgressHUD.show()
         } else {
             UICartBlockingProgressHUD.dismiss()
         }
-        guard let nfts = presenter?.getIdNfts() else { return 0 }
-        return nfts.count
+        return orderIds.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

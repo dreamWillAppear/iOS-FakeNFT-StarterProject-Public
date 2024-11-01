@@ -20,6 +20,7 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
     
     var presenter: PaymentViewPresenterProtocol?
     var delegate: SuccessPaymentDelegate?
+    
     private var paymentId: String?
     private var paymentServiceObserver: NSObjectProtocol?
     

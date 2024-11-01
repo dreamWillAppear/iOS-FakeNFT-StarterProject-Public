@@ -19,7 +19,6 @@ final class CartViewController: UIViewController, CartViewControllerProtocol, Su
     
     var presenter: CartViewPresenterProtocol?
     
-
     private var data: CartResult?
     private var arrayOfNfts: [NftResult] = []
     
@@ -213,7 +212,6 @@ final class CartViewController: UIViewController, CartViewControllerProtocol, Su
     private func sortByName() {
         guard let nfts = presenter?.getNfts() else { return }
         self.arrayOfNfts = nfts.sorted{ (value1, value2) in
-            
             return value1.name < value2.name
         }
     }

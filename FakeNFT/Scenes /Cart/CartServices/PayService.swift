@@ -28,7 +28,7 @@ final class PayService {
         return request
     }
     
-    func fetchPayment(paymentId: String, completion: @escaping (Result<PayResult, Error>) -> Void) {
+    func fetchPay(paymentId: String, completion: @escaping (Result<PayResult, Error>) -> Void) {
         assert(Thread.isMainThread)
         guard task == nil else { return }
         guard let request = makePayRequest(paymentId: paymentId) else { return }

@@ -23,7 +23,10 @@ final class DeleteViewPresenter: DeleteViewPresenterProtocol {
     }
     
     func fetchDeleteNft(order: CartResult, deletetedNft: String) {
-        deleteService.fetchPayment(order: order, deletetedNft: deletetedNft) { result in
+        UICartBlockingProgressHUD.show()
+        deleteService.fetchPayment(order: order, deletetedNft: deletetedNft) { [weak self] result in
+            guard let self = self else { return }
+            UICartBlockingProgressHUD.dismiss()
             switch result {
             case .success(_):
                 self.view?.didDelete()

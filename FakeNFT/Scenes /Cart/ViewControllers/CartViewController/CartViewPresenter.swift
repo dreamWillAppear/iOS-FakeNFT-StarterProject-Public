@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import ProgressHUD
 
 protocol CartViewPresenterProtocol {
     var view: CartViewControllerProtocol?{ get set }
@@ -33,14 +32,19 @@ final class CartViewPresenter: CartViewPresenterProtocol {
     }
     
     func fetchCart() {
-        ProgressHUD.animate()
+        UICartBlockingProgressHUD.show()
         cartService.fetchCart() { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let decodedData):
-                print(decodedData)
                 self.cardData = decodedData
-                nftsService.fetchNfts(idsfNft: decodedData.nfts) { resultNft in
+                if decodedData.nfts.isEmpty {
+                    view?.orderOfNftIsEmpty(bool: true)
+                } else {
+                    view?.orderOfNftIsEmpty(bool: false)
+                }
+                nftsService.fetchNfts(idsfNft: decodedData.nfts) { [weak self] resultNft in
+                    guard let self = self else { return }
                     switch resultNft {
                     case .success(_):
                         print(self.nftsService.arrayOfNfts)
@@ -48,7 +52,7 @@ final class CartViewPresenter: CartViewPresenterProtocol {
                         print("WWWWW")
                     }
                 }
-                ProgressHUD.dismiss()
+                UICartBlockingProgressHUD.dismiss()
             case .failure(_):
                 print("fail cart")
             }

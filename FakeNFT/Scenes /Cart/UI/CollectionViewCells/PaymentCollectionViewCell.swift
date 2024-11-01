@@ -8,6 +8,8 @@
 import UIKit
 
 final class PaymentCollectionViewCell: UICollectionViewCell {
+    
+    var paymentId: String?
        
     lazy var containerView: UIView = {
         let view = UIView()

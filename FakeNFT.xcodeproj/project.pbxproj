@@ -42,6 +42,7 @@
 		356AA5FE2CD4116C00941BF6 /* DeleteService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356AA5FD2CD4116C00941BF6 /* DeleteService.swift */; };
 		356AA6002CD4322F00941BF6 /* PayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356AA5FF2CD4322F00941BF6 /* PayService.swift */; };
 		356AA6022CD432DF00941BF6 /* PayResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356AA6012CD432DF00941BF6 /* PayResult.swift */; };
+		356AA6042CD4BE6D00941BF6 /* UICartBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356AA6032CD4BE6D00941BF6 /* UICartBlockingProgressHUD.swift */; };
 		35754BF62CBCFA1700A1797B /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35754BF52CBCFA1700A1797B /* CartViewController.swift */; };
 		35754BF82CBD1C8700A1797B /* CartTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35754BF72CBD1C8700A1797B /* CartTableViewCell.swift */; };
 		35754C032CBD5BE800A1797B /* DeleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35754C022CBD5BE800A1797B /* DeleteViewController.swift */; };
@@ -119,6 +120,7 @@
 		356AA5FD2CD4116C00941BF6 /* DeleteService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteService.swift; sourceTree = "<group>"; };
 		356AA5FF2CD4322F00941BF6 /* PayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayService.swift; sourceTree = "<group>"; };
 		356AA6012CD432DF00941BF6 /* PayResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayResult.swift; sourceTree = "<group>"; };
+		356AA6032CD4BE6D00941BF6 /* UICartBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICartBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		35754BF52CBCFA1700A1797B /* CartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
 		35754BF72CBD1C8700A1797B /* CartTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartTableViewCell.swift; sourceTree = "<group>"; };
 		35754C022CBD5BE800A1797B /* DeleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteViewController.swift; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 				356AA5E12CC1290C00941BF6 /* ViewControllers */,
 				356AA5E02CC128D200941BF6 /* UI */,
 				35754BFB2CBD2D4700A1797B /* Models */,
+				356AA6032CD4BE6D00941BF6 /* UICartBlockingProgressHUD.swift */,
 			);
 			path = Cart;
 			sourceTree = "<group>";
@@ -691,6 +694,7 @@
 				356AA6022CD432DF00941BF6 /* PayResult.swift in Sources */,
 				0C79EE6C2A76DE2E00EE90EA /* ServicesAssemly.swift in Sources */,
 				0CFCB74E2A7817DC0009A829 /* NftStorage.swift in Sources */,
+				356AA6042CD4BE6D00941BF6 /* UICartBlockingProgressHUD.swift in Sources */,
 				3FC8C39129D2453B0081F015 /* ExamplePutRequest.swift in Sources */,
 				0CFCB7462A78064B0009A829 /* NftDetailCellModel.swift in Sources */,
 				0CFCB74B2A780EA80009A829 /* UIView+Constraints.swift in Sources */,

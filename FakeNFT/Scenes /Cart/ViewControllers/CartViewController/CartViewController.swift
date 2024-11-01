@@ -6,13 +6,13 @@
 //
 
 import UIKit
-import ProgressHUD
 
 protocol CartViewControllerProtocol: AnyObject {
     var presenter: CartViewPresenterProtocol? { get set }
+    func orderOfNftIsEmpty(bool: Bool)
 }
 
-final class CartViewController: UIViewController, CartViewControllerProtocol {
+final class CartViewController: UIViewController, CartViewControllerProtocol, SuccessPaymentDelegate {
     
     private var cartServiceObserver: NSObjectProtocol?
     private var nftServiceObserver: NSObjectProtocol?
@@ -22,6 +22,15 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
 
     private var data: CartResult?
     private var arrayOfNfts: [NftResult] = []
+    
+    private lazy var emptyCartLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Корзина пуста"
+        label.textColor = .ypBlack
+        label.font = .systemFont(ofSize: 17, weight: .bold)
+        label.isHidden = true
+        return label
+    }()
     
     private lazy var sortButton: UIButton = {
         let button = UIButton.systemButton(
@@ -110,6 +119,26 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         navigationController?.tabBarController?.tabBar.isHidden = false
     }
     
+    func orderOfNftIsEmpty(bool: Bool) {
+        if bool {
+            emptyCartLabel.isHidden = false
+            sortButton.isHidden = true
+            paymentView.isHidden = true
+            forPaymentButton.isHidden = true
+            tableView.isHidden = true
+            priceNFTLabel.isHidden = true
+            countNFTLabel.isHidden = true
+        } else {
+            emptyCartLabel.isHidden = true
+            sortButton.isHidden = false
+            paymentView.isHidden = false
+            forPaymentButton.isHidden = false
+            tableView.isHidden = false
+            priceNFTLabel.isHidden = false
+            countNFTLabel.isHidden = false
+        }
+    }
+    
     private func setupNavItems() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortButton)
         let backItem = UIBarButtonItem()
@@ -122,7 +151,8 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         view.backgroundColor = .ypWhite
         tableView.dataSource = self
         tableView.delegate = self
-        [sortButton,
+        [emptyCartLabel,
+         sortButton,
          paymentView,
          tableView].forEach{
             view.addSubview($0)
@@ -136,6 +166,9 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
         }
         
         NSLayoutConstraint.activate([
+            emptyCartLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyCartLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
             sortButton.heightAnchor.constraint(equalToConstant: 42),
             sortButton.widthAnchor.constraint(equalToConstant: 42),
             
@@ -231,6 +264,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol {
     @objc
     private func didTapforPaymentButton() {
         let paymentViewController = PaymentViewController()
+        paymentViewController.delegate = self
         navigationController?.tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(paymentViewController, animated: true)
     }
@@ -252,9 +286,9 @@ extension CartViewController: UITableViewDataSource {
         }
         guard let orderIds = presenter?.getIdNfts() else { return 0 }
         if nfts.count < orderIds.count {
-            ProgressHUD.animate()
+            UICartBlockingProgressHUD.show()
         } else {
-            ProgressHUD.dismiss()
+            UICartBlockingProgressHUD.dismiss()
         }
         guard let nfts = presenter?.getIdNfts() else { return 0 }
         return nfts.count
@@ -285,10 +319,11 @@ extension CartViewController: UITableViewDataSource {
             return cell
         }
         cell.imageNFT.kf.indicatorType = .activity
-        cell.imageNFT.kf.setImage(with: imageUrl, placeholder: UIImage()) { result in
+        cell.imageNFT.kf.setImage(with: imageUrl, placeholder: UIImage()) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(_):
-                tableView.reloadRows(at: [indexPath], with: .automatic)
+                self.tableView.reloadRows(at: [indexPath], with: .automatic)
             case .failure(let error):
                 print("[ImagesListViewController]: \(error)")
             }

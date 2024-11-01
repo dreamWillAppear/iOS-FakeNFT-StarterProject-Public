@@ -1,10 +1,17 @@
 import UIKit
 
+protocol NftCollectionViewCellDelegate: AnyObject {
+    func didTapLikeButton(at indexPath: IndexPath)
+    func didTapCartButton(at indexPath: IndexPath)
+}
+
 final class NftCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Public Properties
     
     static let reuseIdentifier = "NftCollectionViewCell"
+    weak var delegate: NftCollectionViewCellDelegate?
+    var indexPath: IndexPath?
     
     // MARK: - Private Properties
     
@@ -21,6 +28,7 @@ final class NftCollectionViewCell: UICollectionViewCell {
         let image = UIImage(systemName: "heart.fill")?.withTintColor(.ypWhiteUniversal ?? .white, renderingMode: .alwaysOriginal)
         button.setImage(UIImage(systemName: "heart.fill"), for: .normal)
         button.contentMode = .scaleAspectFit
+        button.addTarget(self, action: #selector(didTapLikeButton), for: .touchUpInside)
         return button
     }()
     
@@ -56,6 +64,7 @@ final class NftCollectionViewCell: UICollectionViewCell {
     
     private lazy var cartButton: UIButton = {
         let button = UIButton(type: .system)
+        button.addTarget(self, action: #selector(didTapCartButton), for: .touchUpInside)
         return button
     }()
     
@@ -73,14 +82,28 @@ final class NftCollectionViewCell: UICollectionViewCell {
     
     //MARK: - Public Methods
     
-    func configureCell(cover: UIImage, name: String, isLiked: Bool, raitng: Int, price: Float, isInCart: Bool) {
-        coverImageView.image = cover
+    func configureCell(cover: URL, name: String, isLiked: Bool, raitng: Int, price: Float, isInCart: Bool) {
+        coverImageView.kf.setImage(with: cover)
         nameLabel.text = name
         priceLabel.text = String(price) + " ETH"
         
         updateLikeButtonState(isLiked: isLiked)
         updateRaitingStackView(raitng: raitng)
         updateCartButtonState(isInCart: isInCart)
+    }
+    
+    func updateLikeButtonState(isLiked: Bool) {
+        let whiteHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypWhiteUniversal ?? .white).withRenderingMode(.alwaysOriginal)
+        let redHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypRedUniversal ?? .red).withRenderingMode(.alwaysOriginal)
+        let likeButtonImage = isLiked ? redHeartImage : whiteHeartImage
+        likeButton.setImage(likeButtonImage, for: .normal)
+    }
+    
+    func updateCartButtonState(isInCart: Bool) {
+        let addToCartImage = UIImage(named: "AddToCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
+        let removeFromCartImage = UIImage(named: "RemoveFromCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
+        let cartButtonImage = isInCart ? removeFromCartImage : addToCartImage
+        cartButton.setImage(cartButtonImage, for: .normal)
     }
     
     // MARK: - Private Properties
@@ -154,19 +177,16 @@ final class NftCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func updateLikeButtonState(isLiked: Bool) {
-        let whiteHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypWhiteUniversal ?? .white).withRenderingMode(.alwaysOriginal)
-        let redHeartImage = UIImage(systemName: "heart.fill")?.withTintColor(.ypRedUniversal ?? .red).withRenderingMode(.alwaysOriginal)
-        let likeButtonImage = isLiked ? redHeartImage : whiteHeartImage
-        likeButton.setImage(likeButtonImage, for: .normal)
+    //MARK: - Actions
+    
+    @objc private func didTapLikeButton() {
+        guard let indexPath = indexPath else { return }
+        delegate?.didTapLikeButton(at: indexPath)
     }
     
-    private func updateCartButtonState(isInCart: Bool) {
-        let addToCartImage = UIImage(named: "AddToCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
-        let removeFromCartImage = UIImage(named: "RemoveFromCart")?.withTintColor(.ypBlack ?? .black).withRenderingMode(.alwaysOriginal)
-        let cartButtonImage = isInCart ? removeFromCartImage : addToCartImage
-        cartButton.setImage(cartButtonImage, for: .normal)
+    @objc private func didTapCartButton() {
+        guard let indexPath = indexPath else { return }
+        delegate?.didTapCartButton(at: indexPath)
     }
     
 }
-

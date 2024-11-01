@@ -1,14 +1,25 @@
 import UIKit
 
 protocol NftCollectionViewProtocol: AnyObject {
+    func setLoadingViewVisible(_ visible: Bool)
+    func showNetworkError()
+    func displayLoadedData()
+    func updateLikeButtonState(for indexPath: IndexPath, isLiked: Bool)
+    func updateCartButtonState(for indexPath: IndexPath, isInCart: Bool)
     func reloadData()
 }
 
-final class NftCollectionViewController: UIViewController, NftCollectionViewProtocol {
+final class NftCollectionViewController: UIViewController, NftCollectionViewProtocol, LoadingView, ErrorView  {
+    
+    //MARK: - Public Properties
+    
+    lazy var activityIndicator = UIActivityIndicatorView()
     
     // MARK: - Private Properties
     
     private let presenter: NftCollectionPresenterProtocol?
+    
+    private let authorLinkUrlString = "https://practicum.yandex.ru/ios-developer"
     
     private lazy var collection = presenter?.getCollection()
     
@@ -48,6 +59,7 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     
     private lazy var descriptionTextView: UITextView = {
         let textView = UITextView()
+        textView.delegate = self
         textView.isEditable = false
         textView.isScrollEnabled = false
         textView.backgroundColor = .clear
@@ -95,62 +107,65 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     // MARK: - Public Methods
     
     func reloadData() {
-        nftCollectionView.reloadData()
         updateCollectionViewHeight()
+        nftCollectionView.reloadData()
     }
     
-    func setCover(image: UIImage) {
-        cover.image = image
+    func displayLoadedData() {
+        guard let collection = collection else {
+            print("LOG ERROR NftCollectionViewController: collection for UI is nil")
+            return
+        }
+        
+        cover.kf.setImage(with: collection.cover)
+        setDescription(
+            title: collection.name,
+            author: collection.authorName,
+            description: collection.description
+        )
     }
     
-    func setDescription(title: String, author: String, description: String) {
-        let authorString = "Автор коллекции: "
-        let descriptionText = "\(title)\n\n\(authorString)\(author)\n\(description)"
-        
-        let attributedText = NSMutableAttributedString(string: descriptionText)
-        
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.16
-        
-        let descriptionTextRange = (descriptionText as NSString).range(of: descriptionText)
-        attributedText.addAttribute(.kern, value: -0.08, range: descriptionTextRange)
-        
-        let titleRange = (descriptionText as NSString).range(of: title)
-        attributedText.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 22), range: titleRange)
-        
-        let authorStringRange = (descriptionText as NSString).range(of: authorString)
-        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .regular), range: authorStringRange)
-        
-        let authorRange = (descriptionText as NSString).range(of: author)
-        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 15, weight: .regular), range: authorRange)
-        attributedText.addAttribute(.link, value: "https://practicum.yandex.ru/ios-developer/", range: authorRange)
-        attributedText.addAttribute(.foregroundColor, value: UIColor.blue, range: authorRange)
-        attributedText.addAttribute(.kern, value: 0.2, range: authorRange)
-        
-        let descriptionRange = (descriptionText as NSString).range(of: description)
-        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .regular), range: descriptionRange)
-        
-        attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
-        
-        descriptionTextView.attributedText = attributedText
+    func setLoadingViewVisible(_ visible: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            visible ? self?.activityIndicator.startAnimating() : self?.activityIndicator.stopAnimating()
+        }
+    }
+    
+    func showNetworkError() {
+        guard let presenter = presenter else { return }
+        let error = ErrorModel(
+            message: "Не удалось получить данные",
+            actionText: "Повторить",
+            action: presenter.onViewDidLoad
+        )
+        showError(error)
+    }
+    
+    func updateLikeButtonState(for indexPath: IndexPath, isLiked: Bool) {
+        DispatchQueue.main.async { [weak nftCollectionView] in
+            let cell = nftCollectionView?.cellForItem(at: indexPath) as? NftCollectionViewCell
+            cell?.updateLikeButtonState(isLiked: isLiked)
+        }
+    }
+    
+    func updateCartButtonState(for indexPath: IndexPath, isInCart: Bool) {
+        DispatchQueue.main.async { [weak nftCollectionView] in
+            let cell = nftCollectionView?.cellForItem(at: indexPath) as? NftCollectionViewCell
+            cell?.updateCartButtonState(isInCart: isInCart)
+        }
     }
     
     // MARK: - Private Methods
     
     private func setupUI() {
-        setCover(image: collection?.cover ?? UIImage())
-        setDescription(
-            title: collection?.name ?? "",
-            author: collection?.authorName ?? "",
-            description: collection?.description ?? ""
-        )
-        
         let views = [cover, descriptionTextView, nftCollectionView]
         
         view.backgroundColor = .ypWhite
         
-        view.addSubview(mainScrollView)
-        view.addSubview(backButton)
+        [mainScrollView, backButton, activityIndicator].forEach {
+            view.addSubview($0)
+        }
+        
         mainScrollView.addSubview(mainStackView)
         
         setupMainStackView(for: views)
@@ -166,15 +181,19 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
     private func setupLayout(for views: [UIView]) {
         let window = UIApplication.shared.windows.first
         let windowSafeAreaTopInset = window?.safeAreaInsets.top ?? 50
-        backButton.translatesAutoresizingMaskIntoConstraints = false
-        mainStackView.translatesAutoresizingMaskIntoConstraints = false
-        mainScrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        [activityIndicator, backButton, mainStackView, mainScrollView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+        }
         
         views.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
         
         NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
             backButton.widthAnchor.constraint(equalToConstant: 24),
             backButton.heightAnchor.constraint(equalToConstant: 24),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 9),
@@ -207,19 +226,65 @@ final class NftCollectionViewController: UIViewController, NftCollectionViewProt
         ])
     }
     
+    private func setDescription(title: String, author: String, description: String) {
+        let authorString = "Автор коллекции: "
+        let descriptionText = "\(title)\n\n\(authorString)\(author)\n\(description)"
+        
+        let attributedText = NSMutableAttributedString(string: descriptionText)
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.16
+        
+        let descriptionTextRange = (descriptionText as NSString).range(of: descriptionText)
+        attributedText.addAttribute(.kern, value: -0.08, range: descriptionTextRange)
+        
+        let titleRange = (descriptionText as NSString).range(of: title)
+        attributedText.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 22), range: titleRange)
+        
+        let authorStringRange = (descriptionText as NSString).range(of: authorString)
+        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .regular), range: authorStringRange)
+        
+        let authorRange = (descriptionText as NSString).range(of: author)
+        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 15, weight: .regular), range: authorRange)
+        attributedText.addAttribute(.link, value: "authorLink", range: authorRange)
+        attributedText.addAttribute(.foregroundColor, value: UIColor.blue, range: authorRange)
+        attributedText.addAttribute(.kern, value: 0.2, range: authorRange)
+        
+        let descriptionRange = (descriptionText as NSString).range(of: description)
+        attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .regular), range: descriptionRange)
+        
+        attributedText.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedText.length))
+        
+        descriptionTextView.attributedText = attributedText
+    }
+    
     private func updateCollectionViewHeight()  {
         let itemsCount = presenter?.getNftsCount() ?? 0
         let itemsPerRow = 3
         let cellHeight: CGFloat = 192
         let minimumLineSpacing: CGFloat = 9
-        
         let numberOfRows = ceil(Double(itemsCount) / Double(itemsPerRow))
-        
         let totalHeight = CGFloat(numberOfRows) * cellHeight + CGFloat(numberOfRows - 1) * minimumLineSpacing
+        
+        nftCollectionView.constraints.forEach {
+            if $0.firstAttribute == .height {
+                $0.isActive = false
+            }
+        }
         
         NSLayoutConstraint.activate([
             nftCollectionView.heightAnchor.constraint(equalToConstant: totalHeight)
         ])
+    }
+    
+    private func showWebView(urlString: String) {
+        guard let url = URL(string: urlString) else { return }
+        
+        let webViewViewController = NftCollectionWebViewViewController(url: url)
+        let navigationController = UINavigationController(rootViewController: webViewViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        
+        present(navigationController, animated: true)
     }
     
     //MARK: - Actions
@@ -238,13 +303,16 @@ extension NftCollectionViewController: UICollectionViewDelegate, UICollectionVie
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NftCollectionViewCell.reuseIdentifier, for: indexPath) as? NftCollectionViewCell,
-              let collection = presenter?.getCollection() else {
+        
+        guard  let nftsForView = presenter?.getNftsForView(),
+               let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NftCollectionViewCell.reuseIdentifier, for: indexPath) as? NftCollectionViewCell else {
             return .init()
         }
         
-        let nft = collection.nfts[indexPath.item]
+        let nft = nftsForView[indexPath.row]
         
+        cell.delegate = self
+        cell.indexPath = indexPath
         cell.configureCell(
             cover: nft.cover,
             name: nft.name,
@@ -266,11 +334,34 @@ extension NftCollectionViewController: UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 8
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 9
+    }
+    
+}
+
+extension NftCollectionViewController: UITextViewDelegate {
+    
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        guard URL.absoluteString == "authorLink" else { return false }
+        
+        showWebView(urlString: authorLinkUrlString)
+        
+        return true
+    }
+    
+}
+
+extension NftCollectionViewController: NftCollectionViewCellDelegate {
+    
+    func didTapLikeButton(at indexPath: IndexPath) {
+        presenter?.didTapLikeButtonFromCell(at: indexPath)
+    }
+    
+    func didTapCartButton(at indexPath: IndexPath) {
+        presenter?.didTapCartButtonFromCell(at: indexPath)
     }
     
 }

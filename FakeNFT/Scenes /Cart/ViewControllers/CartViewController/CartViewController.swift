@@ -72,14 +72,28 @@ final class CartViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = CartViewPresenter()
-        view.backgroundColor = .ypWhite
         setupViews()
-        tableView.dataSource = self
-        tableView.delegate = self
         self.data = presenter?.getDataNft()
+        setupNavItems()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.tabBarController?.tabBar.isHidden = false
+    }
+    
+    private func setupNavItems() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortButton)
+        let backItem = UIBarButtonItem()
+        backItem.title = ""
+        navigationItem.backBarButtonItem = backItem
+        navigationItem.backBarButtonItem?.tintColor = .ypBlack
     }
     
     private func setupViews() {
+        view.backgroundColor = .ypWhite
+        tableView.dataSource = self
+        tableView.delegate = self
         [sortButton,
          paymentView,
          tableView].forEach{
@@ -94,8 +108,6 @@ final class CartViewController: UIViewController {
         }
         
         NSLayoutConstraint.activate([
-            sortButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2),
-            sortButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -9),
             sortButton.heightAnchor.constraint(equalToConstant: 42),
             sortButton.widthAnchor.constraint(equalToConstant: 42),
             
@@ -116,7 +128,7 @@ final class CartViewController: UIViewController {
             forPaymentButton.bottomAnchor.constraint(equalTo: paymentView.bottomAnchor, constant: -16),
             forPaymentButton.leadingAnchor.constraint(equalTo: priceNFTLabel.trailingAnchor, constant: 24),
             
-            tableView.topAnchor.constraint(equalTo: sortButton.bottomAnchor, constant: 20),
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.bottomAnchor.constraint(equalTo: paymentView.topAnchor, constant: 0)
@@ -127,16 +139,20 @@ final class CartViewController: UIViewController {
         let alert = UIAlertController(title: "Сортировка",
                                       message: nil,
                                       preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: {action in
+        alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
             self.switchActions(style: action.style)
         }))
-        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: {action in
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
             self.switchActions(style: action.style)
         }))
-        alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: {action in
+        alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
             self.switchActions(style: action.style)
         }))
-        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: {action in
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: { [weak self] action in
+            guard let self = self else { return }
             self.switchActions(style: action.style)
         }))
         self.present(alert, animated: true)
@@ -167,6 +183,9 @@ final class CartViewController: UIViewController {
     
     @objc
     private func didTapforPaymentButton() {
+        let paymentViewController = PaymentViewController()
+        navigationController?.tabBarController?.tabBar.isHidden = true
+        navigationController?.pushViewController(paymentViewController, animated: true)
     }
 }
 
@@ -202,12 +221,12 @@ extension CartViewController: UITableViewDataSource {
 
 extension CartViewController: CartTableViewCellDelegate {
     
-    func imageListCellDidTapLike(_ cell: CartTableViewCell) {
+    func cartCellDidTapDelete(_ cell: CartTableViewCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         guard let data = self.data else { return }
         let deleteViewController = DeleteViewController()
         deleteViewController.dataNft = data[indexPath.row]
-        deleteViewController.modalPresentationStyle = .overCurrentContext
+        deleteViewController.modalPresentationStyle = .overFullScreen
         self.present(deleteViewController, animated: true)
     }
 }

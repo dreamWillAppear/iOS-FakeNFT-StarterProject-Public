@@ -40,12 +40,13 @@ final class TabBarController: UITabBarController {
         )
         
         let cartController = CartViewController()
+        let navigationCartViewController = UINavigationController(rootViewController: cartController)
         
         let statisticsController = UIViewController()
         
         profileController.tabBarItem = profileTabBarItem
         catalogController.tabBarItem = catalogTabBarItem
-        cartController.tabBarItem = cartTabBarItem
+        navigationCartViewController.tabBarItem = cartTabBarItem
         statisticsController.tabBarItem = statisticsTabBarItem
         
         appearance.backgroundColor = .ypWhite
@@ -53,7 +54,7 @@ final class TabBarController: UITabBarController {
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.ypBlack as Any]
         tabBar.standardAppearance = appearance
 
-        viewControllers = [profileController, catalogController, cartController, statisticsController]
+        viewControllers = [profileController, catalogController, navigationCartViewController, statisticsController]
         
         selectedIndex = 1 //при старте приложения будет открыта вторая вкладка
     }

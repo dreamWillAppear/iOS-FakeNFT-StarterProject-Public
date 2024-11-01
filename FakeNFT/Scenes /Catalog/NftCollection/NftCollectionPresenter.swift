@@ -17,9 +17,9 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     private weak var view: NftCollectionViewProtocol?
     private var collectionId: String
     private let networkClient = DefaultNetworkClient()
-    private lazy var networkService = NftCollectionService(networkClient: networkClient, id: collectionId)
+    private lazy var networkService = NftCollectionService(networkClient: networkClient)
     
-    private var collectionResult = NftCollectionResultModel(name: "", cover: "", nfts: [""], description: "", author: "") {
+    private var collectionResult = NftCollectionResultModel(name: "", cover: "", nfts: [], description: "", author: "") {
         didSet {
             collectionForView = convertResultToViewModel(result: collectionResult)
         }
@@ -93,6 +93,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     //MARK: - Did Tap Buttons Methods
     
     func didTapLikeButtonFromCell(at indexPath: IndexPath) {
+        guard indexPath.row < nftsForView.count else { return }
         let nftId = nftsForView[indexPath.row].id
         updateLikeAndFetchState(for: nftId) { [weak view] isLiked in
             view?.updateLikeButtonState(for: indexPath, isLiked:isLiked)
@@ -101,6 +102,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     }
     
     func didTapCartButtonFromCell(at indexPath: IndexPath) {
+        guard indexPath.row < nftsForView.count else { return }
         let nftId = nftsForView[indexPath.row].id
         updateCartAndFetchState(for: nftId) { [weak view] isInCart in
             view?.updateCartButtonState(for: indexPath, isInCart: isInCart)
@@ -115,32 +117,32 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         
         let operationQueue = OperationQueue()
         
-        let fetchCollectionOperation = BlockOperation {
+        let fetchCollectionOperation = BlockOperation { [weak self] in
             let semaphore = DispatchSemaphore(value: 0)
-            self.fetchNftCollection {
+            self?.fetchNftCollection(id: self?.collectionId ?? "") {
                 semaphore.signal()
             }
             semaphore.wait()
         }
         
-        let fetchLikesOperation = BlockOperation {
+        let fetchLikesOperation = BlockOperation {  [weak self] in
             let semaphore = DispatchSemaphore(value: 0)
-            self.fetchLikes {
+            self?.fetchLikes {
                 semaphore.signal()
             }
             semaphore.wait()
         }
         
-        let fetchNftsInCartOperation = BlockOperation {
+        let fetchNftsInCartOperation = BlockOperation {  [weak self] in
             let semaphore = DispatchSemaphore(value: 0)
-            self.fetchNftInCart {
+            self?.fetchNftInCart {
                 semaphore.signal()
             }
             semaphore.wait()
         }
         
-        let fetchNftsOperation = BlockOperation {
-            self.fetchNfts()
+        let fetchNftsOperation = BlockOperation { [weak self] in
+            self?.fetchNfts()
         }
         
         [fetchCollectionOperation, fetchLikesOperation, fetchNftsInCartOperation].forEach {
@@ -150,17 +152,16 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         operationQueue.addOperations([fetchCollectionOperation, fetchLikesOperation, fetchNftsInCartOperation, fetchNftsOperation], waitUntilFinished: false)
     }
     
-    private func fetchNftCollection(completion: @escaping () -> Void) {
-        networkService.loadNftCollection { [weak self]  result  in
+    private func fetchNftCollection(id: String, completion: @escaping () -> Void) {
+        networkService.loadNftCollection(id: id) { [weak self]  result  in
             switch result {
                 case .success(let nftCollection):
                     self?.collectionResult = nftCollection
-                    completion()
                 case .failure(let error):
                     self?.view?.showNetworkError()
                     print("LOG ERROR: NftCollectionPresenter fetchNftCollection – \(String(describing: error))")
-                    completion()
             }
+            completion()
         }
     }
     
@@ -171,11 +172,10 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
             switch result {
                 case .success(let profileData):
                     self?.currentProfileData = profileData
-                    completion()
                 case .failure(let error):
                     print("LOG ERROR: NftCollectionPresenter fetchLikes – \(String(describing: error))")
-                    completion()
             }
+            completion()
         }
     }
     
@@ -186,20 +186,19 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
             switch result {
                 case .success(let cartData):
                     self?.currentCartData = cartData
-                    completion()
                 case .failure(let error):
                     print("LOG ERROR: NftCollectionPresenter fetchNftInCart – \(String(describing: error))")
-                    completion()
             }
+            completion()
         }
     }
     
     private func fetchNfts() {
         collectionResult.nfts.forEach { [weak self] in
             guard let self = self else { return }
-            let networkService = NftCollectionCellService(networkClient: self.networkClient, id: $0)
+            let networkService = NftCollectionCellService(networkClient: self.networkClient)
             
-            networkService.loadNftCollection { result in
+            networkService.loadNftCollection(id: $0) { result in
                 switch result {
                     case .success(let nft):
                         self.nftsResult.append(nft)

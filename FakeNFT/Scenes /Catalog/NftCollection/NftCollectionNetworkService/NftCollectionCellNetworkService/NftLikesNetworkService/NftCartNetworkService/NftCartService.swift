@@ -35,7 +35,7 @@ final class NftCartService: NftCartServiceProtocol {
         else { return }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
+        request.httpMethod = HttpMethod.put.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.setValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")

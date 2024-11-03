@@ -65,6 +65,7 @@
 		FCF32CDD2CC1421300828852 /* FavouritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */; };
 		FCF32CDF2CC1422F00828852 /* FavouriteNFTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */; };
 		FCF32CF12CCFA88B00828852 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CF02CCFA88B00828852 /* WebViewController.swift */; };
+		FCF32CF62CD4FDBC00828852 /* NFTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CF52CD4FDBC00828852 /* NFTService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -146,6 +147,7 @@
 		FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPresenter.swift; sourceTree = "<group>"; };
 		FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNFTModel.swift; sourceTree = "<group>"; };
 		FCF32CF02CCFA88B00828852 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		FCF32CF52CD4FDBC00828852 /* NFTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -441,6 +443,7 @@
 				FCF32CD32CC1380300828852 /* MyNFTPresenterProtocol.swift */,
 				FCF32CD52CC1381100828852 /* NFTModel.swift */,
 				FCF32CD72CC1382E00828852 /* MyNFTPresenter.swift */,
+				FCF32CF52CD4FDBC00828852 /* NFTService.swift */,
 			);
 			path = "MyNFT Page";
 			sourceTree = "<group>";
@@ -641,6 +644,7 @@
 				FCF32CDD2CC1421300828852 /* FavouritesPresenter.swift in Sources */,
 				FCF32CC02CC0E65E00828852 /* ProfileViewProtocol.swift in Sources */,
 				FCF32CB92CBFD8DE00828852 /* FavouriteNFTCell.swift in Sources */,
+				FCF32CF62CD4FDBC00828852 /* NFTService.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
 				FCF32CF12CCFA88B00828852 /* WebViewController.swift in Sources */,

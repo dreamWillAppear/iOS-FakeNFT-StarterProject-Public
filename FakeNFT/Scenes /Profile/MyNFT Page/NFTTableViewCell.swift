@@ -6,10 +6,11 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class NFTTableViewCell: UITableViewCell {
     
-    private let nftImageView: UIImageView = {
+    var nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
@@ -160,12 +161,27 @@ final class NFTTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(image: UIImage?, likeImage: UIImage?, name: String, starImage: UIImage?, author: String, price: String) {
+    func configure(image: UIImage?, likeImage: UIImage?, name: String, starImage: String, author: String, price: String) {
         nftImageView.image = image
         likeButton.setImage(likeImage, for: .normal)
         nameLabel.text = name
-        starImageView.image = starImage
+        //starImageView.image = starImage
         authorLabel.text = author
         priceLabel.text = price
+        
+        switch starImage {
+        case "1":
+            starImageView.image = UIImage(named: "star1")
+        case "2":
+            starImageView.image = UIImage(named: "star2")
+        case "3":
+            starImageView.image = UIImage(named: "star3")
+        case "4":
+            starImageView.image = UIImage(named: "star4")
+        case "5":
+            starImageView.image = UIImage(named: "star5")
+        default:
+            starImageView.image = UIImage(named: "star0")
+        }
     }
 }

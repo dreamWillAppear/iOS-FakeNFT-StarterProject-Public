@@ -192,6 +192,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         case 0:
             let myNFTVC = MyNFTViewController()
             myNFTVC.modalPresentationStyle = .fullScreen
+            myNFTVC.nftIDs = profile?.nfts
             view.window?.layer.add(transition, forKey: kCATransition)
             present(myNFTVC, animated: false, completion: nil)
             

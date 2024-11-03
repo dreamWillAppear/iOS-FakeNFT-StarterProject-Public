@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
     
     var presenter: MyNFTPresenterProtocol?
+    var nftIDs: [String]?
     
     private var backButton: UIButton = {
         let button = UIButton()
@@ -48,7 +50,9 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
         view.backgroundColor = .ypWhite
         
         presenter = MyNFTPresenter(view: self)
-        presenter?.loadNFTs()
+        if let nftIDs = nftIDs {
+            presenter?.loadNFTs(nftIDs)
+        }
         
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         
@@ -115,15 +119,19 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NFTCell", for: indexPath) as! NFTTableViewCell
+        
         if let nft = presenter?.nfts[indexPath.row] {
+            let imageURL = URL(string: nft.imageName)
             cell.configure(
-                image: UIImage(named: nft.imageName),
-                likeImage: UIImage(named: nft.likeImageName),
+                image: UIImage(named: "nft1"),
+                likeImage: UIImage(named: "notLiked"),
                 name: nft.name,
-                starImage: UIImage(named: nft.ratingImageName),
+                starImage: nft.ratingImageName,
                 author: nft.author,
                 price: nft.price
             )
+            
+            cell.nftImageView.kf.setImage(with: imageURL)
         }
         return cell
     }

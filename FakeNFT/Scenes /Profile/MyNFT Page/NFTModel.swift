@@ -14,4 +14,5 @@ struct NFT {
     let ratingImageName: String
     let author: String
     let price: String
+    let id: String
 }

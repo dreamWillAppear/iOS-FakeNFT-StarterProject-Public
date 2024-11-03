@@ -13,7 +13,7 @@ protocol PaymentViewControllerProtocol: AnyObject {
 }
 
 protocol SuccessPaymentDelegate: AnyObject {
-    func orderOfNftIsEmpty(bool: Bool)
+    func orderOfNftIsEmpty(orderIsEmpty: Bool)
 }
 
 final class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
@@ -192,7 +192,7 @@ final class PaymentViewController: UIViewController, PaymentViewControllerProtoc
     func presentResultOfPay(isSuccess: Bool) {
         if isSuccess {
             let successViewController = SuccessViewController()
-            delegate?.orderOfNftIsEmpty(bool: true)
+            delegate?.orderOfNftIsEmpty(orderIsEmpty: true)
             navigationController?.pushViewController(successViewController, animated: true)
         } else {
             showAlert()

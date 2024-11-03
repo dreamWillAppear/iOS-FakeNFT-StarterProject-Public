@@ -8,20 +8,19 @@
 import UIKit
 
 protocol CartViewControllerProtocol: AnyObject {
+    var arrayOfNfts: [NftResult] { get set }
     var presenter: CartViewPresenterProtocol? { get set }
-    func orderOfNftIsEmpty(bool: Bool)
+    func orderOfNftIsEmpty(orderIsEmpty: Bool)
 }
 
 final class CartViewController: UIViewController, CartViewControllerProtocol, SuccessPaymentDelegate {
     
+    var presenter: CartViewPresenterProtocol?
+    var arrayOfNfts: [NftResult] = []
     private var cartServiceObserver: NSObjectProtocol?
     private var nftServiceObserver: NSObjectProtocol?
-    
-    var presenter: CartViewPresenterProtocol?
-    
     private var data: CartResult?
-    private var arrayOfNfts: [NftResult] = []
-    
+
     private lazy var emptyCartLabel: UILabel = {
         let label = UILabel()
         label.text = "Корзина пуста"
@@ -118,8 +117,8 @@ final class CartViewController: UIViewController, CartViewControllerProtocol, Su
         navigationController?.tabBarController?.tabBar.isHidden = false
     }
     
-    func orderOfNftIsEmpty(bool: Bool) {
-        if bool {
+    func orderOfNftIsEmpty(orderIsEmpty: Bool) {
+        if orderIsEmpty {
             emptyCartLabel.isHidden = false
             sortButton.isHidden = true
             paymentView.isHidden = true
@@ -194,45 +193,24 @@ final class CartViewController: UIViewController, CartViewControllerProtocol, Su
             tableView.bottomAnchor.constraint(equalTo: paymentView.topAnchor, constant: 0)
         ])
     }
-    
-    private func sortByPrice() {
-        guard let nfts = presenter?.getNfts() else { return }
-        self.arrayOfNfts = nfts.sorted{ (value1, value2) in
-            return value1.price > value2.price
-        }
-    }
-    
-    private func sortByRating() {
-        guard let nfts = presenter?.getNfts() else { return }
-        self.arrayOfNfts = nfts.sorted{ (value1, value2) in
-            return value1.rating > value2.rating
-        }
-    }
-    
-    private func sortByName() {
-        guard let nfts = presenter?.getNfts() else { return }
-        self.arrayOfNfts = nfts.sorted{ (value1, value2) in
-            return value1.name < value2.name
-        }
-    }
-    
+ 
     private func showAlert() {
         let alert = UIAlertController(title: "Сортировка",
                                       message: nil,
                                       preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
-            self.sortByPrice()
+            presenter?.sortByPrice()
             self.tableView.reloadData()
         }))
         alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
-            self.sortByRating()
+            presenter?.sortByRating()
             self.tableView.reloadData()
         }))
         alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: { [weak self] action in
             guard let self = self else { return }
-            self.sortByName()
+            presenter?.sortByName()
             self.tableView.reloadData()
         }))
         alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))

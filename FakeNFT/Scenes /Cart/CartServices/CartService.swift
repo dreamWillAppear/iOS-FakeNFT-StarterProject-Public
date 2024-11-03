@@ -9,12 +9,14 @@ import Foundation
 
 final class CartService {
     
+    var cartInfo: CartResult?
+    
     static let shared = CartService()
+    
     private let token = "69a72b9d-5370-4d97-9593-9c27f9eb3d0a"
     private let headerForToken = "X-Practicum-Mobile-Token"
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
-    var cartInfo: CartResult?
     
     static let didChangeNotification = Notification.Name(rawValue: "CartProviderDidChange")
 

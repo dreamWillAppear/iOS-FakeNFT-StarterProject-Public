@@ -15,6 +15,9 @@ protocol CartViewPresenterProtocol {
     func fetchCart()
     func getOrder() -> CartResult?
     func deleteCash()
+    func sortByPrice()
+    func sortByRating()
+    func sortByName()
 }
 
 final class CartViewPresenter: CartViewPresenterProtocol {
@@ -39,9 +42,9 @@ final class CartViewPresenter: CartViewPresenterProtocol {
             case .success(let decodedData):
                 self.cardData = decodedData
                 if decodedData.nfts.isEmpty {
-                    view?.orderOfNftIsEmpty(bool: true)
+                    view?.orderOfNftIsEmpty(orderIsEmpty: true)
                 } else {
-                    view?.orderOfNftIsEmpty(bool: false)
+                    view?.orderOfNftIsEmpty(orderIsEmpty: false)
                 }
                 nftsService.fetchNfts(idsfNft: decodedData.nfts) { [weak self] resultNft in
                     guard let self = self else { return }
@@ -75,5 +78,29 @@ final class CartViewPresenter: CartViewPresenterProtocol {
         nftsService.arrayOfNfts = []
         cartService.cartInfo = nil
         cardData = nil
+    }
+    
+    func sortByPrice() {
+        let nfts = getNfts()
+        let sortedNfts = nfts.sorted{ (value1, value2) in
+            return value1.price > value2.price
+        }
+        view?.arrayOfNfts = sortedNfts
+    }
+    
+    func sortByRating() {
+        let nfts = getNfts()
+        let sortedNfts = nfts.sorted{ (value1, value2) in
+            return value1.rating > value2.rating
+        }
+        view?.arrayOfNfts = sortedNfts
+    }
+    
+    func sortByName() {
+        let nfts = getNfts()
+        let sortedNfts = nfts.sorted{ (value1, value2) in
+            return value1.name < value2.name
+        }
+        view?.arrayOfNfts = sortedNfts
     }
 }

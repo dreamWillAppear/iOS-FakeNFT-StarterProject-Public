@@ -43,6 +43,17 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
         return collectionView
     }()
     
+    private var noNFTLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "У вас еще нет избранных NFT"
+        label.textAlignment = .center
+        label.font = .bodyBold
+        label.textColor = .lightGray
+        label.isHidden = true
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
@@ -86,6 +97,13 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
     }
     
     func reloadData() {
+        if presenter?.nfts.isEmpty == true {
+            collectionView.isHidden = true
+            noNFTLabel.isHidden = false
+        } else {
+            collectionView.isHidden = false
+            noNFTLabel.isHidden = true
+        }
         collectionView.reloadData()
     }
     

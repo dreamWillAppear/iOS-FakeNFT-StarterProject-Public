@@ -9,4 +9,5 @@ import Foundation
 
 protocol MyNFTViewProtocol: AnyObject {
     func reloadData()
+    var arrayOfNfts: [NFT] { get set }
 }

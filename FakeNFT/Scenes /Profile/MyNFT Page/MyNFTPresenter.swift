@@ -34,6 +34,30 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
         return nftService.arrayOfNfts
     }
     
+    func sortByName() {
+        let nfts = getNfts()
+        let sortedNfts = nfts.sorted{ (value1, value2) in
+            return value1.name < value2.name
+        }
+        self.nfts = sortedNfts
+    }
+    
+    func sortByRating() {
+        let nfts = getNfts()
+        let sortedNfts = nfts.sorted{ (value1, value2) in
+            return value1.rating > value2.rating
+        }
+        self.nfts = sortedNfts
+    }
+    
+    func sortByPrice() {
+        let nfts = getNfts()
+        let sortedNfts = nfts.sorted{ (value1, value2) in
+            return value1.price > value2.price
+        }
+        self.nfts = sortedNfts
+    }
+    
 //    func loadNFTs(_ nftIDs: [String]) {
 //        nfts = [] // Clear any previous data
 //        let dispatchGroup = DispatchGroup()

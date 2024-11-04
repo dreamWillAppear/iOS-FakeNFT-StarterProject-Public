@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
-    
+    var arrayOfNfts: [NFT] = []
     var presenter: MyNFTPresenterProtocol?
     var nftIDs: [String]?
     
@@ -55,6 +55,7 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
         }
         
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        sortButton.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
         
         setupTable()
         addSubViews()
@@ -109,6 +110,28 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
         
         view.window?.layer.add(transition, forKey: kCATransition)
         dismiss(animated: false, completion: nil)
+    }
+    
+    
+    @objc private func sortButtonTapped() {
+        let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+            presenter?.sortByPrice()
+            self.tableView.reloadData()
+        }))
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+            presenter?.sortByRating()
+            self.tableView.reloadData()
+        }))
+        alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+            presenter?.sortByName()
+            self.tableView.reloadData()
+        }))
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
+        self.present(alert, animated: true)
     }
 }
 

@@ -7,14 +7,27 @@
 
 import UIKit
 
-final class DeleteViewController: UIViewController {
+protocol DeleteViewControllerProtocol: AnyObject {
+    var presenter: DeleteViewPresenterProtocol? { get set }
+    func dismissVC()
+    func didDelete()
+}
+
+protocol DeleteViewDelegate: AnyObject {
+    func didDelete()
+}
+
+final class DeleteViewController: UIViewController, DeleteViewControllerProtocol {
     
-    var dataNft: NftCart?
+    var dataNft: NftResult?
+    var order: CartResult?
+    var presenter: DeleteViewPresenterProtocol?
+    var delegate: DeleteViewDelegate?
     
     private lazy var nftImageView: UIImageView = {
         let imageView = UIImageView()
-        let image: UIImage = dataNft?.image ?? UIImage()
-        imageView.image = image
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
         return imageView
     }()
     
@@ -60,9 +73,22 @@ final class DeleteViewController: UIViewController {
         super.viewDidLoad()
         setupBackground()
         setupViews()
+        self.presenter = DeleteViewPresenter(view: self)
+    }
+    
+    func dismissVC() {
+        self.dismiss(animated: true)
+    }
+    
+    func didDelete() {
+        delegate?.didDelete()
     }
     
     private func setupViews() {
+        guard let imageUrlString = dataNft?.images[0] else { return }
+        guard let imageUrl = URL(string: imageUrlString) else { return }
+        self.nftImageView.kf.indicatorType = .activity
+        self.nftImageView.kf.setImage(with: imageUrl)
         [nftImageView,
          deleteLabel,
          buttonsView].forEach{
@@ -112,7 +138,9 @@ final class DeleteViewController: UIViewController {
     
     @objc
     private func didTapDeleteButton() {
-        //TODO: delete object from server
+        guard let dataNft = dataNft else { return }
+        guard let order = order else { return }
+        presenter?.fetchDeleteNft(order: order, deletetedNft: dataNft.id)
     }
     
     @objc

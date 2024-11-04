@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol CartTableViewCellDelegate: AnyObject {
     func cartCellDidTapDelete(_ cell: CartTableViewCell)
@@ -14,26 +15,33 @@ protocol CartTableViewCellDelegate: AnyObject {
 final class CartTableViewCell: UITableViewCell {
     
     weak var delegate: CartTableViewCellDelegate?
-    
-    lazy var containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .clear
-        return view
-    }()
+    var modelNft: NftResult?
+    var idNft: String?
     
     lazy var imageNFT: UIImageView = {
         let imageView = UIImageView()
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
-    lazy var nameNFT: UILabel = {
+    private lazy var containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 12
+        return view
+    }()
+    
+    private lazy var nameNFT: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .bold)
         label.textColor = .ypBlack
         return label
     }()
     
-    lazy var gradeNFT: UIImageView = {
+    private lazy var gradeNFT: UIImageView = {
         let imageView = UIImageView()
         return imageView
     }()
@@ -46,14 +54,14 @@ final class CartTableViewCell: UITableViewCell {
         return label
     }()
     
-    lazy var priceNFT: UILabel = {
+    private lazy var priceNFT: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .bold)
         label.textColor = .ypBlack
         return label
     }()
     
-    lazy var deleteButton: UIButton = {
+    private lazy var deleteButton: UIButton = {
         let button = UIButton.systemButton(
             with: UIImage(named: "cartDelete") ?? UIImage(),
             target: self,
@@ -69,6 +77,12 @@ final class CartTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
+    }
+    
+    func setupCell(nft: NftResult) {
+        self.nameNFT.text = nft.name
+        self.priceNFT.text = "\(nft.price) ETH".replacingOccurrences(of: ".", with: ",")
+        self.gradeNFT.image = makeGradeImage(grade: nft.rating)
     }
     
     private func setupViews() {
@@ -118,6 +132,11 @@ final class CartTableViewCell: UITableViewCell {
             deleteButton.widthAnchor.constraint(equalTo: deleteButton.heightAnchor)
 
         ])
+    }
+    
+    private func makeGradeImage(grade: Int) -> UIImage? {
+        let image = "grade\(grade)"
+        return UIImage(named: image)
     }
     
     @objc

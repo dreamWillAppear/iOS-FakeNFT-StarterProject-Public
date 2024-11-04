@@ -7,10 +7,22 @@
 
 import UIKit
 
-final class PaymentViewController: UIViewController {
+protocol PaymentViewControllerProtocol: AnyObject {
+    var presenter: PaymentViewPresenterProtocol? { get set }
+    func presentResultOfPay(isSuccess: Bool)
+}
+
+protocol SuccessPaymentDelegate: AnyObject {
+    func orderOfNftIsEmpty(orderIsEmpty: Bool)
+}
+
+final class PaymentViewController: UIViewController, PaymentViewControllerProtocol {
     
-    private var presenter: PaymentViewPresenterProtocol?
-    private var payment: [Payment]?
+    var presenter: PaymentViewPresenterProtocol?
+    var delegate: SuccessPaymentDelegate?
+    
+    private var paymentId: String?
+    private var paymentServiceObserver: NSObjectProtocol?
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -75,11 +87,19 @@ final class PaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        presenter = PaymentViewPresenter()
-        self.payment = presenter?.getPaymentData()
+        presenter = PaymentViewPresenter(view: self)
+        presenter?.fetchPayment()
         setupNavItems()
         setupViews()
         setupDelegates()
+        paymentServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: PaymentService.didChangeNotification,
+                object: nil,
+                queue: .main) { [weak self] _ in
+                    guard let self = self else { return }
+                    collectionView.reloadData()
+                }
     }
     
     private func setupNavItems() {
@@ -169,15 +189,20 @@ final class PaymentViewController: UIViewController {
         }
     }
     
-    @objc
-    private func didTapPaymentButton() {
-        guard let isSuccess = presenter?.getResultOfPayment() else { return }
+    func presentResultOfPay(isSuccess: Bool) {
         if isSuccess {
             let successViewController = SuccessViewController()
+            delegate?.orderOfNftIsEmpty(orderIsEmpty: true)
             navigationController?.pushViewController(successViewController, animated: true)
         } else {
             showAlert()
         }
+    }
+    
+    @objc
+    private func didTapPaymentButton() {
+        guard let paymentId = self.paymentId else { return }
+        presenter?.fetchPay(paymentId: paymentId)
     }
     
     @objc
@@ -192,6 +217,8 @@ extension PaymentViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as? PaymentCollectionViewCell
         self.isSelectedCell(cell: cell, isSelected: true)
+        guard let id = cell?.paymentId else { return }
+        self.paymentId = id
         paymentButton.isEnabled = true
     }
     
@@ -203,7 +230,7 @@ extension PaymentViewController: UICollectionViewDelegate {
 
 extension PaymentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let payment = payment else { return 0 }
+        guard let payment = presenter?.paymentData else { return 0 }
         return payment.count
     }
     
@@ -214,11 +241,13 @@ extension PaymentViewController: UICollectionViewDataSource {
         ) as? PaymentCollectionViewCell else {
             return UICollectionViewCell()
         }
-        guard let payment = payment else { return UICollectionViewCell() }
-        let index = payment[indexPath.row]
-        cell.paymentImage.image = index.image
-        cell.paymentName.text = index.fullName
-        cell.paymentShortName.text = index.shortName
+        guard let payment = presenter?.paymentData else { return UICollectionViewCell() }
+        cell.paymentName.text = payment[indexPath.row].title
+        cell.paymentShortName.text = payment[indexPath.row].name
+        let urlString = payment[indexPath.row].image
+        let url = URL(string: urlString)
+        cell.paymentImage.kf.setImage(with: url)
+        cell.paymentId = payment[indexPath.row].id
         return cell
     }
 }

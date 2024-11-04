@@ -8,6 +8,8 @@
 import UIKit
 
 final class PaymentCollectionViewCell: UICollectionViewCell {
+    
+    var paymentId: String?
        
     lazy var containerView: UIView = {
         let view = UIView()
@@ -19,6 +21,9 @@ final class PaymentCollectionViewCell: UICollectionViewCell {
     
     lazy var paymentImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.backgroundColor = .ypBlackUniversal
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 6
         return imageView
     }()
     

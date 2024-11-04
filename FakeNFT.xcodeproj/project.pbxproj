@@ -64,7 +64,6 @@
 		FCF32CD82CC1382E00828852 /* MyNFTPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CD72CC1382E00828852 /* MyNFTPresenter.swift */; };
 		FCF32CDB2CC1420700828852 /* FavouritesViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */; };
 		FCF32CDD2CC1421300828852 /* FavouritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */; };
-		FCF32CDF2CC1422F00828852 /* FavouriteNFTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */; };
 		FCF32CF12CCFA88B00828852 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CF02CCFA88B00828852 /* WebViewController.swift */; };
 		FCF32CF62CD4FDBC00828852 /* NFTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CF52CD4FDBC00828852 /* NFTService.swift */; };
 /* End PBXBuildFile section */
@@ -147,7 +146,6 @@
 		FCF32CD72CC1382E00828852 /* MyNFTPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTPresenter.swift; sourceTree = "<group>"; };
 		FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewProtocol.swift; sourceTree = "<group>"; };
 		FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPresenter.swift; sourceTree = "<group>"; };
-		FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNFTModel.swift; sourceTree = "<group>"; };
 		FCF32CF02CCFA88B00828852 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		FCF32CF52CD4FDBC00828852 /* NFTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -458,7 +456,6 @@
 				FCF32CB62CBFD5DF00828852 /* FavouritesViewController.swift */,
 				FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */,
 				FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */,
-				FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */,
 			);
 			name = "FavouriteNFT Page";
 			sourceTree = "<group>";
@@ -617,7 +614,6 @@
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				FCF32CB12CBE9CD600828852 /* EditProfileViewController.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
-				FCF32CDF2CC1422F00828852 /* FavouriteNFTModel.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
 				FCF32CB52CBFB02700828852 /* NFTTableViewCell.swift in Sources */,
 				FCF32CD82CC1382E00828852 /* MyNFTPresenter.swift in Sources */,

@@ -8,30 +8,33 @@
 import UIKit
 
 final class FavouritesPresenter {
+    var nfts: [NFT] = []
+    
     private weak var view: FavouritesViewProtocol?
-    private var favouriteNFTs: [FavouriteNFT] = []
-
+    private let nftService = NFTService.shared
+    
     init(view: FavouritesViewProtocol) {
         self.view = view
     }
 
-    func loadFavouriteNFTs() {
-        favouriteNFTs = [
-            FavouriteNFT(name: "Archie", rating: UIImage(named: "rating3"), price: "1,78 ETH", image: UIImage(named: "nft2"), liked: UIImage(named: "liked")),
-            FavouriteNFT(name: "Archie", rating: UIImage(named: "rating3"), price: "1,78 ETH", image: UIImage(named: "nft2"), liked: UIImage(named: "liked")),
-            FavouriteNFT(name: "Archie", rating: UIImage(named: "rating3"), price: "1,78 ETH", image: UIImage(named: "nft2"), liked: UIImage(named: "liked")),
-            FavouriteNFT(name: "Archie", rating: UIImage(named: "rating3"), price: "1,78 ETH", image: UIImage(named: "nft2"), liked: UIImage(named: "liked")),
-            FavouriteNFT(name: "Archie", rating: UIImage(named: "rating3"), price: "1,78 ETH", image: UIImage(named: "nft2"), liked: UIImage(named: "liked")),
-            FavouriteNFT(name: "Archie", rating: UIImage(named: "rating3"), price: "1,78 ETH", image: UIImage(named: "nft2"), liked: UIImage(named: "liked")),
-        ]
-        view?.reloadData()
+    func loadFavouriteNFTs(_ nftIDs: [String]) {
+        nftService.fetchNfts(idsfNft: nftIDs) { [weak self] resultNft in
+            guard let self = self else { return }
+            switch resultNft {
+            case .success(_):
+                nfts = self.nftService.arrayOfNfts
+                view?.reloadData()
+            case .failure(_):
+                print("Failed to load NFTs")
+            }
+        }
     }
 
     func getNumberOfItems() -> Int {
-        return favouriteNFTs.count
+        return nfts.count
     }
 
-    func getNFT(at index: Int) -> FavouriteNFT {
-        return favouriteNFTs[index]
+    func getNFT(at index: Int) -> NFT {
+        return nfts[index]
     }
 }

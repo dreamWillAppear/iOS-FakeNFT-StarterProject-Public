@@ -199,6 +199,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         case 1:
             let favouritesVC = FavouritesViewController()
             favouritesVC.modalPresentationStyle = .fullScreen
+            favouritesVC.nftIDs = profile?.likes
             view.window?.layer.add(transition, forKey: kCATransition)
             present(favouritesVC, animated: false, completion: nil)
             

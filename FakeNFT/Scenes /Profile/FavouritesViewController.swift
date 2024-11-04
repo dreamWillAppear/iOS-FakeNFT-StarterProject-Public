@@ -9,6 +9,8 @@ import UIKit
 
 final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
     
+    var nftIDs: [String]?
+    
     private var presenter: FavouritesPresenter?
     
     private var backButton: UIButton = {
@@ -46,7 +48,9 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
         view.backgroundColor = .ypWhite
         
         presenter = FavouritesPresenter(view: self)
-        presenter?.loadFavouriteNFTs()
+        if let nftIDs = nftIDs {
+            presenter?.loadFavouriteNFTs(nftIDs)
+        }
         
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         
@@ -106,7 +110,11 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteNFTCell", for: indexPath) as? FavouriteNFTCell else { return UICollectionViewCell() }
         if let nft = presenter?.getNFT(at: indexPath.row) {
-            cell.configure(name: nft.name, ratingImage: nft.rating, price: nft.price, nftImage: nft.image, likeImage: nft.liked)
+            cell.configure(
+                name: extractNFTName(from: nft.images.first ?? ""),
+                rating: "\(nft.rating)",
+                price: nft.price,
+                image: nft.images.first ?? "")
         }
         return cell
     }
@@ -116,5 +124,33 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
         let availableWidth = collectionView.frame.width - padding
         let cellWidth = availableWidth / 2
         return CGSize(width: cellWidth, height: 80)
+    }
+}
+
+extension FavouritesViewController {
+    private func extractNFTName(from urlString: String) -> String {
+        let pattern = #"\/([^\/]+)\/\d+\.png$"#
+        let regex = try? NSRegularExpression(
+            pattern: pattern,
+            options: []
+        )
+        let nsString = urlString as NSString
+        let results = regex?.firstMatch(
+            in: urlString,
+            options: [],
+            range: NSRange(
+                location: 0,
+                length: nsString.length
+            )
+        )
+        
+        if let range = results?.range(
+            at: 1
+        ) {
+            return nsString.substring(
+                with: range
+            )
+        }
+        return ""
     }
 }

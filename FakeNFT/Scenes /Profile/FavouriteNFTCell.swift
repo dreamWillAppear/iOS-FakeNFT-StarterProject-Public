@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class FavouriteNFTCell: UICollectionViewCell {
     
@@ -13,6 +14,7 @@ final class FavouriteNFTCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -62,12 +64,27 @@ final class FavouriteNFTCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(name: String, ratingImage: UIImage?, price: String, nftImage: UIImage?, likeImage: UIImage?) {
+    func configure(name: String, rating: String, price: Double, image: String) {
         nameLabel.text = name
-        ratingImageView.image = ratingImage
-        priceLabel.text = price
-        nftImageView.image = nftImage
-        likeButton.setImage(likeImage, for: .normal)
+        priceLabel.text = "\(price)"
+        likeButton.setImage(UIImage(named: "liked"), for: .normal)
+        
+        nftImageView.kf.setImage(with: URL(string: image))
+        
+        switch rating {
+        case "1":
+            ratingImageView.image = UIImage(named: "star1")
+        case "2":
+            ratingImageView.image = UIImage(named: "star2")
+        case "3":
+            ratingImageView.image = UIImage(named: "star3")
+        case "4":
+            ratingImageView.image = UIImage(named: "star4")
+        case "5":
+            ratingImageView.image = UIImage(named: "star5")
+        default:
+            ratingImageView.image = UIImage(named: "star0")
+        }
     }
     
     private func setupCell() {
@@ -86,10 +103,10 @@ final class FavouriteNFTCell: UICollectionViewCell {
             nftImageView.widthAnchor.constraint(equalToConstant: 80),
             nftImageView.heightAnchor.constraint(equalToConstant: 80),
             
-            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor),
-            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor),
-            likeButton.heightAnchor.constraint(equalToConstant: 44),
-            likeButton.widthAnchor.constraint(equalToConstant: 44),
+            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: -6),
+            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 6),
+            likeButton.heightAnchor.constraint(equalToConstant: 42),
+            likeButton.widthAnchor.constraint(equalToConstant: 42),
             
             infoView.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: 7),
             infoView.bottomAnchor.constraint(equalTo: nftImageView.bottomAnchor, constant: -7),

@@ -121,14 +121,14 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NFTCell", for: indexPath) as! NFTTableViewCell
         
         if let nft = presenter?.nfts[indexPath.row] {
-            let imageURL = URL(string: nft.imageName)
+            let imageURL = URL(string: nft.images.first ?? "")
             cell.configure(
                 image: UIImage(named: "nft1"),
                 likeImage: UIImage(named: "notLiked"),
-                name: nft.name,
-                starImage: nft.ratingImageName,
-                author: nft.author,
-                price: nft.price
+                name: extractNFTName(from: nft.images.first ?? ""),
+                starImage: "\(nft.rating)",
+                author: "от \(nft.name)",
+                price: "\(nft.price)"
             )
             
             cell.nftImageView.kf.setImage(with: imageURL)
@@ -143,4 +143,32 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }   
+}
+
+extension MyNFTViewController {
+    private func extractNFTName(from urlString: String) -> String {
+        let pattern = #"\/([^\/]+)\/\d+\.png$"#
+        let regex = try? NSRegularExpression(
+            pattern: pattern,
+            options: []
+        )
+        let nsString = urlString as NSString
+        let results = regex?.firstMatch(
+            in: urlString,
+            options: [],
+            range: NSRange(
+                location: 0,
+                length: nsString.length
+            )
+        )
+        
+        if let range = results?.range(
+            at: 1
+        ) {
+            return nsString.substring(
+                with: range
+            )
+        }
+        return ""
+    }
 }

@@ -73,6 +73,18 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
         applyConstraints()
     }
     
+    func didTapLikeButton(on cell: FavouriteNFTCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        
+        if let nft = presenter?.getNFT(at: indexPath.row),
+            let nftIDs = nftIDs {
+            presenter?.removeNft(withId: nft.id, in: nftIDs)
+        }
+        
+        // Перезагружаем коллекцию (если необходимо)
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
     private func addSubViews() {
         [nameLabel, backButton, collectionView].forEach {
             view.addSubview($0)
@@ -119,15 +131,17 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
     }
 }
 
-extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FavouriteNFTCellDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return presenter?.getNumberOfItems() ?? 0
+        return presenter?.nfts.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteNFTCell", for: indexPath) as? FavouriteNFTCell else { return UICollectionViewCell() }
-        if let nft = presenter?.getNFT(at: indexPath.row) {
+        cell.delegate = self
+        
+        if let nft = presenter?.nfts[indexPath.row] {
             cell.configure(
                 name: extractNFTName(from: nft.images.first ?? ""),
                 rating: "\(nft.rating)",

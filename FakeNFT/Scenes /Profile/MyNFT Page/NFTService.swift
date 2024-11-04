@@ -10,8 +10,7 @@ import Foundation
 final class NFTService {
     
     static let shared = NFTService()
-    private let token = "69a72b9d-5370-4d97-9593-9c27f9eb3d0a"
-    private let headerForToken = "X-Practicum-Mobile-Token"
+    private let header = "X-Practicum-Mobile-Token"
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     
@@ -24,13 +23,14 @@ final class NFTService {
             preconditionFailure("Error: cant construct url")
         }
         var request = URLRequest(url: url)
-        request.setValue(token, forHTTPHeaderField: headerForToken)
+        request.setValue(RequestConstants.token, forHTTPHeaderField: header)
 
         request.httpMethod = "GET"
         return request
     }
     
     func fetchNfts(idsfNft: [String], completion: @escaping (Result<NFT, Error>) -> Void) {
+        arrayOfNfts.removeAll()
         assert(Thread.isMainThread)
         guard task == nil else { return }
         for id in idsfNft {

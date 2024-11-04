@@ -8,7 +8,13 @@
 import UIKit
 import Kingfisher
 
+protocol FavouriteNFTCellDelegate: AnyObject {
+    func didTapLikeButton(on cell: FavouriteNFTCell)
+}
+
 final class FavouriteNFTCell: UICollectionViewCell {
+    
+    weak var delegate: FavouriteNFTCellDelegate?
     
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
@@ -87,11 +93,17 @@ final class FavouriteNFTCell: UICollectionViewCell {
         }
     }
     
+    @objc private func likeButtonTapped() {
+        print("cell tapped")
+        delegate?.didTapLikeButton(on: self)
+    }
+    
     private func setupCell() {
         contentView.addSubview(nftImageView)
         contentView.addSubview(infoView)
+        contentView.addSubview(likeButton)
         
-        nftImageView.addSubview(likeButton)
+        likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         
         infoView.addSubview(nameLabel)
         infoView.addSubview(ratingImageView)

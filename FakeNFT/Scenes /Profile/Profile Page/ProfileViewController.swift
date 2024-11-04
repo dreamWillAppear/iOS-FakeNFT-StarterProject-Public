@@ -75,6 +75,12 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         presenter?.loadProfileData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter = ProfilePresenter(view: self)
+        presenter?.loadProfileData()
+    }
+    
     private func addSubViews() {
         [editButton, avatarImageView, nameLabel, descriptionLabel, websiteLink, tableView].forEach { view.addSubview($0) }
     }

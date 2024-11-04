@@ -45,6 +45,17 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
         return tableView
     }()
     
+    private var noNFTLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "У вас еще нет NFT"
+        label.textAlignment = .center
+        label.font = .bodyBold
+        label.textColor = .lightGray
+        label.isHidden = true
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
@@ -70,7 +81,7 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
     }
     
     private func addSubViews() {
-        [nameLabel, backButton, sortButton, tableView].forEach {
+        [nameLabel, backButton, sortButton, tableView, noNFTLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -93,11 +104,21 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
             tableView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 30),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            noNFTLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noNFTLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
     func reloadData() {
+        if presenter?.nfts.isEmpty == true {
+            tableView.isHidden = true
+            noNFTLabel.isHidden = false
+        } else {
+            tableView.isHidden = false
+            noNFTLabel.isHidden = true
+        }
         tableView.reloadData()
     }
     

@@ -37,7 +37,7 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
     func sortByName() {
         let nfts = getNfts()
         let sortedNfts = nfts.sorted{ (value1, value2) in
-            return value1.name < value2.name
+            return extractNFTName(from: value1.images.first ?? "") < extractNFTName(from: value2.images.first ?? "")
         }
         self.nfts = sortedNfts
     }
@@ -56,6 +56,32 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
             return value1.price > value2.price
         }
         self.nfts = sortedNfts
+    }
+    
+    private func extractNFTName(from urlString: String) -> String {
+        let pattern = #"\/([^\/]+)\/\d+\.png$"#
+        let regex = try? NSRegularExpression(
+            pattern: pattern,
+            options: []
+        )
+        let nsString = urlString as NSString
+        let results = regex?.firstMatch(
+            in: urlString,
+            options: [],
+            range: NSRange(
+                location: 0,
+                length: nsString.length
+            )
+        )
+        
+        if let range = results?.range(
+            at: 1
+        ) {
+            return nsString.substring(
+                with: range
+            )
+        }
+        return ""
     }
     
 //    func loadNFTs(_ nftIDs: [String]) {

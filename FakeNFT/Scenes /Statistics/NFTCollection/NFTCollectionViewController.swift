@@ -57,7 +57,7 @@ final class NFTCollectionViewController: UIViewController, NFTCollectionViewCont
     }
     
     func showProgressHud() {
-        ProgressHUD.show()
+        ProgressHUD.animate()
     }
     
     func hideProgressHud() {

@@ -23,16 +23,21 @@ final class FavouritesPresenter {
         nfts.removeAll()
         likes = nftIDs
         
-        nftService.fetchNfts(idsfNft: nftIDs) { [weak self] resultNft in
-            guard let self = self else { return }
-            switch resultNft {
-            case .success(_):
-                nfts = self.nftService.arrayOfNfts
-                //nfts = [] - проверка заглушки
-                view?.reloadData()
-            case .failure(_):
-                print("Failed to load NFTs")
+        if !likes.isEmpty {
+            nftService.fetchNfts(idsfNft: nftIDs) { [weak self] resultNft in
+                guard let self = self else { return }
+                switch resultNft {
+                case .success(_):
+                    nfts = self.nftService.arrayOfNfts
+                    //nfts = [] - проверка заглушки
+                    view?.reloadData()
+                case .failure(_):
+                    print("Failed to load NFTs")
+                }
             }
+        } else {
+            nfts = []
+            view?.reloadData()
         }
     }
     

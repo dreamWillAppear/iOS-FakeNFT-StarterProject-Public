@@ -20,17 +20,22 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
     }
     
     func loadNFTs(_ nftIDs: [String]) {
-        nftService.fetchNfts(idsfNft: nftIDs) { [weak self] resultNft in
-            guard let self = self else { return }
-            switch resultNft {
-            case .success(_):
-                nfts = self.nftService.arrayOfNfts
-                self.applySavedSortOption()
-               //nfts = [] - проверка заглушки
-                view?.reloadData()
-            case .failure(_):
-                print("Failed to load NFTs")
+        if !nftIDs.isEmpty {
+            nftService.fetchNfts(idsfNft: nftIDs) { [weak self] resultNft in
+                guard let self = self else { return }
+                switch resultNft {
+                case .success(_):
+                    nfts = self.nftService.arrayOfNfts
+                    self.applySavedSortOption()
+                   //nfts = [] - проверка заглушки
+                    view?.reloadData()
+                case .failure(_):
+                    print("Failed to load NFTs")
+                }
             }
+        } else {
+            nfts = []
+            view?.reloadData()
         }
     }
     

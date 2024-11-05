@@ -48,7 +48,7 @@ final class RatingTableViewController: UIViewController, RatingTableViewControll
     }
     
     func showProgressHud() {
-        ProgressHUD.show()
+        ProgressHUD.animate()
     }
     
     func hideProgressHud() {

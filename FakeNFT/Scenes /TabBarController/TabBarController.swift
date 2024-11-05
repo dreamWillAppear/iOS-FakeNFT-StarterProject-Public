@@ -39,13 +39,14 @@ final class TabBarController: UITabBarController {
         let catalogViewController = CatalogViewController(presenter: catalogPresenter)
         catalogPresenter.setView(catalogViewController)
         
-        let cartController = UIViewController()
+        let cartController = CartViewController()
+        let navigationCartViewController = UINavigationController(rootViewController: cartController)
         
         let statisticsController = UINavigationController(rootViewController: RatingTableViewController())
         
         profileController.tabBarItem = profileTabBarItem
+        navigationCartViewController.tabBarItem = cartTabBarItem
         catalogViewController.tabBarItem = catalogTabBarItem
-        cartController.tabBarItem = cartTabBarItem
         statisticsController.tabBarItem = statisticsTabBarItem
         
         appearance.stackedLayoutAppearance.normal.iconColor = .ypBlack
@@ -53,7 +54,7 @@ final class TabBarController: UITabBarController {
         tabBar.standardAppearance = appearance
         tabBar.backgroundColor = .ypWhite
 
-        viewControllers = [profileController, catalogViewController, cartController, statisticsController]
+        viewControllers = [profileController, catalogViewController, navigationCartViewController, statisticsController]
         
         selectedIndex = 3
     }

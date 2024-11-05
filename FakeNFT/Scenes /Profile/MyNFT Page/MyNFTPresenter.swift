@@ -12,9 +12,11 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
     var nfts: [NFT] = []
     
     private let nftService = NFTService.shared
+    private let sortKey = "selectedSortOption"
     
     init(view: MyNFTViewProtocol) {
         self.view = view
+        applySavedSortOption()
     }
     
     func loadNFTs(_ nftIDs: [String]) {
@@ -23,7 +25,8 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
             switch resultNft {
             case .success(_):
                 nfts = self.nftService.arrayOfNfts
-                //nfts = []
+                self.applySavedSortOption()
+               //nfts = [] - проверка заглушки
                 view?.reloadData()
             case .failure(_):
                 print("Failed to load NFTs")
@@ -41,6 +44,7 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
             return extractNFTName(from: value1.images.first ?? "") < extractNFTName(from: value2.images.first ?? "")
         }
         self.nfts = sortedNfts
+        saveSortOption("name")
     }
     
     func sortByRating() {
@@ -49,6 +53,7 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
             return value1.rating > value2.rating
         }
         self.nfts = sortedNfts
+        saveSortOption("rating")
     }
     
     func sortByPrice() {
@@ -57,6 +62,25 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
             return value1.price > value2.price
         }
         self.nfts = sortedNfts
+        saveSortOption("price")
+    }
+    
+    private func saveSortOption(_ option: String) {
+        UserDefaults.standard.set(option, forKey: sortKey)
+    }
+    
+    private func applySavedSortOption() {
+        let savedOption = UserDefaults.standard.string(forKey: sortKey)
+        switch savedOption {
+        case "name":
+            sortByName()
+        case "rating":
+            sortByRating()
+        case "price":
+            sortByPrice()
+        default:
+            break
+        }
     }
     
     private func extractNFTName(from urlString: String) -> String {

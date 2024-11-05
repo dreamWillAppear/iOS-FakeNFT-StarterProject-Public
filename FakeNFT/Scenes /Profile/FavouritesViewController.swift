@@ -111,7 +111,6 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
     }
     
     func reloadData() {
-        UIProfileBlockingProgressHUD.show()
         if presenter?.nfts.isEmpty == true {
             collectionView.isHidden = true
             noNFTLabel.isHidden = false
@@ -120,7 +119,6 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
             noNFTLabel.isHidden = true
         }
         collectionView.reloadData()
-        UIProfileBlockingProgressHUD.dismiss()
     }
     
     @objc private func backButtonTapped() {

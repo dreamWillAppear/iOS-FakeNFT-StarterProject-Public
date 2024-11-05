@@ -112,7 +112,6 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
     }
     
     func reloadData() {
-        UIProfileBlockingProgressHUD.show()
         if presenter?.nfts.isEmpty == true {
             tableView.isHidden = true
             noNFTLabel.isHidden = false
@@ -121,7 +120,6 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
             noNFTLabel.isHidden = true
         }
         tableView.reloadData()
-        UIProfileBlockingProgressHUD.dismiss()
     }
     
     @objc private func backButtonTapped() {

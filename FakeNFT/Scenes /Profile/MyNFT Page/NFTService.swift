@@ -31,6 +31,7 @@ final class NFTService {
     
     func fetchNfts(idsfNft: [String], completion: @escaping (Result<NFT, Error>) -> Void) {
         arrayOfNfts.removeAll()
+        UIProfileBlockingProgressHUD.show()
         assert(Thread.isMainThread)
         guard task == nil else { return }
         for id in idsfNft {
@@ -43,9 +44,11 @@ final class NFTService {
                         case .success(let decodedData):
                             self.arrayOfNfts.append(decodedData)
                             completion(.success(decodedData))
+                            UIProfileBlockingProgressHUD.dismiss()
                         case .failure(let error):
                             completion(.failure(error))
                             print("[NFTService]: \(error)")
+                            UIProfileBlockingProgressHUD.dismiss()
                         }
                     }
                     self.task = nil

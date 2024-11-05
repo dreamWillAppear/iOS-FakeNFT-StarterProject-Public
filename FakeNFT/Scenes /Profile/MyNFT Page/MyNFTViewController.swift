@@ -172,7 +172,7 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
                 name: extractNFTName(from: nft.images.first ?? ""),
                 starImage: "\(nft.rating)",
                 author: "от \(nft.name)",
-                price: "\(nft.price) ETH"
+                price: "\(formatPrice(nft.price)) ETH"
             )
             
             cell.nftImageView.kf.setImage(with: imageURL)
@@ -214,5 +214,15 @@ extension MyNFTViewController {
             )
         }
         return ""
+    }
+    
+    private func formatPrice(_ price: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
+        return formatter.string(from: NSNumber(value: price)) ?? "\(price)"
     }
 }

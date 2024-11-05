@@ -165,7 +165,6 @@ final class NFTTableViewCell: UITableViewCell {
         nftImageView.image = image
         likeButton.setImage(likeImage, for: .normal)
         nameLabel.text = name
-        //starImageView.image = starImage
         authorLabel.text = author
         priceLabel.text = price
         

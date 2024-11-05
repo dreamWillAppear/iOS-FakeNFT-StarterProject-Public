@@ -72,7 +72,7 @@ final class FavouriteNFTCell: UICollectionViewCell {
     
     func configure(name: String, rating: String, price: Double, image: String) {
         nameLabel.text = name
-        priceLabel.text = "\(price) ETH"
+        priceLabel.text = "\(formatPrice(price)) ETH"
         likeButton.setImage(UIImage(named: "liked"), for: .normal)
         
         nftImageView.kf.setImage(with: URL(string: image))
@@ -91,6 +91,16 @@ final class FavouriteNFTCell: UICollectionViewCell {
         default:
             ratingImageView.image = UIImage(named: "star0")
         }
+    }
+    
+    private func formatPrice(_ price: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
+        return formatter.string(from: NSNumber(value: price)) ?? "\(price)"
     }
     
     @objc private func likeButtonTapped() {

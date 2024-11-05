@@ -81,7 +81,6 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
             presenter?.removeNft(withId: nft.id, in: nftIDs)
         }
         
-        // Перезагружаем коллекцию (если необходимо)
         collectionView.reloadItems(at: [indexPath])
     }
     

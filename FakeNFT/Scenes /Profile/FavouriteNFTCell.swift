@@ -72,7 +72,7 @@ final class FavouriteNFTCell: UICollectionViewCell {
     
     func configure(name: String, rating: String, price: Double, image: String) {
         nameLabel.text = name
-        priceLabel.text = "\(price)"
+        priceLabel.text = "\(price) ETH"
         likeButton.setImage(UIImage(named: "liked"), for: .normal)
         
         nftImageView.kf.setImage(with: URL(string: image))

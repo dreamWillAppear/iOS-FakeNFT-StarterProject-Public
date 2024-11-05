@@ -172,7 +172,7 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
                 name: extractNFTName(from: nft.images.first ?? ""),
                 starImage: "\(nft.rating)",
                 author: "от \(nft.name)",
-                price: "\(nft.price)"
+                price: "\(nft.price) ETH"
             )
             
             cell.nftImageView.kf.setImage(with: imageURL)

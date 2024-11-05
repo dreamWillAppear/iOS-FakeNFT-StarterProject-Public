@@ -14,7 +14,7 @@ final class NFTTableViewCell: UITableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 8
+        imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -135,7 +135,7 @@ final class NFTTableViewCell: UITableViewCell {
             descriptionContainerView.widthAnchor.constraint(equalToConstant: 89),
             
             priceContainerView.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
-            priceContainerView.leadingAnchor.constraint(equalTo: descriptionContainerView.trailingAnchor, constant: 28),
+            priceContainerView.leadingAnchor.constraint(equalTo: descriptionContainerView.trailingAnchor, constant: 39),
             priceContainerView.trailingAnchor.constraint(equalTo: labelsContainerView.trailingAnchor),
             priceContainerView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: -10),
             

@@ -9,7 +9,7 @@ final class TabBarController: UITabBarController {
         image: UIImage(systemName: "person.crop.circle.fill"),
         tag: 0
     )
-
+    
     private let catalogTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.catalog", comment: ""),
         image: UIImage(systemName: "rectangle.stack.fill"),
@@ -27,35 +27,35 @@ final class TabBarController: UITabBarController {
         image: UIImage(systemName: "flag.2.crossed.fill"),
         tag: 3
     )
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let appearance = tabBar.standardAppearance
-
+        
         let profileController = UIViewController()
         
-        let catalogController = TestCatalogViewController(
-            servicesAssembly: servicesAssembly
-        )
+        let catalogPresenter = CatalogPresenter(view: nil)
+        let catalogViewController = CatalogViewController(presenter: catalogPresenter)
+        catalogPresenter.setView(catalogViewController)
         
         let cartController = CartViewController()
         let navigationCartViewController = UINavigationController(rootViewController: cartController)
         
-        let statisticsController = UIViewController()
+        let statisticsController = UINavigationController(rootViewController: RatingTableViewController())
         
         profileController.tabBarItem = profileTabBarItem
-        catalogController.tabBarItem = catalogTabBarItem
         navigationCartViewController.tabBarItem = cartTabBarItem
+        catalogViewController.tabBarItem = catalogTabBarItem
         statisticsController.tabBarItem = statisticsTabBarItem
         
-        appearance.backgroundColor = .ypWhite
         appearance.stackedLayoutAppearance.normal.iconColor = .ypBlack
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.ypBlack as Any]
         tabBar.standardAppearance = appearance
+        tabBar.backgroundColor = .ypWhite
 
-        viewControllers = [profileController, catalogController, navigationCartViewController, statisticsController]
+        viewControllers = [profileController, catalogViewController, navigationCartViewController, statisticsController]
         
-        selectedIndex = 1 //при старте приложения будет открыта вторая вкладка
+        selectedIndex = 3
     }
 }

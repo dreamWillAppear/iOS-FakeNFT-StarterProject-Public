@@ -46,6 +46,11 @@ final class FavouritesPresenter {
         if let index = likes.firstIndex(of: id) {
             likes.remove(at: index)
             changeLikeService.changeLikes(with: likes)
+            self.view?.reloadData()
+            
+            if var viewController = view as? FavouritesViewController {
+                viewController.nftIDs = likes
+            }
         }
         
         if let index = nfts.firstIndex(where: { $0.id == id }) {

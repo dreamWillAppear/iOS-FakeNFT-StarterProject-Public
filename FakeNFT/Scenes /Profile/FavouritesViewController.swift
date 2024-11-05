@@ -49,7 +49,7 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
         label.text = "У вас еще нет избранных NFT"
         label.textAlignment = .center
         label.font = .bodyBold
-        label.textColor = .lightGray
+        label.textColor = .ypBlack
         label.isHidden = true
         return label
     }()
@@ -85,7 +85,7 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
     }
     
     private func addSubViews() {
-        [nameLabel, backButton, collectionView].forEach {
+        [nameLabel, backButton, collectionView, noNFTLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -103,11 +103,15 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
             collectionView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            noNFTLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noNFTLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
     func reloadData() {
+        UIProfileBlockingProgressHUD.show()
         if presenter?.nfts.isEmpty == true {
             collectionView.isHidden = true
             noNFTLabel.isHidden = false
@@ -116,6 +120,7 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
             noNFTLabel.isHidden = true
         }
         collectionView.reloadData()
+        UIProfileBlockingProgressHUD.dismiss()
     }
     
     @objc private func backButtonTapped() {

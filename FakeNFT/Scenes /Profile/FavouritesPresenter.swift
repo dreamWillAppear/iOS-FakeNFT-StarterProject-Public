@@ -28,7 +28,7 @@ final class FavouritesPresenter {
             switch resultNft {
             case .success(_):
                 nfts = self.nftService.arrayOfNfts
-                print(nfts.count)
+                //nfts = []
                 view?.reloadData()
             case .failure(_):
                 print("Failed to load NFTs")

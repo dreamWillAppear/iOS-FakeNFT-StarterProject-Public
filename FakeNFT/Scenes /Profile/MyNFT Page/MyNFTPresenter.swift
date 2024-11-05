@@ -23,6 +23,7 @@ final class MyNFTPresenter: MyNFTPresenterProtocol {
             switch resultNft {
             case .success(_):
                 nfts = self.nftService.arrayOfNfts
+                //nfts = []
                 view?.reloadData()
             case .failure(_):
                 print("Failed to load NFTs")

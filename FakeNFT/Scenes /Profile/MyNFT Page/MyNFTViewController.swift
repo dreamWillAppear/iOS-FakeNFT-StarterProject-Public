@@ -51,7 +51,7 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
         label.text = "У вас еще нет NFT"
         label.textAlignment = .center
         label.font = .bodyBold
-        label.textColor = .lightGray
+        label.textColor = .ypBlack
         label.isHidden = true
         return label
     }()
@@ -112,6 +112,7 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
     }
     
     func reloadData() {
+        UIProfileBlockingProgressHUD.show()
         if presenter?.nfts.isEmpty == true {
             tableView.isHidden = true
             noNFTLabel.isHidden = false
@@ -120,6 +121,7 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
             noNFTLabel.isHidden = true
         }
         tableView.reloadData()
+        UIProfileBlockingProgressHUD.dismiss()
     }
     
     @objc private func backButtonTapped() {

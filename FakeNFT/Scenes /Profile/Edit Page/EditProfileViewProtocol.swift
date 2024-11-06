@@ -8,5 +8,5 @@
 import Foundation
 
 protocol EditProfileViewProtocol: AnyObject {
-    func updateProfile(_ profile: Profile)
+    func updateProfile(_ profile: ProfileModel)
 }

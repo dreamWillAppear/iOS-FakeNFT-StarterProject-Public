@@ -18,7 +18,7 @@ final class EditProfilePresenter: EditProfilePresenterProtocol {
         
     }
     
-    func saveProfile(profile: Profile) {
+    func saveProfile(profile: ProfileModel) {
         print("Profile saved: \(profile.name), \(profile.description), \(profile.website), \(profile.avatarImageURL)")
         
         let urlString = "\(RequestConstants.baseURL)/api/v1/profile/1"

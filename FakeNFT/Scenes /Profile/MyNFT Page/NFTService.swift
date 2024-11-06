@@ -37,7 +37,7 @@ final class NFTService {
         for id in idsfNft {
             DispatchQueue.main.async {
                 guard let request = self.makeNftRequest(idNft: id) else { return }
-                let task = self.urlSession.cartObjectTask(for: request) { [weak self] (result: Result<NFT, Error>) in
+                let task = self.urlSession.nftObjectTask(for: request) { [weak self] (result: Result<NFT, Error>) in
                     guard let self = self else { return }
                     DispatchQueue.main.async {
                         switch result {
@@ -60,15 +60,15 @@ final class NFTService {
     }
 }
 
-enum NetworkError: Error {
-    case httpStatusCode(Int)
-    case urlRequestError(Error)
-    case urlSessionError
-    case decoderError(Error)
-}
+//enum NetworkError: Error {
+//    case httpStatusCode(Int)
+//    case urlRequestError(Error)
+//    case urlSessionError
+//    case decoderError(Error)
+//}
 
 extension URLSession {
-    func cartObjectTask<T: Codable>(
+    func nftObjectTask<T: Codable>(
         for request: URLRequest,
         completion: @escaping (Result<T, Error>) -> Void
     ) -> URLSessionTask {

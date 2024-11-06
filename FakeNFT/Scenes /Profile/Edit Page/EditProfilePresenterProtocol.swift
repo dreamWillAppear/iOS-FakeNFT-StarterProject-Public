@@ -9,5 +9,5 @@ import Foundation
 
 protocol EditProfilePresenterProtocol {
     func loadProfileData()
-    func saveProfile(profile: Profile)
+    func saveProfile(profile: ProfileModel)
 }

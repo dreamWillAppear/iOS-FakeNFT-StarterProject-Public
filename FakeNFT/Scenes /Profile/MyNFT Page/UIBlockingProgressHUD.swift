@@ -15,7 +15,7 @@ final class UIProfileBlockingProgressHUD {
     
     static func show() {
         window?.isUserInteractionEnabled = false
-        ProgressHUD.showProgress("Loading...", 0.5)
+        ProgressHUD.animate()
     }
     
     static func dismiss() {

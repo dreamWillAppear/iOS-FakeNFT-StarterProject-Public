@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Profile {
+struct ProfileModel {
     let avatarImageURL: String
     let name: String
     let description: String

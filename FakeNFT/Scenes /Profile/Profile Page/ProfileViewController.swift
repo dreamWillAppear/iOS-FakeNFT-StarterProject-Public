@@ -11,7 +11,7 @@ import Kingfisher
 final class ProfileViewController: UIViewController, ProfileViewProtocol {
     
     var presenter: ProfilePresenterProtocol?
-    var profile: Profile?
+    var profile: ProfileModel?
     
     private var nftCount = 0
     private var favouriteCount = 0
@@ -123,12 +123,12 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
     }
     
     @objc private func openWebsite() {
-        let webVC = WebViewController()
+        let webVC = ProfileWebViewController()
         webVC.modalPresentationStyle = .fullScreen
         present(webVC, animated: true, completion: nil)
     }
     
-    func updateProfile(_ profile: Profile) {
+    func updateProfile(_ profile: ProfileModel) {
         self.profile = profile
         let imageURL = URL(string: profile.avatarImageURL)
         

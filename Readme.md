@@ -3,12 +3,13 @@
 # Ссылки
 
 [Дизайн Figma](https://www.figma.com/file/k1LcgXHGTHIeiCv4XuPbND/FakeNFT-(YP)?node-id=96-5542&t=YdNbOI8EcqdYmDeg-0)
+<br />
 [Скринкаст эпика Каталог](https://disk.yandex.ru/i/saIeKsID24ONdQ)
 <br />
 [Скринкаст эпика Профиль](https://disk.yandex.ru/i/64Z4cjIZuZm2Ag)
 <br />
 [Скринкаст эпика Статистика](https://disk.yandex.ru/i/MhAXE32z62WXGw)
-
+<br />
 [Скринкаст эпика Корзина](https://disk.yandex.ru/i/WgyntPQrlYuKcQ)
 # Назначение и цели приложения
 

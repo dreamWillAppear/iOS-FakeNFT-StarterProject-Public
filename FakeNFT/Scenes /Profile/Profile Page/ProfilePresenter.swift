@@ -49,7 +49,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                        let nfts = json["nfts"] as? [String],
                        let likes = json["likes"] as? [String] {
                         
-                        let profile = Profile(
+                        let profile = ProfileModel(
                             avatarImageURL: avatar,
                             name: name,
                             description: description,

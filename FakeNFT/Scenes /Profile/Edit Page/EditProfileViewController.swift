@@ -15,7 +15,7 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
 
     
     weak var delegate: EditProfileViewControllerDelegate?
-    var profile: Profile?
+    var profile: ProfileModel?
     var presenter: EditProfilePresenterProtocol?
     
     private var avatarURL: String?
@@ -213,12 +213,12 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
         ])
     }
     
-    private func loadProfile(_ profile: Profile?) {
+    private func loadProfile(_ profile: ProfileModel?) {
         guard let profile = profile else { return }
         updateProfile(profile)
     }
     
-    func updateProfile(_ profile: Profile) {
+    func updateProfile(_ profile: ProfileModel) {
         let imageURL = URL(string: profile.avatarImageURL)
         
         avatarImageView.kf.setImage(with: imageURL) { result in
@@ -256,7 +256,7 @@ final class EditProfileViewController: UIViewController, EditProfileViewProtocol
               let website = websiteTextView.text,
               let avatarURL = self.avatarURL else { return }
         
-        let profile = Profile(avatarImageURL: avatarURL, name: name, description: description, website: website, nfts: [], likes: [])
+        let profile = ProfileModel(avatarImageURL: avatarURL, name: name, description: description, website: website, nfts: [], likes: [])
         presenter?.saveProfile(profile: profile)
     }
     

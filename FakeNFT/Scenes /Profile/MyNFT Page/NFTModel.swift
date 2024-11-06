@@ -7,11 +7,10 @@
 
 import Foundation
 
-struct NFT {
-    let imageName: String
-    let likeImageName: String
+struct NFT: Codable {
+    let id: String
     let name: String
-    let ratingImageName: String
-    let author: String
-    let price: String
+    let images: [String]
+    let rating: Int
+    let price: Double
 }

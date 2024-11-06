@@ -75,6 +75,12 @@ final class ProfileViewController: UIViewController, ProfileViewProtocol {
         presenter?.loadProfileData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter = ProfilePresenter(view: self)
+        presenter?.loadProfileData()
+    }
+    
     private func addSubViews() {
         [editButton, avatarImageView, nameLabel, descriptionLabel, websiteLink, tableView].forEach { view.addSubview($0) }
     }
@@ -192,12 +198,14 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         case 0:
             let myNFTVC = MyNFTViewController()
             myNFTVC.modalPresentationStyle = .fullScreen
+            myNFTVC.nftIDs = profile?.nfts
             view.window?.layer.add(transition, forKey: kCATransition)
             present(myNFTVC, animated: false, completion: nil)
             
         case 1:
             let favouritesVC = FavouritesViewController()
             favouritesVC.modalPresentationStyle = .fullScreen
+            favouritesVC.nftIDs = profile?.likes
             view.window?.layer.add(transition, forKey: kCATransition)
             present(favouritesVC, animated: false, completion: nil)
             

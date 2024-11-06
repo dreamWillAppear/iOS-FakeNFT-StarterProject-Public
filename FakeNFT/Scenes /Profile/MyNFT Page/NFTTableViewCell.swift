@@ -6,14 +6,15 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class NFTTableViewCell: UITableViewCell {
     
-    private let nftImageView: UIImageView = {
+    var nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 8
+        imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -118,8 +119,8 @@ final class NFTTableViewCell: UITableViewCell {
             nftImageView.widthAnchor.constraint(equalToConstant: 108),
             nftImageView.heightAnchor.constraint(equalToConstant: 108),
             
-            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor),
-            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor),
+            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: -6),
+            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 6),
             likeButton.heightAnchor.constraint(equalToConstant: 44),
             likeButton.widthAnchor.constraint(equalToConstant: 44),
             
@@ -134,7 +135,7 @@ final class NFTTableViewCell: UITableViewCell {
             descriptionContainerView.widthAnchor.constraint(equalToConstant: 89),
             
             priceContainerView.topAnchor.constraint(equalTo: descriptionContainerView.topAnchor, constant: 10),
-            priceContainerView.leadingAnchor.constraint(equalTo: descriptionContainerView.trailingAnchor, constant: 28),
+            priceContainerView.leadingAnchor.constraint(equalTo: descriptionContainerView.trailingAnchor, constant: 39),
             priceContainerView.trailingAnchor.constraint(equalTo: labelsContainerView.trailingAnchor),
             priceContainerView.bottomAnchor.constraint(equalTo: descriptionContainerView.bottomAnchor, constant: -10),
             
@@ -160,12 +161,26 @@ final class NFTTableViewCell: UITableViewCell {
         ])
     }
     
-    func configure(image: UIImage?, likeImage: UIImage?, name: String, starImage: UIImage?, author: String, price: String) {
+    func configure(image: UIImage?, likeImage: UIImage?, name: String, starImage: String, author: String, price: String) {
         nftImageView.image = image
         likeButton.setImage(likeImage, for: .normal)
         nameLabel.text = name
-        starImageView.image = starImage
         authorLabel.text = author
         priceLabel.text = price
+        
+        switch starImage {
+        case "1":
+            starImageView.image = UIImage(named: "star1")
+        case "2":
+            starImageView.image = UIImage(named: "star2")
+        case "3":
+            starImageView.image = UIImage(named: "star3")
+        case "4":
+            starImageView.image = UIImage(named: "star4")
+        case "5":
+            starImageView.image = UIImage(named: "star5")
+        default:
+            starImageView.image = UIImage(named: "star0")
+        }
     }
 }

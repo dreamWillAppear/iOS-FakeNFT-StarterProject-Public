@@ -45,6 +45,8 @@
 		E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */; };
 		E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */; };
 		E1CD40DC2A96BECC00BE7FE8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */; };
+		FC3FD02A2CD833540005EAF2 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3FD0292CD833540005EAF2 /* UIBlockingProgressHUD.swift */; };
+		FC3FD0842CD8E7D30005EAF2 /* ChangeLikesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3FD0832CD8E7D30005EAF2 /* ChangeLikesService.swift */; };
 		FCF32CAF2CBE672800828852 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CAE2CBE672800828852 /* ProfileViewController.swift */; };
 		FCF32CB12CBE9CD600828852 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CB02CBE9CD600828852 /* EditProfileViewController.swift */; };
 		FCF32CB32CBF9D1500828852 /* MyNFTViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CB22CBF9D1500828852 /* MyNFTViewController.swift */; };
@@ -63,8 +65,8 @@
 		FCF32CD82CC1382E00828852 /* MyNFTPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CD72CC1382E00828852 /* MyNFTPresenter.swift */; };
 		FCF32CDB2CC1420700828852 /* FavouritesViewProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */; };
 		FCF32CDD2CC1421300828852 /* FavouritesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */; };
-		FCF32CDF2CC1422F00828852 /* FavouriteNFTModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */; };
 		FCF32CF12CCFA88B00828852 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CF02CCFA88B00828852 /* WebViewController.swift */; };
+		FCF32CF62CD4FDBC00828852 /* NFTService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCF32CF52CD4FDBC00828852 /* NFTService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +128,8 @@
 		E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E1CD40D92A96BE7D00BE7FE8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		FC3FD0292CD833540005EAF2 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
+		FC3FD0832CD8E7D30005EAF2 /* ChangeLikesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeLikesService.swift; sourceTree = "<group>"; };
 		FCF32CAE2CBE672800828852 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		FCF32CB02CBE9CD600828852 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		FCF32CB22CBF9D1500828852 /* MyNFTViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTViewController.swift; sourceTree = "<group>"; };
@@ -144,8 +148,8 @@
 		FCF32CD72CC1382E00828852 /* MyNFTPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyNFTPresenter.swift; sourceTree = "<group>"; };
 		FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewProtocol.swift; sourceTree = "<group>"; };
 		FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesPresenter.swift; sourceTree = "<group>"; };
-		FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteNFTModel.swift; sourceTree = "<group>"; };
 		FCF32CF02CCFA88B00828852 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		FCF32CF52CD4FDBC00828852 /* NFTService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -441,6 +445,8 @@
 				FCF32CD32CC1380300828852 /* MyNFTPresenterProtocol.swift */,
 				FCF32CD52CC1381100828852 /* NFTModel.swift */,
 				FCF32CD72CC1382E00828852 /* MyNFTPresenter.swift */,
+				FCF32CF52CD4FDBC00828852 /* NFTService.swift */,
+				FC3FD0292CD833540005EAF2 /* UIBlockingProgressHUD.swift */,
 			);
 			path = "MyNFT Page";
 			sourceTree = "<group>";
@@ -452,7 +458,7 @@
 				FCF32CB62CBFD5DF00828852 /* FavouritesViewController.swift */,
 				FCF32CDA2CC1420700828852 /* FavouritesViewProtocol.swift */,
 				FCF32CDC2CC1421300828852 /* FavouritesPresenter.swift */,
-				FCF32CDE2CC1422F00828852 /* FavouriteNFTModel.swift */,
+				FC3FD0832CD8E7D30005EAF2 /* ChangeLikesService.swift */,
 			);
 			name = "FavouriteNFT Page";
 			sourceTree = "<group>";
@@ -611,7 +617,6 @@
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				FCF32CB12CBE9CD600828852 /* EditProfileViewController.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
-				FCF32CDF2CC1422F00828852 /* FavouriteNFTModel.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
 				FCF32CB52CBFB02700828852 /* NFTTableViewCell.swift in Sources */,
 				FCF32CD82CC1382E00828852 /* MyNFTPresenter.swift in Sources */,
@@ -623,6 +628,7 @@
 				FCF32CC32CC0E9D700828852 /* EditProfileViewProtocol.swift in Sources */,
 				3F68069929CBBAF100B4F915 /* SceneDelegate.swift in Sources */,
 				FCF32CB32CBF9D1500828852 /* MyNFTViewController.swift in Sources */,
+				FC3FD02A2CD833540005EAF2 /* UIBlockingProgressHUD.swift in Sources */,
 				0C79EE6C2A76DE2E00EE90EA /* ServicesAssemly.swift in Sources */,
 				FCF32CBB2CC0E58200828852 /* ProfileModel.swift in Sources */,
 				0CFCB74E2A7817DC0009A829 /* NftStorage.swift in Sources */,
@@ -638,9 +644,11 @@
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
+				FC3FD0842CD8E7D30005EAF2 /* ChangeLikesService.swift in Sources */,
 				FCF32CDD2CC1421300828852 /* FavouritesPresenter.swift in Sources */,
 				FCF32CC02CC0E65E00828852 /* ProfileViewProtocol.swift in Sources */,
 				FCF32CB92CBFD8DE00828852 /* FavouriteNFTCell.swift in Sources */,
+				FCF32CF62CD4FDBC00828852 /* NFTService.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
 				FCF32CF12CCFA88B00828852 /* WebViewController.swift in Sources */,

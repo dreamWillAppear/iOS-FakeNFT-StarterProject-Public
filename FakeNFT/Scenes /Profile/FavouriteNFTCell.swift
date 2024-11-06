@@ -6,13 +6,21 @@
 //
 
 import UIKit
+import Kingfisher
+
+protocol FavouriteNFTCellDelegate: AnyObject {
+    func didTapLikeButton(on cell: FavouriteNFTCell)
+}
 
 final class FavouriteNFTCell: UICollectionViewCell {
+    
+    weak var delegate: FavouriteNFTCellDelegate?
     
     private let nftImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
         return imageView
     }()
@@ -62,19 +70,50 @@ final class FavouriteNFTCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(name: String, ratingImage: UIImage?, price: String, nftImage: UIImage?, likeImage: UIImage?) {
+    func configure(name: String, rating: String, price: Double, image: String) {
         nameLabel.text = name
-        ratingImageView.image = ratingImage
-        priceLabel.text = price
-        nftImageView.image = nftImage
-        likeButton.setImage(likeImage, for: .normal)
+        priceLabel.text = "\(formatPrice(price)) ETH"
+        likeButton.setImage(UIImage(named: "liked"), for: .normal)
+        
+        nftImageView.kf.setImage(with: URL(string: image))
+        
+        switch rating {
+        case "1":
+            ratingImageView.image = UIImage(named: "star1")
+        case "2":
+            ratingImageView.image = UIImage(named: "star2")
+        case "3":
+            ratingImageView.image = UIImage(named: "star3")
+        case "4":
+            ratingImageView.image = UIImage(named: "star4")
+        case "5":
+            ratingImageView.image = UIImage(named: "star5")
+        default:
+            ratingImageView.image = UIImage(named: "star0")
+        }
+    }
+    
+    private func formatPrice(_ price: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
+        return formatter.string(from: NSNumber(value: price)) ?? "\(price)"
+    }
+    
+    @objc private func likeButtonTapped() {
+        print("cell tapped")
+        delegate?.didTapLikeButton(on: self)
     }
     
     private func setupCell() {
         contentView.addSubview(nftImageView)
         contentView.addSubview(infoView)
+        contentView.addSubview(likeButton)
         
-        nftImageView.addSubview(likeButton)
+        likeButton.addTarget(self, action: #selector(likeButtonTapped), for: .touchUpInside)
         
         infoView.addSubview(nameLabel)
         infoView.addSubview(ratingImageView)
@@ -86,10 +125,10 @@ final class FavouriteNFTCell: UICollectionViewCell {
             nftImageView.widthAnchor.constraint(equalToConstant: 80),
             nftImageView.heightAnchor.constraint(equalToConstant: 80),
             
-            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor),
-            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor),
-            likeButton.heightAnchor.constraint(equalToConstant: 44),
-            likeButton.widthAnchor.constraint(equalToConstant: 44),
+            likeButton.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: -6),
+            likeButton.trailingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 6),
+            likeButton.heightAnchor.constraint(equalToConstant: 42),
+            likeButton.widthAnchor.constraint(equalToConstant: 42),
             
             infoView.topAnchor.constraint(equalTo: nftImageView.topAnchor, constant: 7),
             infoView.bottomAnchor.constraint(equalTo: nftImageView.bottomAnchor, constant: -7),

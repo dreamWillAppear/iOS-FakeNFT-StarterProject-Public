@@ -9,5 +9,8 @@ import Foundation
 
 protocol MyNFTPresenterProtocol {
     var nfts: [NFT] { get }
-    func loadNFTs()
+    func loadNFTs(_ nftIDs: [String])
+    func sortByPrice()
+    func sortByRating()
+    func sortByName()
 }

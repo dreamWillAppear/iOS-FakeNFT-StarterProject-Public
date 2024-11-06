@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
-    
+    var arrayOfNfts: [NFT] = []
     var presenter: MyNFTPresenterProtocol?
+    var nftIDs: [String]?
     
     private var backButton: UIButton = {
         let button = UIButton()
@@ -43,14 +45,28 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
         return tableView
     }()
     
+    private var noNFTLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "У вас еще нет NFT"
+        label.textAlignment = .center
+        label.font = .bodyBold
+        label.textColor = .ypBlack
+        label.isHidden = true
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         
         presenter = MyNFTPresenter(view: self)
-        presenter?.loadNFTs()
+        if let nftIDs = nftIDs {
+            presenter?.loadNFTs(nftIDs)
+        }
         
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
+        sortButton.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
         
         setupTable()
         addSubViews()
@@ -65,7 +81,7 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
     }
     
     private func addSubViews() {
-        [nameLabel, backButton, sortButton, tableView].forEach {
+        [nameLabel, backButton, sortButton, tableView, noNFTLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -88,11 +104,21 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
             tableView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 30),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            noNFTLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noNFTLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
     func reloadData() {
+        if presenter?.nfts.isEmpty == true {
+            tableView.isHidden = true
+            noNFTLabel.isHidden = false
+        } else {
+            tableView.isHidden = false
+            noNFTLabel.isHidden = true
+        }
         tableView.reloadData()
     }
     
@@ -106,6 +132,28 @@ final class MyNFTViewController: UIViewController, MyNFTViewProtocol {
         view.window?.layer.add(transition, forKey: kCATransition)
         dismiss(animated: false, completion: nil)
     }
+    
+    
+    @objc private func sortButtonTapped() {
+        let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "По цене", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+            presenter?.sortByPrice()
+            self.tableView.reloadData()
+        }))
+        alert.addAction(UIAlertAction(title: "По рейтингу", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+            presenter?.sortByRating()
+            self.tableView.reloadData()
+        }))
+        alert.addAction(UIAlertAction(title: "По названию", style: .default, handler: { [weak self] action in
+            guard let self = self else { return }
+            presenter?.sortByName()
+            self.tableView.reloadData()
+        }))
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .cancel))
+        self.present(alert, animated: true)
+    }
 }
 
 extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
@@ -115,15 +163,19 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NFTCell", for: indexPath) as! NFTTableViewCell
+        
         if let nft = presenter?.nfts[indexPath.row] {
+            let imageURL = URL(string: nft.images.first ?? "")
             cell.configure(
-                image: UIImage(named: nft.imageName),
-                likeImage: UIImage(named: nft.likeImageName),
-                name: nft.name,
-                starImage: UIImage(named: nft.ratingImageName),
-                author: nft.author,
-                price: nft.price
+                image: UIImage(named: "nft1"),
+                likeImage: UIImage(named: "notLiked"),
+                name: extractNFTName(from: nft.images.first ?? ""),
+                starImage: "\(nft.rating)",
+                author: "от \(nft.name)",
+                price: "\(formatPrice(nft.price)) ETH"
             )
+            
+            cell.nftImageView.kf.setImage(with: imageURL)
         }
         return cell
     }
@@ -135,4 +187,42 @@ extension MyNFTViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }   
+}
+
+extension MyNFTViewController {
+    private func extractNFTName(from urlString: String) -> String {
+        let pattern = #"\/([^\/]+)\/\d+\.png$"#
+        let regex = try? NSRegularExpression(
+            pattern: pattern,
+            options: []
+        )
+        let nsString = urlString as NSString
+        let results = regex?.firstMatch(
+            in: urlString,
+            options: [],
+            range: NSRange(
+                location: 0,
+                length: nsString.length
+            )
+        )
+        
+        if let range = results?.range(
+            at: 1
+        ) {
+            return nsString.substring(
+                with: range
+            )
+        }
+        return ""
+    }
+    
+    private func formatPrice(_ price: Double) -> String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 2
+        
+        return formatter.string(from: NSNumber(value: price)) ?? "\(price)"
+    }
 }

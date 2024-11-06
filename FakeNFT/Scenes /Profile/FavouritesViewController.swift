@@ -9,6 +9,8 @@ import UIKit
 
 final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
     
+    var nftIDs: [String]?
+    
     private var presenter: FavouritesPresenter?
     
     private var backButton: UIButton = {
@@ -41,12 +43,25 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
         return collectionView
     }()
     
+    private var noNFTLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "У вас еще нет избранных NFT"
+        label.textAlignment = .center
+        label.font = .bodyBold
+        label.textColor = .ypBlack
+        label.isHidden = true
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         
         presenter = FavouritesPresenter(view: self)
-        presenter?.loadFavouriteNFTs()
+        if let nftIDs = nftIDs {
+            presenter?.loadFavouriteNFTs(nftIDs)
+        }
         
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         
@@ -58,8 +73,19 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
         applyConstraints()
     }
     
+    func didTapLikeButton(on cell: FavouriteNFTCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        
+        if let nft = presenter?.getNFT(at: indexPath.row),
+            let nftIDs = nftIDs {
+            presenter?.removeNft(withId: nft.id, in: nftIDs)
+        }
+        
+        collectionView.reloadItems(at: [indexPath])
+    }
+    
     private func addSubViews() {
-        [nameLabel, backButton, collectionView].forEach {
+        [nameLabel, backButton, collectionView, noNFTLabel].forEach {
             view.addSubview($0)
         }
     }
@@ -77,11 +103,21 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
             collectionView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 20),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            noNFTLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noNFTLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
     func reloadData() {
+        if presenter?.nfts.isEmpty == true {
+            collectionView.isHidden = true
+            noNFTLabel.isHidden = false
+        } else {
+            collectionView.isHidden = false
+            noNFTLabel.isHidden = true
+        }
         collectionView.reloadData()
     }
     
@@ -97,16 +133,22 @@ final class FavouritesViewController: UIViewController, FavouritesViewProtocol {
     }
 }
 
-extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FavouriteNFTCellDelegate {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return presenter?.getNumberOfItems() ?? 0
+        return presenter?.nfts.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FavouriteNFTCell", for: indexPath) as? FavouriteNFTCell else { return UICollectionViewCell() }
-        if let nft = presenter?.getNFT(at: indexPath.row) {
-            cell.configure(name: nft.name, ratingImage: nft.rating, price: nft.price, nftImage: nft.image, likeImage: nft.liked)
+        cell.delegate = self
+        
+        if let nft = presenter?.nfts[indexPath.row] {
+            cell.configure(
+                name: extractNFTName(from: nft.images.first ?? ""),
+                rating: "\(nft.rating)",
+                price: nft.price,
+                image: nft.images.first ?? "")
         }
         return cell
     }
@@ -116,5 +158,33 @@ extension FavouritesViewController: UICollectionViewDelegate, UICollectionViewDa
         let availableWidth = collectionView.frame.width - padding
         let cellWidth = availableWidth / 2
         return CGSize(width: cellWidth, height: 80)
+    }
+}
+
+extension FavouritesViewController {
+    private func extractNFTName(from urlString: String) -> String {
+        let pattern = #"\/([^\/]+)\/\d+\.png$"#
+        let regex = try? NSRegularExpression(
+            pattern: pattern,
+            options: []
+        )
+        let nsString = urlString as NSString
+        let results = regex?.firstMatch(
+            in: urlString,
+            options: [],
+            range: NSRange(
+                location: 0,
+                length: nsString.length
+            )
+        )
+        
+        if let range = results?.range(
+            at: 1
+        ) {
+            return nsString.substring(
+                with: range
+            )
+        }
+        return ""
     }
 }

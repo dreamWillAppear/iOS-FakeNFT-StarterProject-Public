@@ -19,6 +19,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
     
     func loadProfileData() {
+        UIProfileBlockingProgressHUD.show()
         guard let url = URL(string: "\(RequestConstants.baseURL)/api/v1/profile/1") else {
             print("Invalid URL")
             return
@@ -58,6 +59,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
                         )
                         DispatchQueue.main.async {
                             self?.view?.updateProfile(profile)
+                            UIProfileBlockingProgressHUD.dismiss()
                         }
                     }
                 }

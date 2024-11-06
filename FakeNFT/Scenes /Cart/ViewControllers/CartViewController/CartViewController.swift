@@ -91,7 +91,6 @@ final class CartViewController: UIViewController, CartViewControllerProtocol, Su
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter = CartViewPresenter(view: self)
-        presenter?.fetchCart()
         setupViews()
         setupNavItems()
         cartServiceObserver = NotificationCenter.default
@@ -114,6 +113,7 @@ final class CartViewController: UIViewController, CartViewControllerProtocol, Su
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        presenter?.fetchCart()
         navigationController?.tabBarController?.tabBar.isHidden = false
     }
     

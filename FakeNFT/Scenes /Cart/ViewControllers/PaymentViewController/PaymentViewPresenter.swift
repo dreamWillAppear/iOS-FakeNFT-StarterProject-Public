@@ -20,6 +20,7 @@ final class PaymentViewPresenter: PaymentViewPresenterProtocol {
     
     private let paymentService = PaymentService.shared
     private let payService = PayService.shared
+    private let deleteSerice = DeleteService.shared
     
     var view: PaymentViewControllerProtocol?
     var paymentData: [PaymentResult]?
@@ -57,7 +58,15 @@ final class PaymentViewPresenter: PaymentViewPresenterProtocol {
             switch result {
             case .success(let value):
                 self.paySuccess = value
-                view?.presentResultOfPay(isSuccess: value.success)
+                deleteSerice.fetchCleanOrder(idOrder: paymentId) { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(_):
+                        view?.presentResultOfPay(isSuccess: value.success)
+                    case .failure(_):
+                        self.paySuccess = nil
+                    }
+                }
             case .failure(_):
                 self.paySuccess = nil
             }

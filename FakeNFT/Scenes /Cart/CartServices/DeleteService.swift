@@ -67,4 +67,43 @@ final class DeleteService {
         self.task = task
         task.resume()
     }
+    
+    private func makeCleanRequest(idOrder: String) -> URLRequest? {
+        guard let url = URL(string: "https://d5dn3j2ouj72b0ejucbl.apigw.yandexcloud.net/api/v1/orders/1") else {
+            preconditionFailure("Error: cant construct url")
+        }
+        var parameters = ""
+        parameters += "id=\(idOrder)"
+        let postData =  parameters.data(using: .utf8)
+        var request = URLRequest(url: url)
+        request.setValue(token, forHTTPHeaderField: headerForToken)
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.httpMethod = "PUT"
+        request.httpBody = postData
+        return request
+    }
+    
+    func fetchCleanOrder(idOrder: String, completion: @escaping (Result<CartResult, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        guard task == nil else { return }
+        guard let request = makeCleanRequest(idOrder: idOrder) else { return }
+        let task = urlSession.cartObjectTask(for: request) { [weak self] (result: Result<CartResult, Error>) in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let decodedData):
+                    DispatchQueue.main.async {
+                        self.task = nil
+                    }
+                    completion(.success(decodedData))
+                case .failure(let error):
+                    completion(.failure(error))
+                    print("[ProfileService]: \(error)")
+                }
+            }
+            self.task = nil
+        }
+        self.task = task
+        task.resume()
+    }
 }

@@ -32,8 +32,8 @@ final class TabBarController: UITabBarController {
         super.viewDidLoad()
         
         let appearance = tabBar.standardAppearance
-        
-        let profileController = UIViewController()
+
+        let profileController = ProfileViewController()
         
         let catalogPresenter = CatalogPresenter(view: nil)
         let catalogViewController = CatalogViewController(presenter: catalogPresenter)
@@ -56,6 +56,6 @@ final class TabBarController: UITabBarController {
 
         viewControllers = [profileController, catalogViewController, navigationCartViewController, statisticsController]
         
-        selectedIndex = 3
+        selectedIndex = 0
     }
 }
